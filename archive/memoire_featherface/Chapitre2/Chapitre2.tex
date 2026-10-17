@@ -1,0 +1,433 @@
+\chapter{Matériels et Méthodes}
+\begin{onehalfspace}
+
+\hspace{0.65 cm}Ce chapitre présente la méthodologie complète mise en œuvre pour concevoir, développer et évaluer le modèle FeatherFace ECA-CBAM proposé dans ce mémoire. Il couvre quatre aspects principaux~: l'architecture du modèle et sa justification scientifique, la stratégie d'entraînement multi-phase, le développement logiciel et l'organisation du code, ainsi que les protocoles d'évaluation et métriques utilisés. Cette approche méthodologique rigoureuse garantit la reproductibilité des expériences et la validation scientifique des résultats.
+
+\section{Architecture du modèle FeatherFace ECA-CBAM}
+
+\hspace{0.65 cm}L'architecture proposée s'inscrit dans la lignée des détecteurs légers à une phase (Single-Shot Detectors), optimisés pour le déploiement mobile. Elle repose sur une innovation hybride combinant l'attention canal efficace (ECA-Net) et l'attention spatiale (CBAM SAM), intégrées à différents niveaux du réseau pour améliorer la détection de petits visages tout en maintenant une faible complexité computationnelle.
+
+\subsection{Point de départ~: FeatherFace CBAM}
+
+\hspace{0.65 cm}Le modèle FeatherFace CBAM \cite{Kim2025FeatherFace} constitue le point de départ de cette recherche. Cette architecture combine~:
+
+\begin{itemize}
+\item \textbf{MobileNet-0.25} \cite{Sandler2018MobileNetV2}~: backbone ultra-léger pour l'extraction primaire de caractéristiques, utilisant des convolutions séparables en profondeur pour réduire le coût computationnel.
+
+\item \textbf{CBAM Attention (Backbone)}~: Trois modules CBAM \cite{Woo2018CBAM} placés après les blocs MobileNet de 64, 128 et 256 canaux respectivement. Chaque module applique séquentiellement une attention canal (identifiant les caractéristiques importantes) puis une attention spatiale (localisant les régions informatives).
+
+\item \textbf{BiFPN} \cite{Tan2020EfficientDet}~: Bidirectional Feature Pyramid Network pour fusionner et propager des informations multi-échelles de manière bidirectionnelle, crucial pour la robustesse sur petits visages.
+
+\item \textbf{CBAM Attention (BiFPN)}~: Trois modules CBAM placés sur les principales sorties de BiFPN (52 canaux chacune), apportant un second raffinement attentionnel.
+
+\item \textbf{SSH Block} \cite{Najibi2017SSH}~: Single Stage Headless detector pour l'enrichissement multi-résolution des caractéristiques.
+
+\item \textbf{Channel Shuffle}~: Mélange d'information entre canaux pour améliorer la représentation.
+
+\item \textbf{Têtes de détection}~: Prédiction simultanée des classes (visage/non-visage), boîtes englobantes (bounding boxes) et points de repère faciaux (landmarks) pour une localisation précise.
+\end{itemize}
+
+\hspace{0.65 cm}Le modèle complet compte approximativement 488~664 paramètres et atteint un mAP \textit{hard} de 78.3\% sur WIDER FACE \cite{Yang2016WIDERFACE}, avec une latence d'environ 4ms par image sur GPU mobile.
+
+\hspace{0.65 cm}\textbf{Limite principale identifiée}~: La partie "Channel Attention" du CBAM, bien qu'efficace, présente une complexité de $O(C^2)$ due à l'utilisation de couches entièrement connectées avec réduction de dimensionnalité. Cette surcharge computationnelle devient le maillon critique dans un contexte mobile ultra-contraint.
+
+\subsection{Proposition~: Architecture hybride ECA-CBAM}
+
+\subsubsection{Hypothèse d'innovation}
+
+\hspace{0.65 cm}L'hypothèse centrale de ce travail repose sur le remplacement de la \textbf{Channel Attention} du CBAM traditionnel par l'attention canal \textbf{Efficient Channel Attention (ECA-Net)} \cite{Wang2020ECANet}, tout en conservant la \textbf{Spatial Attention Module (SAM)} du CBAM.
+
+\hspace{0.65 cm}Les avantages attendus de cette hybridation sont~:
+
+\begin{itemize}
+\item \textbf{Efficacité paramétrique}~: Réduction de la complexité de $O(C^2)$ à $O(C)$ pour l'attention canal, grâce à l'utilisation d'une convolution 1D adaptative au lieu de couches entièrement connectées \cite{Wang2020ECANet}.
+
+\item \textbf{Conservation de la qualité}~: Wang et al. \cite{Wang2020ECANet} ont démontré qu'ECA-Net récupère 95\% des gains de performance de l'attention canal traditionnelle avec un coût computationnel 10 fois moindre.
+
+\item \textbf{Robustesse spatiale maintenue}~: La partie spatiale du CBAM, reconnue comme la référence pour la localisation précise (\textit{where}), est conservée intégralement \cite{Woo2018CBAM}.
+
+\item \textbf{Compatibilité mobile}~: La réduction de complexité permet d'insérer davantage de modules d'attention (multi-niveau backbone et BiFPN) sans exploser la latence mobile.
+\end{itemize}
+
+\subsubsection{Architecture détaillée}
+
+\hspace{0.65 cm}L'architecture FeatherFace ECA-CBAM proposée suit le flux suivant~:
+
+\begin{enumerate}
+\item \textbf{Input}~: Image RGB de taille variable (redimensionnée à 640×640 pixels pour l'entraînement)
+
+\item \textbf{Backbone MobileNet-0.25}~: Extraction de caractéristiques à trois échelles (64, 128, 256 canaux)
+
+\item \textbf{ECA-CBAM Attention$_1$ (3×)}~: Trois modules hybrides appliqués après chaque échelle du backbone
+   \begin{itemize}
+   \item ECA Channel Attention~: Convolution 1D adaptative sur le vecteur de pooling global (complexité $O(C)$)
+   \item CBAM Spatial Attention~: Attention spatiale 2D identifiant les régions discriminantes (complexité $O(H \times W)$)
+   \end{itemize}
+
+\item \textbf{BiFPN}~: Fusion bidirectionnelle des caractéristiques multi-échelles (3 niveaux de sortie à 52 canaux)
+
+\item \textbf{ECA-CBAM Attention$_2$ (3×)}~: Trois modules hybrides appliqués sur les sorties BiFPN
+
+\item \textbf{SSH Block}~: Enrichissement multi-résolution via détection headless
+
+\item \textbf{Channel Shuffle}~: Réorganisation des canaux pour améliorer le flux d'information
+
+\item \textbf{Detection Heads}~: Prédiction finale
+   \begin{itemize}
+   \item Classification~: 2 classes (face/background)
+   \item Régression de boîtes~: 4 coordonnées (x, y, w, h)
+   \item Landmarks~: 5 points faciaux (yeux, nez, coins de bouche)
+   \end{itemize}
+\end{enumerate}
+
+\subsubsection{Module ECA-CBAM hybride}
+
+\hspace{0.65 cm}Le module hybride ECA-CBAM se décompose en deux étapes séquentielles~:
+
+\paragraph{Étape 1~: ECA Channel Attention}
+
+\hspace{0.65 cm}Soit $\mathbf{F} \in \mathbb{R}^{C \times H \times W}$ une carte de caractéristiques d'entrée avec $C$ canaux, hauteur $H$ et largeur $W$.
+
+\begin{enumerate}
+\item \textbf{Global Average Pooling}~: Agrégation spatiale pour obtenir un descripteur canal
+   \[
+   \mathbf{z} = \text{GAP}(\mathbf{F}) \in \mathbb{R}^{C}
+   \]
+
+\item \textbf{Convolution 1D adaptative}~: Application d'une convolution 1D de taille de noyau $k$ adaptative
+   \[
+   k = \left| \frac{\log_2(C)}{\gamma} + \frac{b}{\gamma} \right|_{\text{impair}}
+   \]
+   où $\gamma = 2$ et $b = 1$ sont des hyperparamètres \cite{Wang2020ECANet}.
+
+\item \textbf{Recalibrage canal}~:
+   \[
+   \mathbf{F}_{\text{ECA}} = \sigma(\text{Conv1D}_k(\mathbf{z})) \odot \mathbf{F}
+   \]
+   où $\sigma$ est la fonction sigmoïde et $\odot$ le produit élément par élément (broadcasting).
+\end{enumerate}
+
+\paragraph{Étape 2~: CBAM Spatial Attention}
+
+\hspace{0.65 cm}Soit $\mathbf{F}_{\text{ECA}}$ la sortie de l'attention canal.
+
+\begin{enumerate}
+\item \textbf{Pooling spatial}~: Agrégation le long de la dimension canal
+   \[
+   \mathbf{F}_{\text{max}} = \text{MaxPool}_{\text{channel}}(\mathbf{F}_{\text{ECA}}) \in \mathbb{R}^{1 \times H \times W}
+   \]
+   \[
+   \mathbf{F}_{\text{avg}} = \text{AvgPool}_{\text{channel}}(\mathbf{F}_{\text{ECA}}) \in \mathbb{R}^{1 \times H \times W}
+   \]
+
+\item \textbf{Concaténation et convolution}~:
+   \[
+   \mathbf{M}_s = \sigma(\text{Conv}_{7 \times 7}([\mathbf{F}_{\text{max}}; \mathbf{F}_{\text{avg}}]))
+   \]
+   où $[\cdot; \cdot]$ désigne la concaténation et Conv$_{7 \times 7}$ une convolution spatiale $7 \times 7$.
+
+\item \textbf{Recalibrage spatial}~:
+   \[
+   \mathbf{F}_{\text{out}} = \mathbf{M}_s \odot \mathbf{F}_{\text{ECA}}
+   \]
+\end{enumerate}
+
+\hspace{0.65 cm}La complexité totale du module hybride est $O(C + H \times W)$, contre $O(C^2 + H \times W)$ pour CBAM traditionnel, soit une réduction significative pour les cartes de caractéristiques à nombreux canaux.
+
+\subsection{Justification scientifique}
+
+\hspace{0.65 cm}Le choix de cette architecture hybride s'appuie sur plusieurs constats issus de la littérature~:
+
+\begin{itemize}
+\item \textbf{Efficacité prouvée d'ECA-Net}~: Wang et al. \cite{Wang2020ECANet} ont démontré qu'ECA-Net surpasse les méthodes d'attention canal traditionnelles (SE-Net, CBAM) en termes de rapport performance/coût sur ImageNet et COCO.
+
+\item \textbf{Complémentarité canal/spatial}~: La combinaison d'attentions canal et spatiale a été validée dans de nombreux contextes \cite{Woo2018CBAM, Wang2024ECACBAM}, montrant des gains significatifs sur la détection d'objets difficiles.
+
+\item \textbf{Validation sur tâches médicales}~: Wang et al. \cite{Wang2024ECACBAM} ont appliqué avec succès la combinaison ECA-CBAM à la classification de rétinopathie diabétique, démontrant la robustesse de l'approche hybride sur images complexes.
+
+\item \textbf{Absence dans la littérature}~: À notre connaissance, aucune publication n'a encore testé cette hybridation ECA-CBAM dans le contexte spécifique de la détection faciale mobile légère, constituant ainsi une contribution originale.
+\end{itemize}
+
+\section{Méthodologie d'entraînement}
+
+\hspace{0.65 cm}L'entraînement d'un modèle comportant de multiples modules d'attention nécessite une stratégie adaptée pour garantir la convergence et éviter les déséquilibres entre mécanismes attentionnels. Nous adoptons une approche d'entraînement multi-phase inspirée des travaux de Wang et al. \cite{Wang2024ECACBAM}.
+
+\subsection{Objectifs de l'entraînement}
+
+\begin{itemize}
+\item Garantir la \textbf{convergence rapide} du modèle malgré la complexité de l'architecture
+\item Assurer la \textbf{stabilité de l'optimisation} avec modules d'attention multiples
+\item Éviter la \textbf{dominance d'un mécanisme} d'attention au détriment de l'autre
+\item Respecter les \textbf{contraintes computationnelles} liées au déploiement mobile
+\end{itemize}
+
+\subsection{Stratégie multi-phase}
+
+\subsubsection{Phase 1~: Pré-entraînement du backbone (20-40 epochs)}
+
+\hspace{0.65 cm}Dans cette première phase, les modules d'attention ECA et CBAM SAM sont désactivés (poids forcés à l'identité, $\mathbf{M}_c = \mathbf{M}_s = \mathbf{1}$). Cela permet au backbone MobileNet-0.25, au BiFPN et aux têtes de détection de s'adapter aux données dans un contexte standard, sans influence attentionnelle.
+
+\begin{itemize}
+\item \textbf{Optimiseur}~: Adam \cite{Kingma2015Adam} avec learning rate initial $\alpha_0 = 1 \times 10^{-3}$
+\item \textbf{Batch size}~: 32 images
+\item \textbf{Loss}~: Multitâche pondérée
+   \[
+   \mathcal{L}_{\text{total}} = \lambda_1 \mathcal{L}_{\text{cls}} + \lambda_2 \mathcal{L}_{\text{bbox}} + \lambda_3 \mathcal{L}_{\text{landmark}}
+   \]
+   avec $\lambda_1 = 2.0$, $\lambda_2 = 1.0$, $\lambda_3 = 0.5$ \cite{Kim2025FeatherFace}
+   \begin{itemize}
+   \item $\mathcal{L}_{\text{cls}}$~: Softmax Cross-Entropy pour la classification face/background
+   \item $\mathcal{L}_{\text{bbox}}$~: Smooth L1 Loss pour la régression de boîtes
+   \item $\mathcal{L}_{\text{landmark}}$~: Wing Loss pour les landmarks faciaux \cite{Feng2018WingLoss}
+   \end{itemize}
+\item \textbf{Durée}~: Jusqu'à convergence (plateau de validation, typiquement 30 epochs)
+\end{itemize}
+
+\subsubsection{Phase 2~: Activation séquentielle des attentions (30-50 epochs)}
+
+\hspace{0.65 cm}Les modules d'attention sont graduellement activés de manière séquentielle pour éviter l'interférence et permettre un apprentissage spécialisé.
+
+\paragraph{Phase 2a~: ECA Channel Attention (15-25 epochs)}
+
+\begin{itemize}
+\item \textbf{Activation}~: Dégel (\textit{unfreeze}) des modules ECA sur backbone et BiFPN
+\item \textbf{CBAM SAM}~: Reste figé à l'identité
+\item \textbf{Learning rate}~: Réduit à $\alpha = 5 \times 10^{-4}$
+\item \textbf{Scheduler}~: Cosine Annealing \cite{Loshchilov2017SGDR}
+   \[
+   \alpha_t = \alpha_{\min} + \frac{1}{2}(\alpha_{\max} - \alpha_{\min})\left(1 + \cos\left(\frac{T_{\text{cur}}}{T_{\max}}\pi\right)\right)
+   \]
+\end{itemize}
+
+\paragraph{Phase 2b~: CBAM Spatial Attention (15-25 epochs)}
+
+\begin{itemize}
+\item \textbf{Activation}~: Dégel des modules CBAM SAM (spatial)
+\item \textbf{ECA}~: Reste entraînable
+\item \textbf{Learning rate}~: Maintenu à $\alpha = 5 \times 10^{-4}$
+\item \textbf{Objectif}~: Apprentissage de la localisation spatiale sans perturber l'attention canal déjà optimisée
+\end{itemize}
+
+\subsubsection{Phase 3~: Fine-tuning global (20-30 epochs)}
+
+\hspace{0.65 cm}Tous les modules (backbone, attentions, BiFPN, têtes) sont entraînés conjointement avec un learning rate très faible pour affiner les poids.
+
+\begin{itemize}
+\item \textbf{Learning rate}~: $\alpha = 1 \times 10^{-4}$
+\item \textbf{Focus}~: Robustesse sur WIDER FACE \textit{hard}, généralisation
+\item \textbf{Data augmentation intensive}~: Horizontal flip, color jittering, random crop, mixup \cite{Zhang2018Mixup}
+\item \textbf{Early stopping}~: Patience de 5 epochs sans amélioration du mAP \textit{hard} sur validation
+\end{itemize}
+
+\subsection{Hyperparamètres et régularisation}
+
+\begin{table}[H]
+\centering
+\caption{Hyperparamètres d'entraînement du modèle FeatherFace ECA-CBAM}
+\label{tab:hyperparameters}
+\begin{tabularx}{\textwidth}{lX}
+\hline
+\textbf{Paramètre} & \textbf{Valeur} \\
+\hline
+Optimiseur & Adam ($\beta_1=0.9$, $\beta_2=0.999$, $\epsilon=10^{-8}$) \\
+Learning rate initial & $1 \times 10^{-3}$ (Phase 1), $5 \times 10^{-4}$ (Phase 2), $1 \times 10^{-4}$ (Phase 3) \\
+Batch size & 32 \\
+Epochs totaux & 80-120 (selon convergence) \\
+Scheduler & Cosine Annealing avec warm restart \\
+Dropout & 0.3 (avant têtes de détection) \\
+Weight decay & $1 \times 10^{-4}$ \\
+Gradient clipping & Norm max = 5.0 \\
+Data augmentation & Flip horizontal (p=0.5), Color jitter (p=0.3), Random crop, Mixup ($\alpha$=0.2) \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Développement logiciel et outils}
+
+\hspace{0.65 cm}L'implémentation du modèle FeatherFace ECA-CBAM suit les standards industriels et académiques pour garantir la reproductibilité, la modularité et la maintenabilité du code.
+
+\subsection{Framework et environnement}
+
+\begin{itemize}
+\item \textbf{PyTorch 1.13+} \cite{Paszke2019PyTorch}~: Framework de deep learning principal, choisi pour sa flexibilité et son adoption large dans la communauté scientifique
+
+\item \textbf{TorchVision 0.14+}~: Utilitaires pour transformations, datasets et métriques standards
+
+\item \textbf{CUDA 11.7+ / cuDNN 8.5+}~: Accélération GPU pour l'entraînement sur NVIDIA A100/V100
+
+\item \textbf{Python 3.9+}~: Langage principal, avec environnement virtuel `conda` pour isolation des dépendances
+
+\item \textbf{Jupyter Notebook}~: Prototypage interactif et visualisation des résultats
+
+\item \textbf{Git + GitHub}~: Versionning et collaboration, dépôt public pour reproductibilité
+\end{itemize}
+
+\subsection{Organisation du code}
+
+\begin{verbatim}
+FeatherFace-ECACBAM/
+|
++-- data/
+|   +-- wider_face/          # WIDER FACE dataset
+|   +-- classroom/            # Données de classe (si disponibles)
+|   +-- preprocessing.py      # Scripts de prétraitement
+|
++-- models/
+|   +-- backbone.py           # MobileNet-0.25
+|   +-- bifpn.py              # Bidirectional FPN
+|   +-- attention.py          # Modules ECA, CBAM SAM, hybride
+|   +-- ssh.py                # SSH Block
+|   +-- featherface.py        # Architecture complète
+|
++-- train/
+|   +-- train_phase1.py       # Phase 1: backbone
+|   +-- train_phase2a.py      # Phase 2a: ECA
+|   +-- train_phase2b.py      # Phase 2b: CBAM SAM
+|   +-- train_phase3.py       # Phase 3: fine-tuning
+|   +-- losses.py             # Wing Loss, Smooth L1, etc.
+|
++-- utils/
+|   +-- metrics.py            # mAP, Precision, Recall
+|   +-- visualization.py      # Affichage détections
+|   +-- augmentation.py       # Data augmentation
+|
++-- config/
+|   +-- config.yaml           # Hyperparamètres centralisés
+|
++-- notebooks/
+|   +-- analysis.ipynb        # Analyse exploratoire
+|
++-- results/
+|   +-- checkpoints/          # Sauvegardes modèles
+|   +-- logs/                 # TensorBoard logs
+|   +-- figures/              # Courbes, visualisations
+|
++-- README.md                 # Documentation
+\end{verbatim}
+
+\subsection{Monitoring et visualisation}
+
+\begin{itemize}
+\item \textbf{TensorBoard}~: Suivi en temps réel des métriques (loss, mAP, learning rate), visualisation des activations attentionnelles, histogrammes de poids
+
+\item \textbf{Weights \& Biases (WandB)}~: Archivage des expériences, comparaison de runs, hyperparameter sweeps
+
+\item \textbf{Matplotlib/Seaborn}~: Génération de figures pour le mémoire (courbes ROC, PR curves, confusion matrices)
+\end{itemize}
+
+\section{Protocole d'évaluation}
+
+\hspace{0.65 cm}L'évaluation du modèle FeatherFace ECA-CBAM suit les standards établis par la communauté de détection faciale, avec des métriques reconnues et des benchmarks publics.
+
+\subsection{Jeux de données}
+
+\subsubsection{WIDER FACE}
+
+\hspace{0.65 cm}Le benchmark WIDER FACE \cite{Yang2016WIDERFACE} constitue le jeu de données principal pour l'évaluation. Il contient~:
+
+\begin{itemize}
+\item \textbf{32~203 images} avec \textbf{393~703 visages annotés}
+\item \textbf{Trois niveaux de difficulté}~:
+   \begin{itemize}
+   \item \textit{Easy}~: Visages de grande taille (>50 pixels), frontaux, bien éclairés
+   \item \textit{Medium}~: Visages de taille moyenne, poses variées, occlusions légères
+   \item \textit{Hard}~: Petits visages (<10 pixels de hauteur), occlusions importantes, poses extrêmes, faible éclairage
+   \end{itemize}
+\item \textbf{Split}~: 40\% entraînement, 10\% validation, 50\% test
+\end{itemize}
+
+\subsubsection{Données de salle de classe (optionnel)}
+
+\hspace{0.65 cm}Si disponibles, des images capturées en environnement réel de classe seront utilisées pour validation applicative~:
+
+\begin{itemize}
+\item Images capturées avec smartphone (diverses marques/modèles)
+\item Distance de capture~: 2-5 mètres
+\item Conditions d'éclairage variables (naturel/artificiel)
+\item Data augmentation pour simulation de variabilité (rotation, flou, bruit)
+\end{itemize}
+
+\subsection{Métriques d'évaluation}
+
+\subsubsection{Métriques de détection}
+
+\paragraph{Precision et Recall}
+
+\[
+\text{Precision} = \frac{TP}{TP + FP}, \quad \text{Recall} = \frac{TP}{TP + FN}
+\]
+
+où $TP$ (True Positives) = détections correctes avec IoU > 0.5, $FP$ (False Positives) = fausses détections, $FN$ (False Negatives) = visages manqués.
+
+\paragraph{F1-Score}
+
+\[
+F_1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+\]
+
+\paragraph{mAP (mean Average Precision)}
+
+\[
+\text{mAP} = \frac{1}{N} \sum_{i=1}^{N} AP_i
+\]
+
+où $AP_i$ (Average Precision) est l'aire sous la courbe Precision-Recall pour la classe $i$, calculée pour différents seuils IoU (0.5 à 0.95 par pas de 0.05, suivant COCO metrics).
+
+\subsubsection{Métriques d'efficacité}
+
+\paragraph{Latence d'inférence}
+
+\hspace{0.65 cm}Temps moyen (en millisecondes) pour traiter une image, mesuré sur~:
+\begin{itemize}
+\item GPU NVIDIA A100 (entraînement/benchmark)
+\item CPU smartphone (déploiement réel, si possible)
+\end{itemize}
+
+\paragraph{Complexité computationnelle}
+
+\begin{itemize}
+\item \textbf{FLOPs} (Floating Point Operations)~: Nombre d'opérations théoriques pour une inférence
+\item \textbf{Paramètres}~: Nombre de poids entraînables du modèle
+\item \textbf{Taille mémoire}~: Occupation disque du modèle (.pth, .onnx)
+\end{itemize}
+
+\subsection{Protocole expérimental}
+
+\begin{enumerate}
+\item \textbf{Entraînement}~: Sur split WIDER FACE training selon stratégie multi-phase (Section 2.2)
+
+\item \textbf{Validation}~: Monitoring sur split validation à chaque epoch, critère d'arrêt basé sur mAP \textit{hard}
+
+\item \textbf{Test}~: Évaluation finale sur split test WIDER FACE (easy, medium, hard)
+
+\item \textbf{Analyse comparative}~: Comparaison avec~:
+   \begin{itemize}
+   \item FeatherFace CBAM (baseline) \cite{Kim2025FeatherFace}
+   \item BlazeFace \cite{Zhang2019BlazeFace}
+   \item MobileFaceNets \cite{Chen2018MobileFaceNets}
+   \item YOLOv5-nano \cite{Jocher2023YOLOv5}
+   \end{itemize}
+
+\item \textbf{Validation croisée}~: 5-fold cross-validation sur données de classe (si disponibles)
+
+\item \textbf{Tests d'ablation}~:
+   \begin{itemize}
+   \item Modèle sans attention (baseline)
+   \item Avec CBAM seul (reproduction Kim et al.)
+   \item Avec ECA seul (variant)
+   \item Avec ECA-CBAM (proposition)
+   \end{itemize}
+\end{enumerate}
+
+\subsection{Outils d'évaluation}
+
+\begin{itemize}
+\item \textbf{Scripts Python}~: Calcul automatisé des métriques (PyTorch, scikit-learn, pycocotools)
+\item \textbf{WIDER FACE evaluation toolkit}~: Outils officiels du benchmark pour mAP
+\item \textbf{Visualisation}~: TensorBoard, matplotlib pour courbes d'apprentissage, exemples de détections correctes/incorrectes
+\item \textbf{Tableaux comparatifs}~: Synthèse des performances (Tableau \ref{tab:results_comparison} au Chapitre 4)
+\end{itemize}
+
+\hspace{0.65 cm}Cette méthodologie rigoureuse garantit la reproductibilité des expériences et la validité scientifique des résultats, conformément aux standards de la communauté de vision par ordinateur et de détection faciale mobile.
+
+\end{onehalfspace}

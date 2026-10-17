@@ -1,0 +1,155 @@
+\chapter{Revue de la littérature et État de l'art}
+\begin{onehalfspace}
+
+\section{Description du domaine et des sous-domaines liés}
+
+\hspace{0.65 cm}Ce chapitre présente une revue exhaustive de la littérature scientifique relative à la détection faciale mobile par apprentissage profond, en mettant l'accent sur les mécanismes d'attention hybrides et les architectures légères. Il couvre quatre domaines principaux~: l'apprentissage profond pour la reconnaissance faciale, les mécanismes d'attention en vision par ordinateur, les modèles légers pour dispositifs embarqués, et les applications de détection faciale mobile. Cette revue établit les bases théoriques et méthodologiques nécessaires à la compréhension de la contribution proposée dans ce mémoire.
+
+\subsection{Apprentissage profond pour la reconnaissance et la détection faciale}
+
+\hspace{0.65 cm}L'\textbf{apprentissage profond} (deep learning) représente aujourd'hui le cœur des progrès en reconnaissance d'images et en détection d'objets, notamment dans la reconnaissance faciale. Les réseaux de neurones convolutifs (CNN), du fait de leur capacité à extraire des caractéristiques invariantes depuis des images, sont devenus la base de la plupart des systèmes de détection et d'identification de visages \cite{LeCun2015DeepLearning}.
+
+\hspace{0.65 cm}Les architectures basées sur CNN telles que VGG, ResNet, ou MobileNet ont permis d'améliorer considérablement les taux de détection dans des environnements variés \cite{He2016ResNet, Sandler2018MobileNetV2}. Néanmoins, la détection de petits visages, sous conditions de forte variabilité spatiale et de contraintes computationnelles strictes, reste un défi central \cite{Zhang2019BlazeFace, Kim2025FeatherFace}.
+
+\hspace{0.65 cm}Les systèmes de détection faciale modernes reposent sur plusieurs composantes essentielles~: la détection initiale de la région faciale, l'alignement géométrique, l'extraction de caractéristiques discriminantes, et la classification ou vérification finale. Chaque étape bénéficie des avancées en apprentissage profond, permettant des performances robustes même dans des conditions environnementales difficiles.
+
+\subsection{Mécanismes d'attention en vision par ordinateur}
+
+\hspace{0.65 cm}Les \textbf{mécanismes d'attention} ont révolutionné la vision par ordinateur en permettant aux modèles d'apprendre à se focaliser sur les zones informatives des images. L'attention permet au réseau de pondérer différemment les caractéristiques extraites, en accordant plus d'importance aux éléments pertinents pour la tâche de reconnaissance.
+
+\hspace{0.65 cm}Parmi les modules les plus influents, le \textbf{CBAM (Convolutional Block Attention Module)} propose une attention séquentielle sur les dimensions canal puis spatiale, améliorant la sélectivité du réseau \cite{Woo2018CBAM}. Ce module combine deux mécanismes complémentaires~: l'attention canal identifie \textit{quelles} caractéristiques sont importantes, tandis que l'attention spatiale détermine \textit{où} se concentrer dans l'image.
+
+\hspace{0.65 cm}À l'inverse, l'\textbf{Efficient Channel Attention (ECA-Net)} utilise une convolution 1D adaptative pour un mécanisme d'attention canal d'une efficacité paramétrique remarquable \cite{Wang2020ECANet}. Contrairement aux approches traditionnelles utilisant des couches entièrement connectées, ECA-Net évite la réduction de dimensionnalité et capture les dépendances canal de manière plus légère, avec une complexité de $O(C)$ seulement.
+
+\hspace{0.65 cm}La fusion de l'attention canal (ECA) et spatiale (CBAM SAM) dans des modules hybrides est devenue une tendance majeure, promettant une reconnaissance faciale plus précise tout en conservant la légèreté du modèle \cite{Wang2024ECACBAM, Kim2025FeatherFace}. Cette hybridation permet de combiner les avantages des deux approches~: l'efficacité paramétrique de ECA et la localisation spatiale précise de CBAM SAM.
+
+\subsection{Modèles légers pour dispositifs embarqués et mobiles}
+
+\hspace{0.65 cm}Face aux contraintes matérielles des smartphones et objets connectés (puissance de calcul limitée, mémoire restreinte, consommation énergétique), le développement de \textbf{modèles légers} (lightweight) est une nécessité pour la reconnaissance faciale embarquée.
+
+\hspace{0.65 cm}Des architectures telles que \textbf{BlazeFace} \cite{Zhang2019BlazeFace}, \textbf{MobileFaceNets} \cite{Chen2018MobileFaceNets} ou \textbf{FeatherFace} \cite{Kim2025FeatherFace} se caractérisent par la réduction du nombre de paramètres, le recours à des couches compactes (convolutions séparables en profondeur), et l'emploi de modules d'attention paramétriquement efficaces.
+
+\hspace{0.65 cm}Ces modèles atteignent un compromis optimal entre trois contraintes antagonistes~: la précision de détection, la vitesse d'inférence, et la taille mémoire. Par exemple, BlazeFace propose un modèle de 0.3M paramètres capable d'inférence en moins de 1ms sur GPU mobile, mais au détriment de la précision sur les petits visages.
+
+\hspace{0.65 cm}Les travaux de Redmon et Farhadi (2018) sur YOLOv3 illustrent également le compromis nécessaire entre rapidité, taille du modèle et précision, tout en montrant les limites pour la détection de petits visages sur mobile \cite{Redmon2018YOLOv3}. Les architectures Single-Shot Detectors (SSD) \cite{Liu2016SSD} offrent une alternative prometteuse en effectuant la détection en une seule passe, contrairement aux détecteurs à deux phases (Faster R-CNN) trop lourds pour le mobile.
+
+\subsection{Détection faciale mobile et applications embarquées}
+
+\hspace{0.65 cm}La \textbf{détection faciale mobile} est au centre d'une explosion d'applications pratiques~: authentification biométrique, contrôle d'accès, santé connectée, et éducation intelligente. L'intégration sur smartphone impose une gestion fine des ressources (CPU, GPU, mémoire, batterie) et une robustesse accrue face aux variations de l'environnement (éclairage, pose, occlusions).
+
+\hspace{0.65 cm}L'usage réel, comme la \textbf{vérification de présence en salle de classe}, met au défi les modèles existants et impose une optimisation technique et algorithmique poussée. Dans ce contexte, les visages peuvent être petits (capture à distance), partiellement occultés (masques, mains), sous éclairage variable (fenêtres, néons), avec des poses non frontales.
+
+\hspace{0.65 cm}Les études récentes \cite{Zhang2019BlazeFace, Kim2025FeatherFace, Wang2024ECACBAM} soulignent le besoin d'attention hybride et d'entraînement adapté pour répondre de façon fiable à ces contraintes et offrir des solutions déployables à large échelle. Le benchmark WIDER FACE \cite{Yang2016WIDERFACE}, avec ses catégories \textit{easy}, \textit{medium} et \textit{hard}, constitue le standard d'évaluation pour ces modèles.
+
+\section{État de l'art de la détection faciale mobile par apprentissage profond}
+
+\hspace{0.65 cm}Cette section présente un panorama critique des principales architectures et méthodes de détection faciale adaptées au contexte mobile, en analysant leurs forces, limites, et performances sur les benchmarks standards.
+
+\subsection{Évolution historique~: des méthodes classiques aux réseaux profonds}
+
+\hspace{0.65 cm}La détection automatique de visages a considérablement évolué depuis la méthode pionnière de \textbf{Viola-Jones} (2001) \cite{ViolaJones2001}, basée sur des cascades de classifieurs Haar. Bien que rapide et efficace sur images simples, cette approche montre rapidement ses limites dans des environnements complexes avec variations d'éclairage, poses non frontales, ou occlusions partielles.
+
+\hspace{0.65 cm}L'avènement des réseaux de neurones profonds a permis un saut qualitatif majeur. Les architectures actuelles s'articulent autour de deux grandes familles~:
+
+\begin{itemize}
+\item \textbf{Modèles à plusieurs phases} (\textit{two-stage detectors}) comme \textbf{Faster R-CNN} \cite{Ren2015FasterRCNN}, qui proposent d'abord des régions candidates puis affinent la détection. Ces modèles sont précis mais trop volumineux (>23M paramètres) et lents (>60ms/image) pour le mobile.
+
+\item \textbf{Détecteurs à une phase} (\textit{single-shot detectors}) comme \textbf{SSD} \cite{Liu2016SSD} ou les variantes YOLO, beaucoup plus rapides et flexibles, prédisant directement les boîtes englobantes et classes en une seule passe réseau. Ces architectures sont privilégiées pour les applications embarquées.
+\end{itemize}
+
+\subsection{Modèles légers dédiés au mobile~: analyse comparative}
+
+\hspace{0.65 cm}Plusieurs architectures ultra-compactes ont été développées spécifiquement pour les smartphones, optimisant le rapport vitesse/précision/paramètres. Le tableau \ref{tab:comparison_models} présente une analyse comparative des principaux modèles existants.
+
+\begin{table}[H]
+\centering
+\caption{Comparaison des modèles légers de détection faciale mobile}
+\label{tab:comparison_models}
+\scriptsize
+\begin{tabularx}{\textwidth}{p{2.5cm}p{1.5cm}p{1.8cm}p{2cm}p{1cm}p{1.3cm}p{1.2cm}}
+\hline
+\textbf{Modèle} & \textbf{Type} & \textbf{Backbone} & \textbf{Attention} & \textbf{Params} & \textbf{mAP Hard} & \textbf{Vitesse} \\
+\hline
+Viola-Jones & Cascade & - & Aucun & <1M & - & <2ms \\
+\hline
+BlazeFace & SSD & BlazeBlock & Aucun & 0.3M & ~65\% & ~1ms \\
+\hline
+MobileFaceNets & SSD & MobileNetV1 & Aucun & 1.0M & ~70\% & ~5ms \\
+\hline
+YOLOv5-nano & SSD & CSPDarkNano & Aucun & 1.9M & ~75\% & 5-7ms \\
+\hline
+RetinaFace & SSD+FPN & ResNet50 & Aucun & >23M & ~80\% & >60ms \\
+\hline
+\textbf{FeatherFace CBAM} & SSD & MobileNet-0.25 & CBAM & 0.49M & 78.3\% & ~4ms \\
+\hline
+\end{tabularx}
+\end{table}
+
+\hspace{0.65 cm}\textbf{BlazeFace} \cite{Zhang2019BlazeFace} est optimisé pour une inférence ultra-rapide sur GPU mobile (<1ms), grâce à une architecture minimaliste (0.3M paramètres). Cependant, sa précision chute significativement sur les petits visages et situations difficiles (mAP hard ~65\%).
+
+\hspace{0.65 cm}\textbf{MobileFaceNets} \cite{Chen2018MobileFaceNets} utilise un backbone MobileNetV1 avec convolutions séparables en profondeur, atteignant 1M paramètres et ~70\% mAP hard. Bien que léger et facilement embarqué, ce modèle reste sensible au bruit, aux groupes denses de visages, et aux occlusions.
+
+\hspace{0.65 cm}\textbf{YOLOv5-nano} \cite{Jocher2023YOLOv5} propose une architecture flexible et réactive (1.9M paramètres, 5-7ms/image), avec un mAP hard de ~75\%. Cependant, sa précision reste limitée sur les très petits visages, et son backbone CSPDarknet, bien que compact, demeure plus lourd que MobileNet.
+
+\hspace{0.65 cm}\textbf{RetinaFace} \cite{Deng2020RetinaFace} atteint une précision excellente (~80\% mAP hard) grâce à un backbone ResNet50 et un Feature Pyramid Network (FPN). Mais avec >23M paramètres et >60ms d'inférence, ce modèle est inadapté aux contraintes mobiles.
+
+\hspace{0.65 cm}\textbf{FeatherFace CBAM} \cite{Kim2025FeatherFace} se distingue comme le meilleur compromis actuel pour le mobile~: 0.49M paramètres, ~4ms/image, et 78.3\% mAP hard. Ce modèle intègre le module d'attention CBAM \cite{Woo2018CBAM} dans un backbone MobileNet-0.25, permettant une attention spatiale et canal pour améliorer la détection des petits visages. Il s'impose comme la référence actuelle pour la détection faciale embarquée.
+
+\subsection{Mécanismes d'attention dans les modèles existants}
+
+\hspace{0.65 cm}Les modules d'attention permettent au réseau de focaliser son apprentissage sur les informations les plus pertinentes, améliorant ainsi la précision sans augmentation prohibitive du coût computationnel.
+
+\hspace{0.65 cm}Le \textbf{CBAM (Convolutional Block Attention Module)} \cite{Woo2018CBAM} combine séquentiellement une attention canal (identifiant les cartes de caractéristiques importantes) et une attention spatiale (localisant les régions informatives). Son intégration dans FeatherFace a permis d'améliorer significativement la détection des petits visages par rapport aux modèles non-attentionnés.
+
+\hspace{0.65 cm}Cependant, le module d'attention canal de CBAM utilise des couches entièrement connectées avec réduction de dimensionnalité, introduisant une surcharge paramétrique non négligeable. L'\textbf{ECA-Net} \cite{Wang2020ECANet} propose une alternative plus légère via une convolution 1D adaptative sans réduction de dimensionnalité, atteignant des performances similaires avec beaucoup moins de paramètres.
+
+\hspace{0.65 cm}Les modèles non-attentionnés (BlazeFace, MobileFaceNets, YOLOv5-nano) privilégient la légèreté et la vitesse, mais souffrent d'une précision limitée sur images complexes ou petits visages. L'intégration d'attention hybride ECA-CBAM représente donc une piste prometteuse pour améliorer encore les performances.
+
+\subsection{Benchmarks et protocoles d'évaluation}
+
+\hspace{0.65 cm}Le \textbf{dataset WIDER FACE} \cite{Yang2016WIDERFACE} est le standard actuel pour évaluer et comparer les modèles de détection faciale. Il contient 32,203 images avec 393,703 visages annotés, couvrant une grande variété de scénarios réels (événements, foules, conditions difficiles).
+
+\hspace{0.65 cm}WIDER FACE est subdivisé en trois niveaux de difficulté~:
+\begin{itemize}
+\item \textbf{Easy}~: visages de grande taille, frontaux, bien éclairés
+\item \textbf{Medium}~: visages de taille moyenne, poses variées, occlusions légères
+\item \textbf{Hard}~: petits visages (<10 pixels de hauteur), occlusions importantes, poses extrêmes, faible éclairage
+\end{itemize}
+
+\hspace{0.65 cm}Les performances sont mesurées en~:
+\begin{itemize}
+\item \textbf{mAP (mean Average Precision)}~: précision moyenne sur différents seuils IoU, mesurée séparément sur easy/medium/hard
+\item \textbf{Temps d'inférence mobile}~: latence en millisecondes par image sur processeur mobile (CPU/GPU)
+\item \textbf{Nombre de paramètres réseau}~: taille du modèle en mémoire (MB)
+\end{itemize}
+
+\hspace{0.65 cm}Le mAP hard est particulièrement critique pour les applications de vérification de présence en classe, où les visages peuvent être petits et partiellement occultés.
+
+\subsection{Limites des solutions existantes}
+
+\hspace{0.65 cm}Malgré les avancées significatives, plusieurs limites persistent dans les modèles actuels~:
+
+\begin{itemize}
+\item \textbf{Compromis vitesse/précision}~: BlazeFace et MobileFaceNets sont ultra-rapides mais insuffisants sur la difficulté \textit{hard} (65-70\% mAP). À l'inverse, RetinaFace atteint 80\% mais reste inadapté au mobile.
+
+\item \textbf{Efficacité attentionnelle}~: FeatherFace CBAM affiche le meilleur compromis existant (78.3\% mAP hard, 0.49M paramètres), mais son module d'attention canal peut encore être optimisé pour réduire la surcharge paramétrique.
+
+\item \textbf{Robustesse sur petits visages}~: La plupart des modèles légers peinent à détecter des visages de moins de 10 pixels de hauteur, situation fréquente en capture de classe à distance.
+
+\item \textbf{Stabilité d'entraînement}~: L'intégration de modules d'attention multiples nécessite des stratégies d'entraînement adaptées pour éviter la dominance d'un mécanisme au détriment de l'autre.
+\end{itemize}
+
+\subsection{Positionnement de l'étude}
+
+\hspace{0.65 cm}\textbf{Au vu de cette analyse, FeatherFace avec module CBAM s'impose comme la meilleure solution existante pour la détection de petits visages sur smartphone}~: modèle ultra-léger (0.49M), attention spatiale pour robustesse additionnelle, validation sur WIDER FACE avec un mAP \textit{hard} de 78.3\% à vitesse compatible avec le mobile \cite{Kim2025FeatherFace, Woo2018CBAM}.
+
+\hspace{0.65 cm}Cependant, des limites persistent, notamment sur~:
+\begin{itemize}
+\item La capacité du module d'attention canal à distinguer finement les caractéristiques discriminantes sans surcharge paramétrique excessive
+\item L'intégration harmonieuse d'attentions multiples sans déséquilibre durant l'entraînement
+\item L'amélioration de la précision sur très petits visages (<10 pixels) tout en conservant la légèreté
+\end{itemize}
+
+\hspace{0.65 cm}Ces constats motivent l'élaboration, dans la partie méthodologie, d'une \textbf{architecture hybride innovante combinant ECA-Net (attention canal légère) et CBAM SAM (attention spatiale)}, accompagnée d'une \textbf{stratégie d'entraînement multi-phase optimisée} \cite{Wang2024ECACBAM}. Cette approche vise à dépasser les performances actuelles tout en maintenant la compatibilité mobile, comme le démontrera le chapitre suivant.
+
+\end{onehalfspace}

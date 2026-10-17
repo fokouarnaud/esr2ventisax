@@ -1,0 +1,206 @@
+\documentclass[12pt,a4paper]{report}
+
+%------------------------------Zone 1-------------------------
+\usepackage[utf8]{inputenc} % un package permet d'utiliser tous les caractères de votre clavier.
+\usepackage[T1]{fontenc} % un second package permettant d'utiliser tous les caractères de votre clavier.
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{3}
+
+% IMPORTANT: natbib DOIT être chargé AVANT babel (corrige l'avertissement)
+\usepackage[round]{natbib}
+
+\usepackage[french, english]{babel} % Changé de 'francais' à 'french' (francais est déprécié)
+
+\usepackage[french]{nomencl}
+\makenomenclature
+\usepackage[maxlevel=3]{csquotes}
+\usepackage{fancyhdr}
+\usepackage[cyr]{aeguill}
+\usepackage{geometry}
+\geometry{verbose,letterpaper,tmargin=27.5mm,bmargin=27.5mm,lmargin=27.5mm,rmargin=27.5mm,headheight=20pt}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{xltabular}
+\usepackage{supertabular}
+\usepackage{epigraph}
+\setlength\epigraphwidth{13cm}
+\usepackage[center,up,labelfont=bf]{caption}
+\usepackage{float}
+\usepackage{url}
+\usepackage[acronym]{glossaries}
+\usepackage{array}
+\usepackage{xcolor,rotating}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{ulem}
+\usepackage{multirow}
+\usepackage{subfigure}
+\usepackage{sidecap}
+
+% fontenc déjà chargé ligne 5 - pas besoin de le recharger
+
+\addto\captionsfrench{\def\tablename{{\textsc{Tableau}}}}	% Renome 'table' en 'tableau'
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	filecolor=black,
+	urlcolor=black,
+	citecolor=blue,
+}
+\newcommand{\guil}[1]{«~{#1}~»}    %guillemets
+\newcommand{\guill}[1]{``{#1}''}     %guillements dans les guillemets
+%\usepackage[francais, english]%{babel}
+%------------------------------Fin Zone 1---------------------------
+\let\cite \citet
+
+\makeatletter
+\newcommand{\thechapterwords}
+{ \ifcase \thechapter\or un\or Deux\or Trois\or Quatre\or Cinq\or
+	Six\or Sept\or Eight\or Nine\or Ten\or Onze\fi}
+\def\thickhrulefill{\leavevmode \leaders \hrule height 1ex \hfill \kern \z@}
+\def\@makechapterhead#1{   \vspace*{15\p@}%
+	{\parindent \z@ \centering \reset@font
+		\hrule
+		\thickhrulefill\quad
+		\fcolorbox{black}{gray}{\color{white}\textbf{ \@chapapp{}
+				\thechapterwords}}
+		\quad \thickhrulefill
+		\quad \hrule
+		\par\nobreak
+		\vspace*{15\p@}%
+		\Huge \bfseries #1\par\nobreak
+		\par
+		\vspace*{15\p@}%
+		\hrule
+		\par
+		\vspace*{8\p@}%
+		\thickhrulefill\quad
+		\vskip 60\p@
+}}
+
+\def\@makeschapterhead#1{
+	\vspace*{10\p@}  {
+		\parindent \z@ \centering \reset@font
+		\hrule
+		\par\nobreak
+		\vspace*{2\p@}%
+		\thickhrulefill
+		\par\nobreak
+		\vspace*{6\p@}%
+		\interlinepenalty\@M
+		\hrule
+		\vspace*{15\p@}%
+		\Large{$\clubsuit$}
+		\hspace{0.3cm}
+		\Huge \bfseries #1 \hspace{0.3cm}\Large{$\clubsuit$}\par\nobreak
+		\par
+		\vspace*{15\p@}%
+		\hrule
+		\par\nobreak
+		\vspace*{2\p@}%
+		\thickhrulefill
+		\vskip 60\p@
+	}
+}
+\def\@makechapterhead#1{    \vspace*{10\p@}  {\parindent \z@ \centering
+		\reset@font
+		\hrule
+		\vspace*{10\p@}
+		\thickhrulefill\quad
+		\scshape$\star~~\star$\hspace{0.3cm}\fcolorbox{black}{gray}{\color{white}\textbf{
+				\@chapapp{}\thechapterwords}}
+		\hspace{0.3cm}$\star~~\star$
+		\quad \thickhrulefill
+		\quad \hrule
+		\par\nobreak
+		\vspace*{15\p@}%
+		\Huge \bfseries #1\par\nobreak
+		\par
+		\vspace*{15\p@}%
+		\hrule
+		\par
+		\vspace*{2\p@}%
+		\thickhrulefill
+		\par
+		\vspace*{6\p@}%
+		\hrule
+		\vskip 60\p@
+}}
+\usepackage[all]{xy}
+
+\makeindex
+% \makeglossaries désactivé car pas de glossaires dans le document (évite l'avertissement)
+% Si vous ajoutez des glossaires plus tard, décommentez cette ligne ET utilisez makeglossaries
+% \makeglossaries
+\input{ListeDesAbreviations/ListeDesAbreviations.tex}
+\begin{document}
+\begin{singlespace}
+%------------------------------Zone 2: début des page non numérotées-------------------------
+\input{PageDeGarde/PageDeGarde.tex}
+\newpage \pagenumbering{roman}%numérotation avec les chiffres romains
+%\input{Dedicaces/Dedicaces.tex}
+%\input{Remerciements/Remerciements.tex}
+%------------------------------Fin Zone 2: fin des page non numérotées---------------------------
+
+%------------------------------Zone 3:début entêtes et prieds de page-----------------------------------------
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{1pt}
+\fancyhead[R]{\scriptsize{\leftmark}}
+\fancyhead[L]{\scriptsize{\rightmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\footrulewidth}{1pt}
+\fancyfoot[L]{\footnotesize{Mémoire de Master II en Informatique}}
+\fancyfoot[R]{\footnotesize{\copyright Departement d'informatique de UY1}}
+%------------------------------Fin Zone 3: fin des entêtes et prieds de page-------------------------------------------
+
+%-----------------Zone 4: début de la numérotation avec les chiffres romains-----------------
+\selectlanguage{french}
+\tableofcontents
+\input{Resume/Resume.tex}
+\input{Resume/Abstract.tex}
+
+%\printglossary[type=\acronymtype,title=Liste des abréviations]
+\addcontentsline{toc}{chapter}{Liste des abréviations}
+\newpage
+\addcontentsline{toc}{chapter}{Table des Figures}
+\listoffigures
+\renewcommand{\listfigurename}{Table des Figures}
+\newpage
+\addcontentsline{toc}{chapter}{Liste des tableaux}
+\listoftables
+\renewcommand{\listtablename}{Liste des Tableaux}
+
+%-----------------Fin Zone 4: fin de la numérotation avec les chiffres romains-------------------
+
+%-----------------Zone 5: début de la numérotation avec les chiffres arabs-------------------
+%\mainmatter  %%%%
+\newpage \pagenumbering{arabic}% numérotation avec les chiffres arabe
+\input{IntroductionGenerale/IntroductionGenerale}	
+\input{Chapitre1/Chapitre1}
+\input{Chapitre2/Chapitre2}
+\input{Chapitre3/Chapitre3}
+%\input{Chapitre4/Chapitre4}
+\input{ConclusionGenerale/ConclusionGenerale}
+\input{Bibliographie/Bibliographie}
+%\appendix
+\newpage	\pagestyle{fancy}
+	\renewcommand{\headrulewidth}{1pt}
+
+	\fancyhead[R]{ANNEXES}
+	\fancyhead[L]{}
+	\fancyfoot[C]{\thepage}
+	\renewcommand{\footrulewidth}{1pt}
+	\fancyfoot[L]{\footnotesize{FOKOU Arnaud}}
+	\fancyfoot[R]{\copyright Mémoire de Master II en Informatique}
+%\newpage \pagenumbering{roman}%numérotation avec les chiffres romains
+%\input{Annexe/Annexe}
+%-----------------Fin Zone 5: fin de la numérotation avec les chiffres arabs---------------------
+
+\end{singlespace}
+\end {document} 

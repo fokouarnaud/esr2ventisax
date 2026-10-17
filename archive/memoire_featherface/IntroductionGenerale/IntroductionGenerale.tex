@@ -1,0 +1,104 @@
+\chapter{Introduction Générale}
+\begin{onehalfspace}
+
+\section{Contexte général d'étude}
+
+\hspace{0.65 cm}La reconnaissance faciale est devenue une technologie incontournable dans de nombreux domaines, notamment la sécurité, la biométrie, et plus récemment, les systèmes intelligents embarqués comme les smartphones. Cette technologie facilite l'authentification, la vérification de présence, et la personnalisation d'appareils, avec des applications sensibles telles que la surveillance en salle de classe, le contrôle d'accès, ou encore la gestion d'événements.
+
+\hspace{0.65 cm}Cependant, la détection précise de visages, particulièrement des petits visages en contexte mobile, reste un défi majeur. En effet, les contraintes matérielles des smartphones (ressources limitées, faible puissance de calcul, consommation énergétique) et la variabilité importante des environnements (variations d'éclairage, poses, occlusions) imposent le développement de modèles à la fois légers et robustes. Les architectures classiques lourdes telles que Faster R-CNN ou des variantes standard de YOLO, bien que précises, se révèlent souvent inadaptées à ces contraintes embarquées.
+
+\hspace{0.65 cm}Dans ce contexte, les architectures légères à une phase (Single-Shot Detectors) ont émergé comme une solution pragmatique. Elles permettent un compromis efficace entre rapidité et précision. Des modèles comme BlazeFace \cite{Zhang2019BlazeFace}, MobileFaceNets \cite{Chen2018MobileFaceNets}, ou FeatherFace \cite{Kim2025FeatherFace} se distinguent particulièrement en intégrant des mécanismes d'attention visant à améliorer la détection de petits visages.
+
+\hspace{0.65 cm}Plus récemment, les mécanismes d'attention hybride combinant l'\textbf{Efficient Channel Attention (ECA-Net)} \cite{Wang2020ECANet} et le module spatial de la \textbf{Convolutional Block Attention Module (CBAM)} \cite{Woo2018CBAM} offrent une nouvelle voie prometteuse. Le concept est d'associer une attention canal adaptative et légère (ECA) avec une attention spatiale localisée (CBAM SAM) afin de renforcer la capacité du réseau à extraire des représentations discriminantes tout en restant compact.
+
+\hspace{0.65 cm}L'application spécifique à la vérification de présence en salle de classe via smartphone introduit un cadre réaliste et exigeant pour ces modèles, nécessitant une précision élevée sur des petits visages partiellement visibles. Cette problématique guide ce mémoire vers l'étude et l'optimisation d'un modèle léger basé sur FeatherFace intégrant l'attention hybride ECA-CBAM.
+
+\section{Problématique}
+
+\hspace{0.65 cm}La détection faciale en conditions réelles sur dispositifs mobiles, en particulier pour la vérification de présence en salle de classe via smartphone, pose de nombreux défis techniques qui limitent encore les performances des systèmes actuels. D'une part, les visages à détecter sont souvent petits, partiellement occultés ou soumis à des variations d'éclairage et de pose, ce qui complique la localisation précise et fiable. D'autre part, les contraintes matérielles des smartphones~— puissance de calcul, consommation énergétique, mémoire limitée~— exigent des modèles d'apprentissage profond à la fois compacts et rapides, sans compromettre la précision.
+
+\hspace{0.65 cm}Les architectures classiques de détection faciale telles que les détecteurs à deux phases (ex. Faster R-CNN) ou même certains détecteurs à une phase populaires (ex. YOLOv5 standard) ne sont pas idéales pour le contexte embarqué à cause de leur taille et lourdeur computationnelle \cite{Zhang2019BlazeFace}.
+
+\hspace{0.65 cm}Afin de dépasser ces limitations, les recherches récentes se sont focalisées sur la conception de modèles légers (SSD) intégrant des mécanismes d'attention hybrides permettant d'améliorer la représentation des caractéristiques discriminantes dans des conditions contraignantes. Notamment, les combinaisons d'attentions ciblant à la fois les dimensions canal avec ECA-Net \cite{Wang2020ECANet} et spatiale avec CBAM SAM \cite{Woo2018CBAM} ont montré des améliorations significatives en performance et efficacité \cite{Wang2024ECACBAM, Kim2025FeatherFace}.
+
+\hspace{0.65 cm}Toutefois, plusieurs questions fondamentales restent ouvertes~:
+
+\begin{itemize}
+\item Quel est le meilleur compromis entre compacité et précision dans ces architectures hybrides pour la détection de petits visages sur mobile~?
+\item Comment optimiser et stabiliser l'apprentissage multi-phase de ces modules d'attention pour éviter la dominance d'un mécanisme au détriment de l'autre~?
+\item En quoi une approche intégrée basée sur un modèle spécifique comme FeatherFace avec attention ECA-CBAM peut-elle répondre efficacement à la problématique de la vérification de présence en milieu éducatif~?
+\end{itemize}
+
+\hspace{0.65 cm}Répondre à ces questions est essentiel pour concevoir un système efficace capable d'être déployé à large échelle dans des environnements réels, tout en répondant aux contraintes techniques des smartphones.
+
+\section{Objectifs de recherche}
+
+\hspace{0.65 cm}L'objectif principal de ce mémoire est de concevoir, implémenter et évaluer un modèle léger de détection faciale sur smartphone, optimisé par un mécanisme d'attention hybride combinant Efficient Channel Attention (ECA-Net) et Convolutional Block Attention Module Spatial Attention (CBAM SAM), dans le cadre de la vérification de présence en salle de classe.
+
+\hspace{0.65 cm}Pour atteindre cet objectif global, plusieurs objectifs spécifiques sont définis~:
+
+\begin{itemize}
+\item \textbf{Étudier les approches existantes} de détection faciale légère pour dispositifs mobiles, en mettant l'accent sur les architectures Single-Shot Detectors (SSD) et sur les modules d'attention efficaces, notamment ECA-Net et CBAM, comme bases essentielles \cite{Wang2020ECANet, Woo2018CBAM, Kim2025FeatherFace}.
+
+\item \textbf{Intégrer un mécanisme d'attention hybride ECA-CBAM} dans une architecture légère existante, telle que FeatherFace, pour améliorer la détection de petits visages dans des images capturées par smartphone \cite{Kim2025FeatherFace, Wang2024ECACBAM}.
+
+\item \textbf{Développer une stratégie d'entraînement multi-phase optimisée}, permettant de stabiliser l'apprentissage des modules d'attention hybrides, d'équilibrer leur influence et de maximiser la précision sur les visages difficiles \cite{Wang2024ECACBAM}.
+
+\item \textbf{Évaluer la performance du modèle proposé} sur des jeux de données standardisés et pertinents pour la détection mobile (ex. WIDER FACE \cite{Yang2016WIDERFACE}) ainsi que sur un cas d'usage ciblé (vérification de présence en salle de classe), en mesurant précision, rapidité d'inférence et contraintes computationnelles \cite{Zhang2019BlazeFace, Kim2025FeatherFace}.
+
+\item \textbf{Comparer les résultats obtenus avec l'état de l'art} afin de démontrer les avantages de l'attention hybride ECA-CBAM pour la reconnaissance faciale mobile, et identifier les limites pour proposer des pistes d'amélioration futures \cite{Woo2018CBAM, Wang2020ECANet}.
+\end{itemize}
+
+\section{Importance de l'étude}
+
+\hspace{0.65 cm}La reconnaissance faciale mobile est un sujet d'actualité capitale, tirant parti de la généralisation des smartphones dans tous les secteurs, y compris l'éducation. La mise en place de systèmes de \textbf{vérification de présence automatisée en salle de classe} à travers des applications mobiles présente un fort potentiel d'amélioration de la gestion et du suivi des présences, tout en garantissant une expérience utilisateur fluide et sécurisée.
+
+\hspace{0.65 cm}Cependant, les défis liés aux limitations matérielles des smartphones~— en termes de puissance de calcul, mémoire et consommation énergétique~— conjugués à la complexité des conditions réelles de détection faciale (petits visages, variations de position, luminosité, occlusions) rendent difficile la création de modèles à la fois précis et efficaces \cite{Zhang2019BlazeFace}.
+
+\hspace{0.65 cm}L'intégration des mécanismes d'\textbf{attention hybride ECA-CBAM} offre une nouvelle voie prometteuse, car elle permet d'optimiser la représentation des caractéristiques par une fusion intelligente d'attentions canal et spatiale, tout en restant légère et adaptée au déploiement mobile \cite{Wang2020ECANet, Woo2018CBAM, Kim2025FeatherFace}.
+
+\hspace{0.65 cm}Cette étude est importante car elle~:
+
+\begin{itemize}
+\item Contribue à l'avancement des \textbf{modèles légers de détection faciale}, favorisant leur déploiement dans des environnements mobiles contraints,
+\item Apporte un éclairage scientifique rigoureux à l'intégration et à l'entraînement des modules d'attention hybrides dans un cadre pratique,
+\item Facilite la conception d'applications innovantes pour l'éducation intelligente, offrant un outil automatisé, fiable et non intrusif pour le suivi des présences,
+\item Permet de combler un manque dans la littérature actuelle concernant l'évaluation pragmatique des mécanismes d'attention hybrides sur des cas d'usage réels et contraints, particulièrement en biométrie embarquée.
+\end{itemize}
+
+\hspace{0.65 cm}De plus, son impact sociétal est significatif en favorisant des solutions technologiques accessibles et à faible coût pour améliorer la qualité des services éducatifs \cite{Kim2025FeatherFace, Wang2024ECACBAM}.
+
+\section{Plan du mémoire}
+
+\hspace{0.65 cm}Ce mémoire est organisé en chapitres principaux, chacun construisant progressivement l'argumentaire scientifique et technique autour de la détection de visage sur smartphone via attention hybride ECA-CBAM~:
+
+\begin{itemize}
+\item \textbf{Chapitre 1~– Introduction générale~:} Présente le contexte, la problématique, les objectifs, l'importance de l'étude et la structure du mémoire.
+
+\item \textbf{Chapitre 2~– Revue de littérature et état de l'art~:}
+\begin{itemize}
+\item Définit les concepts fondamentaux de la reconnaissance faciale, des réseaux de neurones convolutifs, et des principes d'attention en vision par ordinateur.
+\item Présente un état de l'art détaillé sur les modèles légers, les modules d'attention (ECA-Net, CBAM, hybrides), et les déploiements mobiles récents, s'appuyant sur des études telles que Wang et al. \cite{Wang2020ECANet, Wang2024ECACBAM}, Woo et al. \cite{Woo2018CBAM}, Kim et al. \cite{Kim2025FeatherFace}, Zhang et al. \cite{Zhang2019BlazeFace}.
+\end{itemize}
+
+\item \textbf{Chapitre 3~– Matériels et méthodes~:}
+\begin{itemize}
+\item Décrit l'architecture détaillée du modèle FeatherFace, la méthodologie d'intégration du module ECA-CBAM, ainsi que la stratégie d'entraînement multi-phase \cite{Wang2024ECACBAM}.
+\item Précise les jeux de données, métriques d'évaluation, protocoles expérimentaux, et outils logiciels utilisés.
+\end{itemize}
+
+\item \textbf{Chapitre 4~– Résultats expérimentaux et discussion~:}
+\begin{itemize}
+\item Analyse et compare les performances du modèle proposé avec l'état de l'art (précision, rapidité, robustesse).
+\item Interprète les limitations, avantages, et potentialités d'application réelle.
+\item Se réfère aux résultats des approches comparées dans la littérature \cite{Kim2025FeatherFace, Wang2024ECACBAM}.
+\end{itemize}
+
+\item \textbf{Chapitre 5~– Conclusion générale et perspectives~:}
+\begin{itemize}
+\item Récapitule les principales contributions du mémoire.
+\item Propose des perspectives d'amélioration, d'extensions futures ou de transposition à d'autres domaines (biométrie, sécurité, IoT).
+\end{itemize}
+\end{itemize}
+
+\end{onehalfspace}
