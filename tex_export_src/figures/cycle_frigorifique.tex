@@ -1,0 +1,17 @@
+% Cycle frigorifique à compression de vapeur
+\begin{tikzpicture}[font=\small, >=Stealth,
+  org/.style={draw=vertnuit, fill=vertclair, rounded corners=3pt, align=center,
+              minimum width=3.2cm, minimum height=1.1cm, font=\small\bfseries},
+  hp/.style={red!75!black, line width=1.5pt, ->},
+  bp/.style={blue!70!black, line width=1.5pt, ->}]
+  \node[org] (cond) at (0,3) {Condenseur\\{\scriptsize\normalfont (unité extérieure)}};
+  \node[org] (evap) at (0,0) {Évaporateur\\{\scriptsize\normalfont (unité intérieure)}};
+  \node[org, minimum width=2.4cm] (comp) at (4.2,1.5) {Compresseur};
+  \node[org, minimum width=2.4cm] (det) at (-4.2,1.5) {Détendeur};
+  \draw[hp] (comp.north) |- node[pos=0.75, above] {vapeur HP, chaude} (cond.east);
+  \draw[hp] (cond.west) -| node[pos=0.25, above] {liquide HP} (det.north);
+  \draw[bp] (det.south) |- node[pos=0.75, below] {mélange BP, froid} (evap.west);
+  \draw[bp] (evap.east) -| node[pos=0.25, below] {vapeur BP} (comp.south);
+  \draw[->, orange!80!black, line width=1pt] (0,4.0) -- ++(0,0.8) node[above] {chaleur rejetée à l'extérieur};
+  \draw[<-, teal, line width=1pt] (0,-0.6) -- ++(0,-0.8) node[below] {chaleur absorbée dans la pièce};
+\end{tikzpicture}

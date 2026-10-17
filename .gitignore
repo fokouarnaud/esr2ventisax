@@ -81,3 +81,8 @@ exemple_rapport/
 *.fdb_latexmk
 *.synctex.gz
 *.xdv
+
+# Rapport : figures TikZ compilées pour la présentation (régénérables)
+tex_export_src/outils/_build/
+*.bcf
+*.run.xml

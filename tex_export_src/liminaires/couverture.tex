@@ -1,0 +1,74 @@
+% =============================================================================
+%  COUVERTURE — jamais paginée. Champs exigés par le cours (module 2, §1) :
+%  stagiaire, titre, type de rapport, responsables pro/académique (nom + poste),
+%  noms et logos entreprise/centre, formation/diplôme, année d'étude, période.
+% =============================================================================
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  \draw[vertfonce,line width=2.5pt]
+    ($(current page.north west)+(1.2cm,-1.2cm)$) rectangle ($(current page.south east)+(-1.2cm,1.2cm)$);
+  \draw[vertmoyen,line width=0.8pt]
+    ($(current page.north west)+(1.45cm,-1.45cm)$) rectangle ($(current page.south east)+(-1.45cm,1.45cm)$);
+\end{tikzpicture}
+\singlespacing\centering\vspace*{-1.4cm}
+
+{\scriptsize
+\begin{minipage}[t]{0.42\textwidth}\centering
+  \textbf{RÉPUBLIQUE DU CAMEROUN}\\ Paix -- Travail -- Patrie\\ \rule{1.5cm}{0.3pt}\\
+  \textbf{MINISTÈRE DE L'EMPLOI ET DE LA FORMATION PROFESSIONNELLE}\\ \rule{1.5cm}{0.3pt}\\
+  Direction de la Formation et de l'Orientation Professionnelles
+\end{minipage}\hfill
+\begin{minipage}[t]{0.42\textwidth}\centering
+  \textbf{REPUBLIC OF CAMEROON}\\ Peace -- Work -- Fatherland\\ \rule{1.5cm}{0.3pt}\\
+  \textbf{MINISTRY OF EMPLOYMENT AND VOCATIONAL TRAINING}\\ \rule{1.5cm}{0.3pt}\\
+  Department of Vocational Training and Guidance
+\end{minipage}}
+
+\vspace{0.5cm}
+\begin{minipage}[c]{0.3\textwidth}\centering
+  \includegraphics[height=2.4cm]{img/logo_cfp.png}\\[2pt]{\scriptsize\InfoCFP}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.36\textwidth}\centering
+  \textbf{\small EXAMENS NATIONAUX DE FIN DE CYCLE DE FORMATION PROFESSIONNELLE}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.3\textwidth}\centering
+  \includegraphics[height=2.4cm]{img/logo_entreprise.png}\\[2pt]{\scriptsize\InfoEntreprise}
+\end{minipage}
+
+\vspace{0.6cm}
+{\large\bfseries RAPPORT DE STAGE DE FIN DE FORMATION\par}
+\vspace{0.3cm}
+\begin{tikzpicture}
+  \node[draw=vertfonce,line width=1.5pt,rounded corners=12pt,
+        top color=vertclair,bottom color=vertmoyen!70,text=vertnuit,
+        align=center,inner xsep=20pt,inner ysep=10pt,text width=12.5cm]
+  {{\large\bfseries Thème : \MakeUppercase{\InfoTheme}}\\[4pt]
+   {\normalsize\InfoSousTheme}\\[4pt]
+   {\normalsize Cas de : \InfoEntrepriseSigle{} au chantier \InfoChantier}};
+\end{tikzpicture}
+
+\vspace{0.5cm}
+{\normalsize Rapport de stage effectué à \InfoEntreprise\\
+du \InfoDateDebut{} au \InfoDateFin{} (\InfoDuree)\par}
+\vspace{0.3cm}
+{\normalsize\textbf{SPÉCIALITÉ : \MakeUppercase{\InfoSpecialite}}\\
+Formation : \InfoDiplome{} \;--\; \InfoAnneeEtude\par}
+
+\vspace{0.6cm}
+{\normalsize Rédigé et présenté par :\\[2pt]
+{\large\bfseries \InfoEtudiant}\\ Apprenant au \InfoCFPSigle\par}
+
+\vspace{0.6cm}
+\begin{minipage}[t]{0.46\textwidth}\centering
+  \textbf{\underline{RESPONSABLE ACADÉMIQUE}}\\[3pt]
+  \InfoTuteurAcad\\ {\small\itshape\InfoTuteurAcadPoste}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.46\textwidth}\centering
+  \textbf{\underline{RESPONSABLE PROFESSIONNEL}}\\[3pt]
+  \InfoTuteurPro\\ {\small\itshape\InfoTuteurProPoste}
+\end{minipage}
+
+\vfill
+\tikz\node[fill=vertfonce,text=white,font=\bfseries,rounded corners=6pt,inner xsep=14pt,inner ysep=5pt]{Session \InfoSession};
+\end{titlepage}

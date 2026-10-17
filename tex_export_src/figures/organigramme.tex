@@ -1,0 +1,33 @@
+% Organigramme fonctionnel (à adapter à l'entreprise réelle)
+\begin{tikzpicture}[
+  font=\scriptsize\bfseries, node distance=6mm and 3mm,
+  bloc/.style={draw=vertfonce, fill=vertclair, rounded corners=3pt, align=center,
+               minimum height=8mm, text width=2.15cm, inner sep=2pt},
+  lien/.style={-{Stealth[length=2mm]}, vertfonce, line width=0.6pt}]
+  \node[bloc, fill=vertfonce, text=white, text width=3.2cm] (dg) {Directeur général};
+  \node[bloc, left=1.4cm of dg] (dt) {Directeur technique};
+  \node[bloc, right=1.4cm of dg, text width=2.6cm] (ct) {Conducteur des travaux\\chargé d'études};
+  \node[bloc, below=17mm of dg, xshift=-5.0cm] (d1) {Division\\climatisation};
+  \node[bloc, right=of d1] (d2) {Division\\plomberie};
+  \node[bloc, right=of d2] (d3) {Division\\électricité};
+  \node[bloc, right=of d3] (d4) {Division réseaux\\et gaines};
+  \node[bloc, right=of d4] (d5) {Division\\génie civil};
+  \node[bloc, below=of d1] (e1) {Chef d'équipe\\climatisation};
+  \node[bloc, below=of d2] (e2) {Chef d'équipe\\plomberie};
+  \node[bloc, below=of d3] (e3) {Chef d'équipe\\électricité};
+  \node[bloc, below=of d4] (e4) {Magasinier};
+  \node[bloc, below=of d5] (e5) {Logistique\\chauffeur};
+  \node[bloc, below=of e2, text width=4.4cm, xshift=1.2cm] (tech) {Techniciens};
+  \node[bloc, below=of tech, text width=4.4cm] (man) {Manœuvres};
+  \node[bloc, right=6mm of tech, fill=vertmoyen, text=white] (stg) {STAGIAIRE};
+  \draw[lien] (dg) -- (dt);
+  \draw[lien] (dg) -- (ct);
+  \coordinate (bus) at ($(dg.south)+(0,-11mm)$);
+  \draw[vertfonce, line width=0.6pt] (dg.south) -- (bus);
+  \draw[vertfonce, line width=0.6pt] (bus -| d1.north) -- (bus -| d5.north);
+  \foreach \d in {d1,d2,d3,d4,d5} \draw[lien] (bus -| \d.north) -- (\d.north);
+  \foreach \d/\e in {d1/e1,d2/e2,d3/e3,d4/e4,d5/e5} \draw[lien] (\d) -- (\e);
+  \draw[lien] (e2.south) -- (e2.south |- tech.north);
+  \draw[lien] (tech) -- (man);
+  \draw[lien, dashed, vertmoyen] (e2.south east) -- (stg.north west);
+\end{tikzpicture}
