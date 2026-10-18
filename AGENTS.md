@@ -41,7 +41,7 @@ outils/                  # scripts de génération (images factices, présentati
   Les valeurs encore inconnues s'écrivent `\AC{texte}`, qui s'affiche « [À COMPLÉTER : texte] »
   en orange. Avant le rendu final, chercher `\AC{` dans tout le dossier.
 - **Images factices** : `img/fig_*.png` sont générées par `outils/generer_images_factices.py`.
-  Elles portent la mention « IMAGE À REMPLACER ». Les `\includegraphics` et `igureimg` les appellent
+  Elles portent la mention « IMAGE À REMPLACER ». Les `\includegraphics` et `\figureimg` les appellent
   **sans extension** (`img/fig_manometre`) : `importer_dossier` supprime la factice `.png` quand la photo
   `img/fig_<slug>.jpg` du même nom arrive, et le plan de situation du siège devient `img/fig_localisation.png`.
 - **Schémas** : en TikZ dans `figures/`, de vraies figures modifiables.
