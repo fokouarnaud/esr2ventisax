@@ -216,9 +216,9 @@ Les deux scripts fonctionnent seuls, de part et d'autre d'une rédaction faite �
 
 ```powershell
 # importer + contrôler ; la dernière ligne affiche DOSSIER=<chemin du rapport>
-powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skillsapport-dossier-terrain\scripts\preparer.ps1" -Zip <zip> [-SansCarte] [-Force]
+powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\rapport-dossier-terrain\scripts\preparer.ps1" -Zip <zip> [-SansCarte] [-Force]
 # compiler + présenter + bilan des \AC{}
-powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skillsapport-dossier-terrain\scriptsinaliser.ps1" -Dossier <DOSSIER> [-SansPresentation]
+powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\rapport-dossier-terrain\scripts\finaliser.ps1" -Dossier <DOSSIER> [-SansPresentation]
 ```
 
 | Code de sortie | Signification |
