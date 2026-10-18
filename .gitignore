@@ -86,3 +86,9 @@ exemple_rapport/
 tex_export_src/outils/_build/
 *.bcf
 *.run.xml
+
+# ==============================================================================
+# 🗂️ Carnet de stage (webapp) : aucune donnée réelle d'apprenant versionnée (A14, A21)
+# ==============================================================================
+rapports/
+*.zip
