@@ -1,0 +1,56 @@
+/* Admin Unfold aux couleurs ventisax : police Lexend et tableau de bord du Carnet de stage.
+   Les couleurs viennent de UNFOLD["COLORS"] (variables --color-primary-*, --color-base-*). */
+
+:root { --font-sans: "Lexend", system-ui, sans-serif; }
+
+.carnet-pile { display: grid; gap: 24px; }
+
+.carnet-bloc {
+  border: 1px solid var(--color-base-200);
+  border-radius: 24px;
+  padding: 20px;
+  background: var(--color-base-50);
+}
+.dark .carnet-bloc { border-color: var(--color-base-800); background: var(--color-base-900); }
+
+.carnet-entete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.carnet-entete h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; color: var(--color-base-900); }
+.dark .carnet-entete h2 { color: var(--color-base-100); }
+.carnet-entete p { margin: 2px 0 0; color: var(--color-base-500); font-size: .875rem; }
+
+.carnet-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.carnet-bouton {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--color-base-200); color: var(--color-base-700); font-weight: 500; font-size: .875rem;
+  white-space: nowrap; background: var(--color-base-50);
+}
+.carnet-bouton:hover { background: var(--color-base-100); }
+.carnet-bouton--principal { background: #0b2d46; border-color: #0b2d46; color: #fcfefe; }
+.carnet-bouton--principal:hover { background: #173f58; }
+.dark .carnet-bouton { border-color: var(--color-base-700); color: var(--color-base-200); background: transparent; }
+.dark .carnet-bouton--principal { background: #68ddce; border-color: #68ddce; color: #0b2d46; }
+
+.carnet-indicateurs { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+@media (min-width: 1024px) { .carnet-indicateurs { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.carnet-indicateur { border-radius: 20px; padding: 14px 16px; background: var(--color-base-100); margin: 0; }
+.dark .carnet-indicateur { background: var(--color-base-800); }
+.carnet-indicateur dt { font-size: .8rem; color: var(--color-base-500); }
+.carnet-indicateur dd { margin: 4px 0 0; font-size: 1.5rem; font-weight: 600; color: var(--color-base-900); font-variant-numeric: tabular-nums; }
+.dark .carnet-indicateur dd { color: var(--color-base-100); }
+.carnet-indicateur--alerte { background: #fff0c2; }
+.carnet-indicateur--alerte dd, .carnet-indicateur--alerte dt { color: #53410a; }
+.dark .carnet-indicateur--alerte { background: #3a300f; }
+.dark .carnet-indicateur--alerte dd, .dark .carnet-indicateur--alerte dt { color: #f6dd98; }
+
+.carnet-details { margin-top: 16px; }
+.carnet-details summary { cursor: pointer; font-weight: 500; }
+.carnet-details ul { columns: 2 260px; margin: 10px 0 0; padding-left: 18px; color: var(--color-base-600); font-size: .875rem; }
+.dark .carnet-details ul { color: var(--color-base-300); }
+
+.carnet-disque { display: flex; gap: 12px; align-items: center; }
+.carnet-disque strong { font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.carnet-lien { color: var(--color-primary-700); text-decoration: underline; text-underline-offset: 3px; }
+.dark .carnet-lien { color: var(--color-primary-400); }
+
+/* Journal sur mobile : l'aperçu de la note garde une largeur lisible, le tableau défile dans son cadre */
+@media (max-width: 767px) { #result_list .field-apercu { min-width: 15rem; } }

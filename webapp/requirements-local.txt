@@ -1,0 +1,3 @@
+-r requirements.txt
+# Uniquement en local (import et plans de situation), jamais sur PythonAnywhere
+staticmap==0.5.7

@@ -1,0 +1,50 @@
+{% extends "carnet/base.html" %}
+{% block titre %}Tri des photos | Carnet de stage{% endblock %}
+
+{% block contenu %}
+<div class="titre-page">
+    <h1>Tri des photos</h1>
+    <p>Choisissez ce qui ira dans le rapport. Seules les photos « Corps » et « Annexe » sont exportées.</p>
+</div>
+
+<nav class="filtres" aria-label="Filtrer par destination">
+    <a href="{% url 'carnet:tri_photos' %}" {% if not filtre %}aria-current="true"{% endif %}>Toutes<span class="compte">{{ total }}</span></a>
+    {% for valeur, libelle, n in filtres %}
+    <a href="?destination={{ valeur }}" {% if filtre == valeur %}aria-current="true"{% endif %}>{{ libelle }}<span class="compte">{{ n }}</span></a>
+    {% endfor %}
+</nav>
+
+{% if photos %}
+<ul class="grille-photos">
+    {% for photo in photos %}
+    <li class="photo" id="photo-{{ photo.pk }}">
+        <img src="{{ photo.fichier.url }}" alt="{{ photo.legende|default:'Photo sans légende' }}" loading="lazy" width="480" height="360">
+        <div class="photo__corps">
+            <p class="photo__legende {% if not photo.legende %}photo__legende--vide{% endif %}">{{ photo.legende|default:"Sans légende" }}</p>
+            <p class="photo__meta">{% if photo.prise_le %}{{ photo.prise_le|date:"j M Y, H:i" }}{% else %}Date inconnue{% endif %}{% if photo.slug %} | fig_{{ photo.slug }}{% endif %}</p>
+            {% with manque=photo.problemes_export %}{% if manque %}
+            <p class="photo__manque"><span class="icone" aria-hidden="true">warning</span>{{ manque|join:", "|capfirst }}</p>
+            {% endif %}{% endwith %}
+            <form method="post" action="{% url 'carnet:destination_photo' photo.pk %}" class="segments" aria-label="Destination">
+                {% csrf_token %}
+                <input type="hidden" name="suivant" value="{{ request.get_full_path }}#photo-{{ photo.pk }}">
+                {% for valeur, libelle, court in destinations %}
+                <button name="destination" value="{{ valeur }}" title="{{ libelle }}" aria-label="{{ libelle }}"
+                        aria-pressed="{% if photo.destination == valeur %}true{% else %}false{% endif %}">{{ court }}</button>
+                {% endfor %}
+            </form>
+            <a class="bouton bouton--contour bouton--petit" href="{% url 'admin:carnet_photo_change' photo.pk %}">
+                <span class="icone" aria-hidden="true">edit</span>Légende et slug</a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="carte vide">
+    <span class="icone" aria-hidden="true">photo_library</span>
+    <h2>{% if filtre %}Aucune photo dans cette catégorie{% else %}Aucune photo pour l'instant{% endif %}</h2>
+    <p>Les photos prises depuis la note rapide arrivent ici, prêtes à être triées.</p>
+    <a class="bouton" href="{% url 'carnet:note_rapide' %}"><span class="icone" aria-hidden="true">photo_camera</span>Nouvelle note</a>
+</div>
+{% endif %}
+{% endblock %}

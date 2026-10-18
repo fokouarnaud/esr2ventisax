@@ -1,0 +1,89 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+
+{% block title %}Tableau de bord | {{ site_title }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="carnet-pile">
+    {% if carnet_disque %}
+    <section class="carnet-bloc">
+        <div class="carnet-disque">
+            <span class="material-symbols-outlined" aria-hidden="true">storage</span>
+            <div>
+                <h2 class="font-semibold">Occupation du disque</h2>
+                <p><strong>{{ carnet_disque.octets|filesizeformat }}</strong> sur 512 Mo ({% widthratio carnet_disque.ratio 1 100 %} %)
+                {% if carnet_disque.alerte %}: au-delà de 80 %, demandez aux apprenants de trier leurs photos.{% endif %}</p>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if carnet_stage %}
+    {% with i=carnet_indicateurs %}
+    <section class="carnet-bloc">
+        <div class="carnet-entete">
+            <div>
+                <h2>{{ carnet_stage.intitule }}</h2>
+                <p>Du {{ carnet_stage.date_debut|date:"j F Y" }} au {{ carnet_stage.date_fin|date:"j F Y" }}{% if carnet_stage.entreprise %}, {{ carnet_stage.entreprise }}{% endif %}</p>
+            </div>
+            <div class="carnet-actions">
+                <a class="carnet-bouton carnet-bouton--principal" href="{% url 'carnet:note_rapide' %}">
+                    <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>Note rapide</a>
+                <a class="carnet-bouton" href="{% url 'carnet:tri_photos' %}">
+                    <span class="material-symbols-outlined" aria-hidden="true">photo_library</span>Trier les photos</a>
+                <a class="carnet-bouton" href="{% url 'carnet:export' carnet_stage.pk %}">
+                    <span class="material-symbols-outlined" aria-hidden="true">download</span>Dossier terrain</a>
+            </div>
+        </div>
+        <dl class="carnet-indicateurs">
+            <div class="carnet-indicateur {% if i.notes_non_completees %}carnet-indicateur--alerte{% endif %}">
+                <dt>Notes à compléter</dt><dd>{{ i.notes_non_completees }}</dd></div>
+            <div class="carnet-indicateur {% if i.jours_sans_note %}carnet-indicateur--alerte{% endif %}">
+                <dt>Jours sans note</dt><dd>{{ i.jours_sans_note|length }}</dd></div>
+            <div class="carnet-indicateur"><dt>Rubriques du cours remplies</dt>
+                <dd>{{ carnet_rubriques_remplies }} / {{ carnet_rubriques_total }}</dd></div>
+            <div class="carnet-indicateur"><dt>Présence</dt><dd>{% widthratio i.taux_presence 1 100 %} %</dd></div>
+            <div class="carnet-indicateur {% if i.photos.trop_dans_le_corps %}carnet-indicateur--alerte{% endif %}">
+                <dt>Photos corps / annexe</dt><dd>{{ i.photos.par_destination.corps }} / {{ i.photos.par_destination.annexe }}</dd></div>
+            <div class="carnet-indicateur {% if i.photos.par_destination.a_trier %}carnet-indicateur--alerte{% endif %}">
+                <dt>Photos à trier</dt><dd>{{ i.photos.par_destination.a_trier }}</dd></div>
+            <div class="carnet-indicateur"><dt>Espace utilisé</dt>
+                <dd>{{ i.quota.utilise|filesizeformat }}</dd></div>
+            <div class="carnet-indicateur {% if i.sauvegarde.alerte %}carnet-indicateur--alerte{% endif %}">
+                <dt>Dernière sauvegarde</dt>
+                <dd>{% if i.sauvegarde.jours is None %}Jamais{% elif i.sauvegarde.jours == 0 %}Aujourd'hui{% else %}Il y a {{ i.sauvegarde.jours }} j{% endif %}</dd></div>
+        </dl>
+        {% if i.rubriques_vides %}
+        <details class="carnet-details">
+            <summary>Voir les {{ i.rubriques_vides|length }} rubriques encore vides</summary>
+            <ul>{% for code in i.rubriques_vides %}<li>{{ code }}</li>{% endfor %}</ul>
+        </details>
+        {% endif %}
+    </section>
+    {% endwith %}
+    {% elif not carnet_stages_suivis %}
+    <section class="carnet-bloc">
+        <div class="carnet-entete">
+            <div><h2>Bienvenue</h2><p>Commencez par décrire votre stage : entreprise, dates, thème.</p></div>
+            <a class="carnet-bouton carnet-bouton--principal" href="{% url 'admin:carnet_stage_add' %}">
+                <span class="material-symbols-outlined" aria-hidden="true">add</span>Créer mon stage</a>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if carnet_stages_suivis %}
+    <section class="carnet-bloc">
+        <div class="carnet-entete"><div><h2>Stages suivis</h2><p>Lecture seule, remarques possibles sur chaque note.</p></div></div>
+        <ul>{% for s in carnet_stages_suivis %}
+            <li><a class="carnet-lien" href="{% url 'admin:carnet_entreejournal_changelist' %}?stage__id__exact={{ s.pk }}">{{ s }}</a></li>
+        {% endfor %}</ul>
+    </section>
+    {% endif %}
+
+    {% include "unfold/helpers/app_list_default.html" %}
+</div>
+{% endblock %}

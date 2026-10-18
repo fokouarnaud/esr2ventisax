@@ -1,0 +1,276 @@
+/* Carnet de stage : pages hors admin (note rapide, tri des photos).
+   Charte ventisax.pythonanywhere.com : Lexend, marine + turquoise, cartes 24px, champs 12px, boutons pilule. */
+
+:root {
+  --marine: #0b2d46;
+  --marine-doux: #173f58;
+  --turquoise: #68ddce;
+  --turquoise-encre: #0d665e;
+  --turquoise-voile: #e3f4f1;
+  --encre: #13212c;
+  --discret: #4a5d69;
+  --papier: #f4f7f8;
+  --surface: #fcfefe;
+  --trait: #e1e7ea;
+  --brume: #e9eff1;
+  --bouton-fond: var(--marine);
+  --bouton-fond-survol: var(--marine-doux);
+  --bouton-texte: #fcfefe;
+  --avis-fond: #fff0c2;
+  --avis-encre: #53410a;
+  --erreur-fond: #fff1f1;
+  --erreur-encre: #9d2b2b;
+  --succes-fond: #e3f4f1;
+  --succes-encre: #0d665e;
+  --ombre: 0 1px 2px rgb(11 45 70 / .06), 0 8px 24px rgb(11 45 70 / .06);
+  --r-carte: 24px;
+  --r-surface: 20px;
+  --r-champ: 12px;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --encre: #e4edf1;
+    --discret: #a7bac4;
+    --papier: #0a1c28;
+    --surface: #10283a;
+    --trait: #234053;
+    --brume: #16324a;
+    --turquoise-encre: #68ddce;
+    --turquoise-voile: #12393b;
+    --bouton-fond: #68ddce;
+    --bouton-fond-survol: #8fe7dc;
+    --bouton-texte: #0b2d46;
+    --avis-fond: #3a300f;
+    --avis-encre: #f6dd98;
+    --erreur-fond: #3a1618;
+    --erreur-encre: #ffb4b4;
+    --succes-fond: #12393b;
+    --succes-encre: #68ddce;
+    --ombre: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .25);
+  }
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; } /* sinon .bouton { display:inline-flex } l'emporte sur l'attribut */
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  background: var(--papier);
+  color: var(--encre);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--turquoise-encre); text-underline-offset: 3px; }
+h1, h2 { line-height: 1.15; letter-spacing: -0.02em; margin: 0; }
+h1 { font-size: clamp(1.6rem, 4vw + .6rem, 2.1rem); font-weight: 600; }
+h2 { font-size: 1.05rem; font-weight: 600; }
+
+.icone {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.25em;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: -0.2em;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+}
+
+.visuellement-cache {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* --- En-tête -------------------------------------------------------------------- */
+.entete {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--papier) 88%, transparent);
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  border-bottom: 1px solid var(--trait);
+}
+.entete__interieur {
+  max-width: 1160px; margin: 0 auto; padding: 0 16px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.marque {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--encre);
+  font-weight: 600; letter-spacing: -0.01em; white-space: nowrap;
+}
+.marque__pastille {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px;
+  background: var(--turquoise-voile); color: var(--turquoise-encre);
+}
+.nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.nav a {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px;
+  color: var(--discret); text-decoration: none; font-size: .9rem; white-space: nowrap;
+}
+.nav a:hover { background: var(--brume); color: var(--encre); }
+.nav a[aria-current="page"] { background: var(--turquoise-voile); color: var(--turquoise-encre); font-weight: 500; }
+@media (max-width: 520px) {
+  /* Libellé masqué à l'écran mais lu par les lecteurs d'écran (sinon le lien s'annonce « edit_note ») */
+  .nav a span:not(.icone) {
+    position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .nav a { padding: 8px 10px; }
+}
+
+/* --- Mise en page ----------------------------------------------------------------- */
+.page { max-width: 1160px; margin: 0 auto; padding: 24px 16px 120px; }
+.page--etroite { max-width: 640px; }
+.titre-page { display: grid; gap: 4px; margin-bottom: 20px; }
+.titre-page p { margin: 0; color: var(--discret); }
+
+.carte {
+  background: var(--surface); border: 1px solid var(--trait); border-radius: var(--r-carte);
+  box-shadow: var(--ombre); padding: 20px;
+}
+.pile { display: grid; gap: 20px; }
+
+/* --- Messages ---------------------------------------------------------------------- */
+.messages { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 8px; }
+.messages li, .alerte {
+  display: flex; gap: 10px; align-items: flex-start; padding: 12px 16px; border-radius: var(--r-surface);
+  background: var(--avis-fond); color: var(--avis-encre); margin: 0;
+}
+.messages .success { background: var(--succes-fond); color: var(--succes-encre); }
+.messages .error, .alerte--erreur { background: var(--erreur-fond); color: var(--erreur-encre); }
+
+/* --- Formulaires ------------------------------------------------------------------------ */
+.champ { display: grid; gap: 8px; }
+.champ > label, .libelle { font-weight: 500; font-size: .95rem; }
+.aide { font-size: .85rem; color: var(--discret); margin: 0; }
+.erreur-champ { font-size: .875rem; color: var(--erreur-encre); margin: 0; }
+
+textarea, select {
+  width: 100%; font: inherit; color: var(--encre); background: var(--papier);
+  border: 1px solid var(--trait); border-radius: var(--r-champ); padding: 12px 14px;
+}
+textarea { min-height: 9rem; resize: vertical; }
+textarea[aria-invalid="true"] { border-color: var(--erreur-encre); background: var(--erreur-fond); }
+textarea::placeholder { color: var(--discret); opacity: 1; }
+textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible, .choix input:focus-visible + span {
+  outline: 3px solid color-mix(in srgb, var(--turquoise) 70%, transparent); outline-offset: 2px;
+}
+
+.selecteur-stage { display: flex; gap: 8px; align-items: center; }
+.selecteur-stage select { padding: 8px 12px; border-radius: 999px; background: var(--surface); }
+
+/* --- Boutons ------------------------------------------------------------------------------ */
+.bouton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 20px; border-radius: 999px; border: 1px solid transparent;
+  font: inherit; font-weight: 500; text-decoration: none; cursor: pointer; white-space: nowrap;
+  background: var(--bouton-fond); color: var(--bouton-texte);
+  transition: background-color .2s ease, transform .1s ease;
+}
+.bouton:hover { background: var(--bouton-fond-survol); }
+.bouton:active { transform: translateY(1px); }
+.bouton[disabled] { opacity: .6; cursor: progress; }
+.bouton--contour { background: var(--surface); color: var(--encre); border-color: var(--trait); }
+.bouton--contour:hover { background: var(--brume); }
+.bouton--plein { width: 100%; }
+.bouton--petit { min-height: 36px; padding: 0 14px; font-size: .875rem; }
+
+.boutons-photo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.boutons-photo label { cursor: pointer; position: relative; }
+.boutons-photo .bouton { width: 100%; }
+.boutons-photo input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.boutons-photo input:focus-visible + .bouton { outline: 3px solid color-mix(in srgb, var(--turquoise) 70%, transparent); }
+
+.vignettes { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
+.vignettes:empty { display: none; }
+.vignettes img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--r-champ); display: block; }
+
+/* --- Pastille d'état (GPS, quota) : état réel, pas de décoration --------------------------- */
+.etats { display: flex; flex-wrap: wrap; gap: 8px; }
+.etat {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+  background: var(--brume); color: var(--discret); font-size: .85rem;
+}
+.etat--ok { background: var(--turquoise-voile); color: var(--turquoise-encre); }
+.etat--alerte { background: var(--avis-fond); color: var(--avis-encre); }
+.etat button {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer;
+}
+
+/* --- Étiquettes ------------------------------------------------------------------------------- */
+details.etiquettes { border: 1px solid var(--trait); border-radius: var(--r-surface); padding: 0; }
+details.etiquettes summary {
+  cursor: pointer; list-style: none; padding: 14px 16px; display: flex; justify-content: space-between;
+  align-items: center; font-weight: 500;
+}
+details.etiquettes summary::-webkit-details-marker { display: none; }
+details.etiquettes[open] summary .icone { transform: rotate(180deg); }
+.etiquettes__corps { padding: 0 16px 16px; display: grid; gap: 14px; }
+.groupe-etiquettes h3 { font-size: .8rem; font-weight: 500; color: var(--discret); margin: 0 0 8px; }
+.choix-liste { display: flex; flex-wrap: wrap; gap: 6px; }
+.choix { position: relative; }
+.choix input { position: absolute; opacity: 0; inset: 0; }
+.choix span {
+  display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--trait);
+  font-size: .85rem; background: var(--surface); cursor: pointer;
+}
+.choix input:checked + span { background: var(--turquoise-voile); border-color: var(--turquoise-encre); color: var(--turquoise-encre); }
+
+/* --- Barre d'action collée en bas sur mobile ------------------------------------------------ */
+.action-fixe {
+  position: sticky; bottom: 0; padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--papier) 70%, transparent);
+}
+.liens-bas { display: flex; justify-content: center; gap: 16px; font-size: .9rem; color: var(--discret); }
+
+/* --- Tri des photos ---------------------------------------------------------------------------- */
+.filtres { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 20px; scrollbar-width: none; }
+.filtres::-webkit-scrollbar { display: none; }
+.filtres a {
+  padding: 8px 14px; border-radius: 999px; border: 1px solid var(--trait); background: var(--surface);
+  color: var(--encre); text-decoration: none; font-size: .9rem; white-space: nowrap;
+}
+.filtres a[aria-current="true"] { background: var(--marine); border-color: var(--marine); color: #fcfefe; }
+@media (prefers-color-scheme: dark) {
+  .filtres a[aria-current="true"] { background: var(--turquoise); border-color: var(--turquoise); color: var(--marine); }
+}
+.filtres .compte { opacity: .7; margin-left: 4px; }
+
+.grille-photos { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.photo {
+  background: var(--surface); border: 1px solid var(--trait); border-radius: var(--r-carte);
+  overflow: hidden; display: grid; grid-template-rows: auto 1fr;
+}
+.photo img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--brume); }
+.photo__corps { padding: 14px 16px 16px; display: grid; gap: 10px; align-content: start; }
+.photo__legende { margin: 0; font-weight: 500; }
+.photo__legende--vide { color: var(--discret); font-weight: 400; font-style: italic; }
+.photo__meta { margin: 0; font-size: .8rem; color: var(--discret); }
+.photo__manque { margin: 0; font-size: .85rem; color: var(--erreur-encre); display: flex; gap: 6px; align-items: center; }
+
+.segments { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.segments button {
+  font: inherit; font-size: .8rem; min-height: 36px; padding: 0 8px; border-radius: 999px;
+  border: 1px solid var(--trait); background: var(--papier); color: var(--encre); cursor: pointer;
+}
+.segments button:hover { background: var(--brume); }
+.segments button[aria-pressed="true"] { background: var(--marine); border-color: var(--marine); color: #fcfefe; }
+@media (prefers-color-scheme: dark) {
+  .segments button[aria-pressed="true"] { background: var(--turquoise); border-color: var(--turquoise); color: var(--marine); }
+}
+
+.vide { text-align: center; padding: 48px 20px; display: grid; gap: 12px; justify-items: center; }
+.vide > .icone { font-size: 2.5rem; color: var(--turquoise-encre); }
+.vide p { margin: 0; color: var(--discret); max-width: 40ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

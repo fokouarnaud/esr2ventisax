@@ -1,0 +1,89 @@
+{% extends "carnet/base.html" %}
+{% load static %}
+{% block titre %}Note rapide | Carnet de stage{% endblock %}
+{% block largeur %}page--etroite{% endblock %}
+
+{% block contenu %}
+<div class="titre-page">
+    <h1>Note rapide</h1>
+    <p>{{ maintenant|date:"l j F, H:i"|capfirst }}</p>
+</div>
+
+<form class="selecteur-stage" method="post" action="{% url 'carnet:stage_actif' %}" style="margin-bottom:16px">
+    {% csrf_token %}
+    <label class="visuellement-cache" for="choix-stage">Stage</label>
+    <select id="choix-stage" name="stage">
+        {% for s in stages %}<option value="{{ s.pk }}" {% if s.pk == stage.pk %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+    <button class="bouton bouton--contour bouton--petit" type="submit">Changer</button>
+</form>
+
+<form id="note-rapide" class="pile" method="post" enctype="multipart/form-data"
+      data-stage="{{ stage.pk }}" data-enregistree="{{ enregistree|yesno:'1,0' }}" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <p class="alerte alerte--erreur" role="alert"><span class="icone" aria-hidden="true">error</span>{{ form.non_field_errors|join:" " }}</p>
+    {% endif %}
+
+    <div class="carte pile">
+        <div class="champ">
+            <label for="{{ form.texte.id_for_label }}">Ce que vous avez fait, vu ou appris</label>
+            <textarea id="{{ form.texte.id_for_label }}" name="texte" rows="5"
+                      aria-describedby="aide-texte{% if form.texte.errors %} erreur-texte{% endif %}"
+                      {% if form.texte.errors %}aria-invalid="true"{% endif %}>{{ form.texte.value|default_if_none:"" }}</textarea>
+            <p class="aide" id="aide-texte">Quelques phrases suffisent : vous compléterez au calme dans le tableau de bord.</p>
+            <p class="aide" id="brouillon-restaure" hidden>Brouillon restauré.</p>
+            {% for e in form.texte.errors %}<p class="erreur-champ" id="erreur-texte">{{ e }}</p>{% endfor %}
+        </div>
+
+        <div class="champ">
+            <span class="libelle">Photos</span>
+            <div class="boutons-photo">
+                <label>
+                    <input type="file" name="photos" accept="image/*" capture="environment">
+                    <span class="bouton bouton--contour"><span class="icone" aria-hidden="true">photo_camera</span>Prendre</span>
+                </label>
+                <label>
+                    <input type="file" name="photos" accept="image/*" multiple>
+                    <span class="bouton bouton--contour"><span class="icone" aria-hidden="true">add_photo_alternate</span>Galerie</span>
+                </label>
+            </div>
+            <div id="vignettes" class="vignettes" aria-live="polite"></div>
+            <p class="aide" id="compte-photos" aria-live="polite"></p>
+        </div>
+
+        <div class="etats">
+            <span id="etat-gps" class="etat" role="status"><span class="icone" aria-hidden="true">location_off</span> Position non captée</span>
+            <span class="etat {% if restant_mo < 5 %}etat--alerte{% endif %}">
+                <span class="icone" aria-hidden="true">cloud</span> {{ restant_mo|floatformat:1 }} Mo disponibles
+            </span>
+        </div>
+        {{ form.latitude }}{{ form.longitude }}
+    </div>
+
+    <details class="etiquettes carte" style="padding:0">
+        <summary>Étiquettes du rapport <span class="icone" aria-hidden="true">expand_more</span></summary>
+        <div class="etiquettes__corps">
+            <p class="aide">Facultatif : indique la partie du rapport où cette note servira.</p>
+            {% for libelle, items in groupes %}
+            <fieldset class="groupe-etiquettes" style="border:0;padding:0;margin:0">
+                <legend><h3>{{ libelle }}</h3></legend>
+                <div class="choix-liste">
+                    {% for r in items %}
+                    <label class="choix"><input type="checkbox" name="rubriques" value="{{ r.pk }}" {% if r.coche %}checked{% endif %}><span>{{ r.libelle }}</span></label>
+                    {% endfor %}
+                </div>
+            </fieldset>
+            {% endfor %}
+        </div>
+    </details>
+
+    <div class="action-fixe">
+        <button class="bouton bouton--plein" type="submit"><span class="icone" aria-hidden="true">save</span> Enregistrer la note</button>
+    </div>
+</form>
+
+<p class="liens-bas"><a href="{% url 'admin:carnet_entreejournal_changelist' %}">Compléter mes notes</a></p>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'carnet/js/note_rapide.js' %}" defer></script>{% endblock %}
