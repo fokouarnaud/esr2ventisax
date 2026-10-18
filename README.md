@@ -54,6 +54,122 @@ Carnet de stage (en ligne)  →  zip « dossier terrain »  →  importer_dossie
 3. Claude Code rédige les parties à partir de `donnees_terrain/terrain.md` (procédure dans AGENTS.md, US-30).
 4. Le PDF et la présentation sont produits avec le skill `latex-pdf-soutenance`.
 
+## Après le téléchargement du zip : produire le rapport en local
+
+Cette procédure transforme le **dossier terrain** d'un apprenant en rapport PDF et en présentation. Elle se fait
+entièrement sur votre machine : rien n'est compilé sur le serveur (A4).
+
+**Prérequis** : l'installation locale de l'application (voir plus bas, avec `requirements-local.txt`), LaTeX
+(`latexmk`, `biber`), Python avec `python-pptx` et `PyMuPDF` pour la présentation, Claude Code pour la rédaction,
+et un accès Internet pour les plans OpenStreetMap.
+
+### 1. Télécharger le zip
+
+Dans l'application : **Tableau de bord → Dossier terrain**. Le fichier s'appelle
+`dossier-terrain-<slug>-<AAAAMMJJ>.zip`. Si le téléchargement est refusé, le message liste les photos « corps » ou
+« annexe » sans slug ni légende : compléter ces photos (Tri des photos → Légende et slug), puis recommencer.
+
+Ranger le zip dans `rapports/`, dossier ignoré par git : il contient des données réelles et sert aussi de
+sauvegarde (voir l'étape 8).
+
+### 2. Importer le zip
+
+```bash
+cd webapp
+.venv/Scripts/python manage.py importer_dossier ../rapports/dossier-terrain-<slug>-<AAAAMMJJ>.zip
+```
+
+La commande vérifie les sommes de contrôle du zip, puis crée `rapports/<slug>-<uuid8>/` :
+
+| Élément | Contenu |
+|---|---|
+| copie de `tex_export_src/` | le modèle complet du rapport : texte générique, schémas TikZ, style |
+| `config/infos.tex` | couverture et identités ; `\AC{…}` pour chaque champ laissé vide dans l'application |
+| `img/fig_<slug>.jpg` | photos « corps » et « annexe » ; chacune remplace l'image factice de même nom |
+| `img/logo_entreprise.png`, `img/logo_cfp.png` | logos saisis dans l'application |
+| `img/plan_situation_<lieu>.png` | un plan OpenStreetMap par lieu ; celui du siège devient `img/fig_localisation.png` |
+| `figures/organigramme.tex`, `figures/gantt.tex` | organigramme et Gantt réels |
+| `tableaux/equipements_<catégorie>.tex` | un tableau par catégorie d'équipement |
+| `bib/references.bib` | références du modèle, plus celles du stage |
+| `donnees_terrain/` | `terrain.md` (matériau de rédaction), `terrain.json` (toutes les données), `catalogue.tex` |
+
+Options :
+- `--force` écrase un dossier déjà importé, y compris les textes déjà rédigés : à utiliser avec prudence.
+- `--sans-carte` saute les plans OpenStreetMap (pas de réseau) ; la figure de localisation reste alors factice.
+
+### 3. Contrôler les fragments générés
+
+```bash
+cd ../rapports/<slug>-<uuid8>
+latexmk -pdf donnees_terrain/catalogue.tex
+```
+
+`catalogue.pdf` rassemble organigramme, Gantt, tableaux d'équipement, photos retenues, plans de situation et
+bibliographie. S'il compile, chaque fragment généré est valide. Il permet aussi de voir d'un coup tout le matériau
+disponible avant la rédaction.
+
+### 4. Rédiger avec Claude Code
+
+Ouvrir Claude Code à la racine du dépôt et demander, par exemple :
+
+> Rédige le rapport de `rapports/<slug>-<uuid8>/` à partir de `donnees_terrain/terrain.md`, en suivant la
+> procédure US-30 d'AGENTS.md.
+
+Claude Code écrit dans `parties/` (introduction, parties I à IV, conclusion) et respecte ces règles :
+- une **synthèse** organisée selon le plan du cours, jamais un récit au jour le jour ;
+- uniquement des informations présentes dans `terrain.md` : ce qui manque reste en `\AC{…}` ;
+- les chiffres repris de la section « Données techniques », avec leur `\cite{}` ;
+- les personnes citées comme indiqué (par leur fonction si le nom n'est pas publiable) ;
+- chaque photo, tableau et plan du catalogue inséré là où il sert.
+
+### 5. Compléter ce qui manque
+
+```bash
+grep -rn '\\AC{' --include=*.tex .
+```
+
+Chaque `\AC{…}` restant s'affiche en orange « [À COMPLÉTER : …] » dans le PDF. Deux façons de le traiter :
+- **corriger dans l'application**, puis retélécharger le zip et réimporter avec `--force` : c'est la bonne voie pour
+  les données du stage, mais les textes rédigés sont écrasés, à refaire ou à sauvegarder avant ;
+- **corriger directement** dans `config/infos.tex` ou `parties/` pour une retouche de dernière minute.
+
+### 6. Compiler le PDF
+
+Depuis la racine du dépôt :
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\latex-pdf-soutenance\scripts\compile-latex.ps1" -Dir rapports\<slug>-<uuid8>
+```
+
+Le script doit se terminer par « OK : aucune erreur ni référence indéfinie ». Le PDF est
+`rapports/<slug>-<uuid8>/main.pdf`.
+
+### 7. Générer la présentation
+
+```bash
+python tex_export_src/outils/build_presentation.py rapports/<slug>-<uuid8> rapports/<slug>-<uuid8>/presentation.pptx
+```
+
+Quinze diapositives environ, dans le style du rapport, avec des notes de présentateur. Relire et ajuster dans
+PowerPoint.
+
+### 8. Relire, livrer, conserver
+
+- Relire le PDF en entier et vérifier que les photos et les noms sont publiables.
+- Livrer `main.pdf` et `presentation.pptx`.
+- **Ne jamais commiter `rapports/`** : le dépôt est public (A14). Les fichiers y sont ignorés par git.
+- Garder le zip : il restaure le stage dans une base vide,
+  `.venv/Scripts/python manage.py restaurer_dossier <zip> --proprietaire <identifiant>` (depuis `webapp/`).
+
+### En cas de problème
+
+| Message | Cause et solution |
+|---|---|
+| `Archive altérée : somme de contrôle invalide pour …` | Zip modifié ou téléchargement incomplet : retélécharger. |
+| `… existe déjà : relancer avec --force` | Le stage a déjà été importé : garder ce dossier, ou écraser avec `--force`. |
+| `Plan de situation non généré pour …` | Pas de réseau ou serveur de tuiles indisponible : relancer plus tard, ou `--sans-carte`. |
+| Erreur LaTeX sur une figure ou un tableau | Compiler `catalogue.tex` (étape 3) pour isoler le fragment fautif. |
+
 ### Reproduire la démo en local
 
 Depuis la racine du dépôt, une fois l'installation locale faite (voir plus bas) :
