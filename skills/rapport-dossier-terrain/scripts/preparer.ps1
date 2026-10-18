@@ -15,7 +15,7 @@ $Depot = Trouver-Depot $Depot
 $Zip = (Resolve-Path $Zip).Path
 $python = Join-Path $Depot 'webapp\.venv\Scripts\python.exe'
 if (-not (Test-Path $python)) {
-    Write-Host "venv introuvable : $python. Installer l'application (README, Installation locale)."; exit 2
+    Write-Host "venv introuvable : $python. Installer l'application (README, Demarrage rapide)."; exit 2
 }
 
 # Nom du dossier cree par importer_dossier : <slug>-<uuid8>, lu dans manifest.json

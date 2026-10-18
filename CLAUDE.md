@@ -18,7 +18,7 @@ Avant toute tâche sur `webapp/` :
 
 **Utiliser le skill global `rapport-dossier-terrain`**, qui enchaîne tout (scripts `preparer.ps1`, rédaction,
 `finaliser.ps1` ; source dans `skills/rapport-dossier-terrain/`, à garder identique à la copie de `~/.claude/skills/`).
-La procédure complète, pas à pas, est dans le README (« Après le téléchargement du zip ») et dans AGENTS.md
+La procédure complète, pas à pas, est dans `docs/rapport-local.md` et dans AGENTS.md
 (US-30). En résumé :
 
 1. Importer : `webapp/.venv/Scripts/python webapp/manage.py importer_dossier <zip>` → `rapports/<slug>-<uuid8>/`.
