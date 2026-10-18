@@ -1,0 +1,22 @@
+% Diagramme de Gantt du stage (16 semaines), cohérent avec le tableau du planning
+\begin{tikzpicture}[x=0.72cm,y=0.55cm,font=\scriptsize]
+  \foreach \s in {1,...,16} {
+    \node[anchor=south] at (\s-0.5,0.2) {S\s};
+    \draw[gray!30] (\s,0) -- (\s,-10);
+  }
+  \draw[gray!30] (0,0) -- (0,-10);
+  \foreach [count=\i] \lib/\deb/\fin/\col in {
+      Accueil et sécurité/0/1/vertfonce,
+      Préparation et traçage/1/3/vertfonce,
+      Canalisations étages hauts/3/6/vertmoyen,
+      Canalisations étages bas/6/8/vertmoyen,
+      Essais d'étanchéité/8/9/acompleter,
+      Isolation des réseaux/9/11/vertfonce,
+      Réducteurs et manomètres/11/13/vertmoyen,
+      Robinetterie et flexibles/13/14/vertmoyen,
+      Appui climatisation/14/15/bandeau!60!blue,
+      Mise en eau et bilan/15/16/acompleter} {
+    \node[anchor=east] at (-0.15,-\i+0.5) {\lib};
+    \fill[\col, rounded corners=1.5pt] (\deb+0.05,-\i+0.15) rectangle (\fin-0.05,-\i+0.85);
+  }
+\end{tikzpicture}

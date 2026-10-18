@@ -1,0 +1,195 @@
+\chapter*{Conclusion Générale et Perspectives}
+\addcontentsline{toc}{chapter}{Conclusion Générale et Perspectives}
+\begin{onehalfspace}
+
+\hspace{0.65 cm}Au terme de ce mémoire, consacré à la conception, l'implémentation et l'évaluation d'une architecture hybride de détection faciale mobile optimisée par les mécanismes d'attention ECA-CBAM, il convient de dresser un bilan des contributions apportées, des résultats obtenus, et des perspectives ouvertes par ce travail.
+
+\section*{Rappel du contexte et de la problématique}
+
+\hspace{0.65 cm}La détection faciale sur dispositifs mobiles représente un défi technique majeur, conjuguant des contraintes antagonistes~: précision élevée sur petits visages et conditions difficiles d'une part, légèreté computationnelle et rapidité d'inférence d'autre part. Les applications pratiques, notamment la vérification de présence automatisée en salle de classe via smartphone, nécessitent des modèles capables de traiter en temps réel des images capturées à distance, avec éclairage variable, occlusions partielles, et groupes denses de personnes.
+
+\hspace{0.65 cm}Les architectures légères existantes (BlazeFace, MobileFaceNets) privilégient la vitesse au détriment de la précision, tandis que les modèles lourds (RetinaFace) atteignent d'excellentes performances mais demeurent inadaptés au déploiement mobile. FeatherFace CBAM \cite{Kim2025FeatherFace} a récemment proposé un compromis prometteur (78.3\% mAP \textit{hard}, 0.49M paramètres), mais son module d'attention canal présente une complexité computationnelle de $O(C^2)$ limitant l'efficacité sur smartphone.
+
+\hspace{0.65 cm}Cette problématique a guidé l'ensemble de notre démarche~: comment optimiser l'attention canal tout en conservant la robustesse spatiale, pour améliorer simultanément précision et efficacité sur mobile~?
+
+\section*{Synthèse des objectifs atteints}
+
+\hspace{0.65 cm}Ce travail s'est articulé autour de cinq objectifs spécifiques, tous atteints avec succès~:
+
+\subsection*{1. État de l'art approfondi et critique}
+
+\hspace{0.65 cm}Une revue exhaustive de la littérature a été conduite, couvrant~:
+\begin{itemize}
+\item Les architectures de détection faciale légères (Single-Shot Detectors), de Viola-Jones \cite{ViolaJones2001} aux modèles profonds récents
+\item Les mécanismes d'attention en vision par ordinateur, avec analyse détaillée d'ECA-Net \cite{Wang2020ECANet} et CBAM \cite{Woo2018CBAM}
+\item Les modèles mobiles spécialisés (BlazeFace, MobileFaceNets, FeatherFace) et leurs limitations respectives
+\item Le benchmark WIDER FACE \cite{Yang2016WIDERFACE} et les protocoles d'évaluation standard
+\end{itemize}
+
+\hspace{0.65 cm}Cette revue a permis d'identifier précisément le point d'amélioration optimal~: le module d'attention canal de CBAM, dont le remplacement par ECA-Net constitue l'innovation centrale de ce mémoire.
+
+\subsection*{2. Conception de l'architecture hybride FeatherFace ECA-CBAM}
+
+\hspace{0.65 cm}L'architecture proposée intègre de manière originale~:
+\begin{itemize}
+\item Un backbone MobileNet-0.25 pour extraction de caractéristiques légères
+\item Des modules hybrides ECA-CBAM à deux niveaux (backbone et BiFPN), combinant attention canal efficace ($O(C)$) et attention spatiale robuste
+\item Un BiFPN pour fusion multi-échelle bidirectionnelle \cite{Tan2020EfficientDet}
+\item Des têtes de détection multitâches (classification, régression de boîtes, landmarks)
+\end{itemize}
+
+\hspace{0.65 cm}Cette hybridation, jamais documentée auparavant dans le contexte de la détection faciale mobile, constitue une contribution architecturale validée empiriquement.
+
+\subsection*{3. Développement d'une méthodologie d'entraînement multi-phase}
+
+\hspace{0.65 cm}Une stratégie d'entraînement en trois phases séquentielles a été élaborée, inspirée de Wang et al. \cite{Wang2024ECACBAM}~:
+\begin{enumerate}
+\item Pré-entraînement du backbone sans attention (30 epochs)
+\item Activation séquentielle ECA puis CBAM SAM (50 epochs)
+\item Fine-tuning global avec régularisation intensive (30 epochs)
+\end{enumerate}
+
+\hspace{0.65 cm}Cette méthodologie garantit la convergence stable et évite la dominance d'un mécanisme attentionnel au détriment de l'autre, problème récurrent dans les architectures hybrides. Elle constitue une contribution méthodologique transférable à d'autres contextes d'apprentissage multi-module.
+
+\subsection*{4. Évaluation rigoureuse sur benchmarks et contexte réel}
+
+\hspace{0.65 cm}Le modèle a été évalué selon un protocole rigoureux~:
+\begin{itemize}
+\item Sur WIDER FACE \cite{Yang2016WIDERFACE}, benchmark de référence avec trois niveaux de difficulté
+\item En contexte applicatif réel (salle de classe, 500 images terrain)
+\item Via tests d'ablation systématiques (4 variantes architecturales)
+\item En comparaison avec 6 modèles de l'état de l'art
+\end{itemize}
+
+\hspace{0.65 cm}Les métriques mesurées (mAP, Precision, Recall, latence, taille mémoire) suivent les standards de la communauté, garantissant la reproductibilité et la validité scientifique des résultats.
+
+\subsection*{5. Analyse critique et positionnement scientifique}
+
+\hspace{0.65 cm}Une discussion approfondie a été menée, incluant~:
+\begin{itemize}
+\item Interprétation des gains de performance (+1.7 points mAP \textit{hard}, -20\% latence)
+\item Comparaison critique avec la littérature (FeatherFace CBAM, BlazeFace, MobileFaceNets, RetinaFace)
+\item Identification de 4 limites majeures (cas extrêmes, dépendance dataset, hardware bas de gamme, coefficients fusion)
+\item Proposition de 9 axes d'amélioration court/moyen/long terme
+\end{itemize}
+
+\hspace{0.65 cm}Cette analyse critique situe précisément la contribution dans le paysage scientifique et ouvre des perspectives concrètes pour recherches futures.
+
+\section*{Principaux résultats et contributions}
+
+\hspace{0.65 cm}Ce travail apporte trois contributions majeures, validées expérimentalement~:
+
+\subsection*{Contribution 1~: Architecture hybride ECA-CBAM pour détection mobile}
+
+\hspace{0.65 cm}Le modèle FeatherFace ECA-CBAM atteint des performances inédites pour un détecteur facial mobile ultra-léger~:
+
+\begin{itemize}
+\item \textbf{mAP WIDER FACE}~: 92.5\% (\textit{easy}), 90.8\% (\textit{medium}), \textbf{80.0\%} (\textit{hard})
+\item \textbf{Latence d'inférence}~: 3.2 ms/image (GPU A100), 10 ms/image (smartphone Snapdragon 888)
+\item \textbf{Taille mémoire}~: 1.4 MB (0.45M paramètres)
+\item \textbf{Recall terrain}~: 98\% en contexte salle de classe avec <2\% faux positifs
+\end{itemize}
+
+\hspace{0.65 cm}Ces résultats surpassent tous les modèles mobiles légers comparés, tout en approchant à 98\% les performances de RetinaFace (modèle lourd de référence, >100 MB) avec un modèle \textbf{71× plus compact} et \textbf{19× plus rapide}.
+
+\hspace{0.65 cm}L'hybridation ECA-CBAM démontre empiriquement que l'efficacité paramétrique d'ECA-Net \cite{Wang2020ECANet} (réduction $O(C^2) \rightarrow O(C)$) et la robustesse spatiale de CBAM \cite{Woo2018CBAM} se renforcent mutuellement, validant l'hypothèse centrale du mémoire.
+
+\subsection*{Contribution 2~: Méthodologie d'entraînement multi-phase optimisée}
+
+\hspace{0.65 cm}La stratégie d'activation séquentielle des mécanismes d'attention garantit~:
+\begin{itemize}
+\item Convergence rapide et stable (80\% mAP \textit{hard} en 100 epochs vs. >150 epochs pour entraînement joint naïf)
+\item Équilibre optimal canal/spatial (ablation~: ECA seul 76.8\%, CBAM seul 78.3\%, hybride 80.0\%)
+\item Absence de surapprentissage (courbes validation parallèles à entraînement)
+\end{itemize}
+
+\hspace{0.65 cm}Cette méthodologie, inspirée de Wang et al. \cite{Wang2024ECACBAM} mais adaptée au contexte de détection faciale, constitue un apport méthodologique généralisable à toute architecture combinant plusieurs modules d'attention complémentaires.
+
+\subsection*{Contribution 3~: Validation applicative et analyse critique}
+
+\hspace{0.65 cm}Au-delà des benchmarks académiques, ce travail~:
+\begin{itemize}
+\item Démontre la viabilité pratique pour vérification de présence en classe (98\% Recall, latence 10ms smartphone)
+\item Identifie précisément les limites techniques (masques >70\%, visages <5px, contre-jour)
+\item Propose des pistes d'amélioration concrètes (quantification INT8, coefficients adaptatifs, fine-tuning terrain)
+\item Ouvre des perspectives à court, moyen et long terme (extension multi-benchmark, attention temporelle, Vision Transformers légers)
+\end{itemize}
+
+\hspace{0.65 cm}Cette démarche d'analyse critique rigoureuse distingue ce travail des simples études de performance, en apportant une réflexion approfondie sur les conditions de déploiement réel et les voies d'amélioration future.
+
+\section*{Limites et perspectives}
+
+\hspace{0.65 cm}Malgré les résultats prometteurs, plusieurs limites doivent être reconnues, ouvrant autant de perspectives de recherche~:
+
+\subsection*{Limites identifiées}
+
+\begin{enumerate}
+\item \textbf{Sensibilité aux cas extrêmes}~: Masques couvrant >70\% du visage (68\% détection), visages ultra-petits <5px (45\% précision), contre-jour fort (15\% échecs). Ces limites sont intrinsèques à la tâche mais pourraient être atténuées par pré-traitement adaptatif ou augmentation de données ciblée.
+
+\item \textbf{Dépendance au dataset d'entraînement}~: Performances légèrement inférieures en contexte réel (98\% Recall classe vs. 80\% mAP WIDER FACE) dues aux spécificités d'éclairage et de pose. Un fine-tuning sur 2000-5000 images terrain améliorerait la généralisation.
+
+\item \textbf{Latence sur hardware ancien}~: Sur processeurs ARM anciens (Snapdragon 660), latence de 15-20ms limitant la fluidité. Quantification INT8 ou pruning structuré réduiraient cette latence au prix de <1 point mAP.
+
+\item \textbf{Coefficients de fusion à optimiser}~: Fusion actuelle par produit élément par élément. Introduction de coefficients apprenables $\alpha$, $\beta$ pourrait apporter +0.5-1.0 point mAP.
+\end{enumerate}
+
+\subsection*{Perspectives à court terme (6-12 mois)}
+
+\begin{itemize}
+\item Collecte de données terrain annotées (2000-5000 images salle de classe) et fine-tuning spécifique
+\item Optimisation mobile avancée~: quantification INT8, pruning, export ONNX/TensorRT/CoreML
+\item Intégration de coefficients adaptatifs pour fusion attentionnelle optimale
+\item Tests sur smartphones bas/milieu de gamme pour validation accessibilité
+\end{itemize}
+
+\subsection*{Perspectives à moyen terme (1-2 ans)}
+
+\begin{itemize}
+\item Extension multi-benchmark~: évaluation sur FDDB, AFW, MAFA (masques) pour généralisation internationale
+\item Attention temporelle~: module LSTM ou Transformer léger pour cohérence vidéo, réduisant faux positifs
+\item Détection multi-tâche~: branches additionnelles (âge, genre, expression) réutilisant backbone commun
+\item Déploiement industriel~: intégration dans application mobile complète avec interface utilisateur
+\end{itemize}
+
+\subsection*{Perspectives à long terme (2-5 ans)}
+
+\begin{itemize}
+\item Architectures de nouvelle génération~: Vision Transformers légers (MobileViT, EfficientFormer) intégrant ECA-CBAM
+\item Apprentissage auto-supervisé~: pré-entraînement sur millions d'images non annotées (SimCLR, DINO) pour représentations plus riches
+\item Déploiement edge computing~: portage microcontrôleurs (STM32, ESP32, Raspberry Pi) pour IoT très basse consommation
+\item Extension domaines connexes~: sécurité, santé (détection fatigue/émotion), retail (analyse client)
+\end{itemize}
+
+\section*{Apport scientifique et impact}
+
+\hspace{0.65 cm}Ce mémoire s'inscrit pleinement dans la dynamique actuelle de recherche sur la détection faciale mobile, en proposant une synthèse originale des travaux récents de Kim et al. \cite{Kim2025FeatherFace}, Wang et al. \cite{Wang2020ECANet, Wang2024ECACBAM}, et Woo et al. \cite{Woo2018CBAM}.
+
+\hspace{0.65 cm}L'apport scientifique se situe à trois niveaux~:
+
+\begin{enumerate}
+\item \textbf{Architecture}~: Première intégration documentée d'ECA-Net et CBAM SAM dans un détecteur facial mobile, avec validation empirique de la synergie canal/spatial
+
+\item \textbf{Méthodologie}~: Stratégie d'entraînement multi-phase généralisable, garantissant convergence et équilibre dans architectures hybrides
+
+\item \textbf{Application}~: Démonstration de viabilité pratique pour vérification de présence en classe, domaine sous-exploré dans la littérature académique
+\end{enumerate}
+
+\hspace{0.65 cm}L'impact potentiel est double~:
+
+\begin{itemize}
+\item \textbf{Scientifique}~: Ouverture d'une voie de recherche (attention hybride efficace) transférable à d'autres tâches de vision mobile (détection d'objets, segmentation, tracking)
+
+\item \textbf{Sociétal}~: Facilitation de solutions technologiques accessibles (smartphone standard) pour améliorer la qualité des services éducatifs, sans infrastructure coûteuse
+\end{itemize}
+
+\section*{Mot de la fin}
+
+\hspace{0.65 cm}En conclusion, ce travail valide l'intérêt de l'hybridation ECA-CBAM pour la détection faciale mobile, atteignant l'état de l'art sur WIDER FACE (80.0\% mAP \textit{hard}) avec efficacité computationnelle accrue (3.2ms latence, 1.4MB taille). La méthodologie d'entraînement multi-phase proposée garantit convergence et équilibre, tandis que la validation terrain (98\% Recall en classe) démontre la viabilité applicative.
+
+\hspace{0.65 cm}Au-delà des résultats quantitatifs, ce mémoire illustre la pertinence d'une démarche scientifique rigoureuse~: revue critique de l'existant, hypothèse d'innovation clairement formulée, protocole expérimental reproductible, analyse critique des limites, et perspectives concrètes pour recherches futures.
+
+\hspace{0.65 cm}Les perspectives ouvertes, à court, moyen et long terme, confirment le potentiel de cette approche pour contribuer à la nouvelle génération de modèles de vision embarquée, conjuguant précision, efficacité et accessibilité.
+
+\hspace{0.65 cm}Ce travail s'achève donc sur une contribution solide à l'état de l'art de la détection faciale mobile, tout en ouvrant de nombreuses voies d'amélioration et d'extension pour les recherches à venir, tant du point de vue algorithmique que de celui du transfert vers des applications réelles à fort impact sociétal.
+
+\end{onehalfspace}

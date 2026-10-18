@@ -1,0 +1,12 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+Automatic face detection on mobile devices is a major challenge for various fields, including security, biometrics, and attendance verification in educational settings. While lightweight models such as BlazeFace \cite{Zhang2019BlazeFace}, MobileFaceNets \cite{Chen2018MobileFaceNets}, and FeatherFace CBAM \cite{Kim2025FeatherFace} have enabled significant progress in speed and compactness, they quickly reach their limitations in detecting small, partially occluded faces or operating under real-world variable conditions.
+
+In this context, this thesis introduces the \textbf{FeatherFace ECA-CBAM} architecture, an original hybrid solution integrating lightweight channel attention via ECA-Net \cite{Wang2020ECANet} and spatial attention from the CBAM module \cite{Woo2018CBAM}. These are strategically inserted within the MobileNet-0.25 backbone coupled with a BiFPN \cite{Tan2020EfficientDet}. The experimental protocol, based on the WIDER FACE benchmark \cite{Yang2016WIDERFACE} and dedicated classroom datasets, demonstrates a performance gain: the model achieves a \textbf{"hard" mAP of 80.0\,\%}, reduces inference latency to less than 3.5\,ms per image, and keeps the model size below 1.5\,MB. These results surpass existing architectures for mobile face detection, confirming the value of the hybrid design.
+
+The methodological approach, inspired by multi-phase training strategies \cite{Wang2024ECACBAM}, guarantees convergence and stability, while the software structuring follows current standards (PyTorch \cite{Paszke2019PyTorch}, state-of-the-art open source practices). In summary, this research validates the relevance of hybrid channel/spatial attention in embedded contexts and paves the way for future improvements, both from a technical standpoint and for large-scale deployment in real environments.
+
+\vspace{1cm}
+
+\noindent\textbf{Keywords:} face detection, hybrid attention, ECA-Net, CBAM, lightweight architectures, mobile devices, deep learning, attendance verification

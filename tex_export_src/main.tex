@@ -1,0 +1,68 @@
+% =============================================================================
+%  RAPPORT DE STAGE — Spécialité Froid et climatisation
+%  Thème : Plomberie sanitaire
+%  Personnaliser : config/infos.tex  ·  Consignes : ../AGENTS.md
+% =============================================================================
+\documentclass[12pt,a4paper,oneside]{report}
+
+\input{config/preambule}
+\input{config/style}
+\input{config/infos}
+
+\hypersetup{pdftitle={Rapport de stage -- Plomberie sanitaire},
+            pdfsubject={Spécialité Froid et climatisation}}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Couverture
+\input{liminaires/couverture}
+
+% ------------------------------------------------- Pages liminaires (i, ii…)
+\pagenumbering{roman}
+\input{liminaires/dedicace}
+
+\clearpage\phantomsection
+\addcontentsline{toc}{chapter}{SOMMAIRE}
+\etocsettocstyle{\banniere{SOMMAIRE}\vspace{0.4em}}{}
+\etocsetnexttocdepth{section}
+\tableofcontents
+
+\input{liminaires/remerciements}
+\input{liminaires/abreviations}
+
+\clearpage\phantomsection
+\addcontentsline{toc}{chapter}{LISTE DES TABLEAUX}
+\listoftables
+
+\clearpage\phantomsection
+\addcontentsline{toc}{chapter}{LISTE DES FIGURES}
+\listoffigures
+
+\input{liminaires/avant_propos}
+
+% ------------------------------------------------------- Corps (1, 2, 3…)
+\clearpage
+\pagenumbering{arabic}
+\input{parties/introduction}
+\input{parties/partie1_entreprise}
+\input{parties/partie2_deroulement}
+\input{parties/partie3_theme}
+\input{parties/partie4_critiques}
+\input{parties/conclusion}
+
+% ------------------------------------------------------------- Bibliographie
+\pageTitre{BIBLIOGRAPHIE}
+\nocite{coursModule2}
+\printbibliography[heading=none]
+
+% ------------------------------------------------------------------- Annexes
+\input{annexes/annexes}
+
+% --------------------------------------------------------- Table des matières
+\clearpage\phantomsection
+\addcontentsline{toc}{chapter}{TABLE DES MATIÈRES}
+\etocsettocstyle{\banniere{TABLE DES MATIÈRES}\vspace{0.4em}}{}
+\etocsetnexttocdepth{subsubsection}
+\tableofcontents
+
+\end{document}

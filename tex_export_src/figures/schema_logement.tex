@@ -1,0 +1,27 @@
+% Logement type : compteur -> réducteur -> nourrices EF/ECS -> appareils
+\begin{tikzpicture}[font=\scriptsize, >=Stealth,
+  eq/.style={draw=vertnuit, fill=vertclair, rounded corners=2pt, align=center, minimum height=7mm, inner sep=2pt},
+  app/.style={draw=gray!70, fill=white, align=center, minimum width=14mm, minimum height=6mm},
+  ef/.style={blue!70!black, line width=1.1pt, ->},
+  ecs/.style={red!75!black, line width=1.1pt, ->}]
+  \node[eq] (v1) at (0,0) {Vanne\\d'arrêt};
+  \node[eq, right=5mm of v1] (cpt) {Compteur};
+  \node[eq, right=5mm of cpt] (cl) {Clapet\\anti-retour};
+  \node[eq, right=5mm of cl, fill=acompleter!15] (red) {Réducteur\\de pression};
+  \node[eq, right=5mm of red] (nef) {Nourrice EF};
+  \draw[ef] (v1) -- (cpt); \draw[ef] (cpt) -- (cl); \draw[ef] (cl) -- (red); \draw[ef] (red) -- (nef);
+  \node[eq, below=14mm of red, fill=red!10] (ce) {Chauffe-eau};
+  \node[eq, right=5mm of ce] (necs) {Nourrice ECS};
+  \draw[ef] (red.south) -- (ce.north);
+  \draw[ecs] (ce) -- (necs);
+  \foreach \a/\x/\n in {Lavabo/11.0/a, Douche/12.4/b, WC/13.8/c, Évier/15.2/d} {
+    \node[app] (A\n) at (\x,-0.9) {\a};
+  }
+  \draw[blue!70!black, line width=1.1pt] (nef.east) -- ++(0.3,0) -- ++(0,0.5);
+  \foreach \n in {a,b,c,d} \draw[ef] (nef.east) ++(0.3,0.5) -| (A\n.north);
+  \draw[ecs] (necs.east) -| (Aa.south);
+  \draw[ecs] (necs.east) -| (Ab.south);
+  \draw[ecs] (necs.east) -| (Ad.south);
+  \node[anchor=west, text width=6cm] at (0,-3.2) {Distribution en tube PPR (ou PER) depuis les nourrices :
+     une canalisation par appareil, sans raccord intermédiaire en partie encastrée.};
+\end{tikzpicture}

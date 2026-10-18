@@ -1,0 +1,12 @@
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+La détection automatique de visages sur dispositifs mobiles représente un enjeu majeur pour de nombreux domaines, tels que la sécurité, la biométrie et la vérification de présence en milieu éducatif. Si les modèles légers tels que BlazeFace \cite{Zhang2019BlazeFace}, MobileFaceNets \cite{Chen2018MobileFaceNets} et FeatherFace CBAM \cite{Kim2025FeatherFace} ont permis d'importantes avancées en termes de rapidité et de compacité, ils atteignent vite leurs limites dans la détection de visages petits, partiellement occultés ou en conditions réelles variées.
+
+Dans ce contexte, ce mémoire propose l'architecture \textbf{FeatherFace ECA-CBAM}, une solution hybride originale intégrant l'attention canal allégée ECA-Net \cite{Wang2020ECANet} et l'attention spatiale du module CBAM \cite{Woo2018CBAM}, insérées stratégiquement au sein du backbone MobileNet-0.25 couplé à un BiFPN \cite{Tan2020EfficientDet}. Le protocole expérimental, fondé sur le benchmark WIDER FACE \cite{Yang2016WIDERFACE} et des tests sur données de classe, a permis de démontrer un gain en performance~: le modèle atteint un \textbf{mAP "hard" de 80.0\,\%}, réduit la latence à moins de 3,5\,ms/image et conserve une taille mémoire inférieure à 1,5\,MB. Ces résultats dépassent ceux des architectures existantes pour la détection faciale mobile, confirmant l'apport du design hybride.
+
+L'approche méthodologique, inspirée des stratégies d'entraînement multi-phase \cite{Wang2024ECACBAM}, garantit la convergence et la stabilité, tandis que la structuration logicielle suit les standards actuels (PyTorch \cite{Paszke2019PyTorch}, bonnes pratiques open source). En conclusion, cette recherche valide la pertinence d'une hybridation attention canal/spatial dans le contexte embarqué, tout en ouvrant la voie à des améliorations futures, aussi bien du point de vue technique que pour le déploiement à grande échelle dans des environnements concrets.
+
+\vspace{1cm}
+
+\noindent\textbf{Mots clés~:} détection faciale, attention hybride, ECA-Net, CBAM, architectures légères, dispositifs mobiles, apprentissage profond, vérification de présence
