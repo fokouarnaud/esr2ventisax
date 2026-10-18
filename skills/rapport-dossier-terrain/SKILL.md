@@ -14,7 +14,7 @@ preparer.ps1 (importer + contrôler)  →  rédaction (toi)  →  finaliser.ps1 
 
 Scripts : `~/.claude/skills/rapport-dossier-terrain/scripts/`. Ils trouvent seuls le dépôt esr2ventisax
 (dossier courant ou parents, sinon `~/Desktop/sop_ai_coding/01_GREENFIELD/esr2ventisax`) ; sinon `-Depot <chemin>`.
-La référence complète est la section « Après le téléchargement du zip » du README du dépôt, ainsi que la
+La référence complète est `docs/rapport-local.md` du dépôt, ainsi que la
 procédure US-30 d'AGENTS.md. Relis AGENTS.md (conventions, A14, A34, A36) avant de rédiger.
 
 ## 0. Garde-fous
