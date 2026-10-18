@@ -59,6 +59,13 @@ Carnet de stage (en ligne)  →  zip « dossier terrain »  →  importer_dossie
 Cette procédure transforme le **dossier terrain** d'un apprenant en rapport PDF et en présentation. Elle se fait
 entièrement sur votre machine : rien n'est compilé sur le serveur (A4).
 
+> **Raccourci** : le skill global Claude Code **`rapport-dossier-terrain`** enchaîne les étapes 2 à 7. Dans Claude
+> Code, à la racine du dépôt : « Produis le rapport à partir de `rapports/dossier-terrain-<slug>-<AAAAMMJJ>.zip` »
+> (ou `/rapport-dossier-terrain <zip>`). Il importe le zip, contrôle le catalogue, rédige les parties à partir de
+> `terrain.md`, compile le PDF, génère la présentation, puis liste ce qui reste à compléter. Ses scripts sont dans
+> `~/.claude/skills/rapport-dossier-terrain/scripts/` (`preparer.ps1`, puis `finaliser.ps1`). Les étapes
+> ci-dessous décrivent ce qu'il fait, pour les suivre à la main si besoin.
+
 **Prérequis** : l'installation locale de l'application (voir plus bas, avec `requirements-local.txt`), LaTeX
 (`latexmk`, `biber`), Python avec `python-pptx` et `PyMuPDF` pour la présentation, Claude Code pour la rédaction,
 et un accès Internet pour les plans OpenStreetMap.

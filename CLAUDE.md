@@ -16,7 +16,8 @@ Avant toute tâche sur `webapp/` :
 
 ## Quand l'utilisateur fournit un zip « dossier terrain »
 
-La procédure complète, pas à pas, est dans le README (« Après le téléchargement du zip ») et dans AGENTS.md
+**Utiliser le skill global `rapport-dossier-terrain`**, qui enchaîne tout (scripts `preparer.ps1`, rédaction,
+`finaliser.ps1`). La procédure complète, pas à pas, est dans le README (« Après le téléchargement du zip ») et dans AGENTS.md
 (US-30). En résumé :
 
 1. Importer : `webapp/.venv/Scripts/python webapp/manage.py importer_dossier <zip>` → `rapports/<slug>-<uuid8>/`.
