@@ -8,6 +8,7 @@ Ce dépôt réunit deux outils qui travaillent ensemble pour produire le **rappo
 | `webapp/` | **Carnet de stage** : application Django où l'apprenant note son stage au jour le jour (texte, photos, GPS), puis l'exporte en « dossier terrain ». |
 | `tex_export_src/` | **Modèle LaTeX** du rapport (plan imposé par le cours « Module 2 »), avec sa présentation de soutenance. |
 | `demo/` | Rapport PDF et présentation PPTX **produits par la chaîne complète** à partir du stage de démonstration. |
+| `skills/` | Source du skill Claude Code `rapport-dossier-terrain` (zip → PDF et PPTX), à copier dans `~/.claude/skills/`. |
 | `rapports/` | Rapports réels importés en local. Jamais versionné (dépôt public). |
 
 Les consignes détaillées, le PRD (user stories, modèle de données, Definition of Done) et le journal des
@@ -231,9 +232,20 @@ powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\rapport-dossier-t
 
 #### Installer le skill sur un autre poste
 
-Le skill vit dans `~/.claude/skills/rapport-dossier-terrain/` (`SKILL.md` et `scripts/`), hors du dépôt. Copier ce
-dossier au même endroit sur l'autre machine. Il s'appuie sur le skill `latex-pdf-soutenance` pour la compilation
-et retrouve seul le dépôt (dossier courant ou parents) ; sinon, passer `-Depot <chemin>` aux scripts.
+La source versionnée du skill est dans le dépôt : [`skills/rapport-dossier-terrain/`](skills/rapport-dossier-terrain/)
+(`SKILL.md` et `scripts/`). Claude Code ne lit les skills globaux que dans `~/.claude/skills/` : il faut donc l'y
+copier, à l'installation puis après chaque modification.
+
+```powershell
+Copy-Item -Recurse -Force skills\rapport-dossier-terrain "$HOME\.claude\skills\"
+```
+
+Sous Linux ou macOS : `cp -r skills/rapport-dossier-terrain ~/.claude/skills/`. Le skill s'appuie sur le skill
+`latex-pdf-soutenance` pour la compilation et retrouve seul le dépôt (dossier courant ou parents) ; sinon,
+passer `-Depot <chemin>` aux scripts.
+
+> Il n'est pas placé dans `.claude/skills/` du dépôt : Claude Code le chargerait alors comme skill de projet, en
+> double avec la copie globale du même nom.
 
 ### En cas de problème
 

@@ -67,7 +67,7 @@ Ne rien pousser vers le dépôt distant sans demande explicite.
 
 ### Rapport réel à partir du Carnet de stage (US-30)
 
-Skill global **`rapport-dossier-terrain`** : il automatise les étapes 2 à 5 ci-dessous (`preparer.ps1` importe et
+Skill global **`rapport-dossier-terrain`** (source versionnée : `skills/rapport-dossier-terrain/`, à recopier dans `~/.claude/skills/` après modification) : il automatise les étapes 2 à 5 ci-dessous (`preparer.ps1` importe et
 contrôle, Claude rédige, `finaliser.ps1` compile et génère la présentation, puis fait le bilan des `\AC{}`).
 
 1. Dans l'application : Tableau de bord → « Télécharger le dossier terrain » (zip). L'export est refusé tant qu'une
