@@ -35,8 +35,9 @@ entièrement au vert.
 - **Tri des photos** (`/carnet/photos/`) : destination corps, annexe, preuve ou à trier.
 - **Tableau de bord** (`/admin/`) : ce qui manque au rapport, et le bouton **Dossier terrain** qui télécharge le zip.
 
-Le résultat final de la chaîne est dans [`demo/rapport_demo.pdf`](demo/rapport_demo.pdf) (50 pages, aucun champ
-« À COMPLÉTER ») et [`demo/presentation_demo.pptx`](demo/presentation_demo.pptx) (15 diapositives).
+Le résultat final de la chaîne, obtenu à partir du zip téléchargé sur le site en ligne, est dans
+[`demo/rapport_demo.pdf`](demo/rapport_demo.pdf) (50 pages, aucun champ « À COMPLÉTER », aucune image factice) et
+[`demo/presentation_demo.pptx`](demo/presentation_demo.pptx) (15 diapositives).
 
 ## La chaîne complète
 
