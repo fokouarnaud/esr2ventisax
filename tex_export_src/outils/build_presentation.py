@@ -163,6 +163,9 @@ def metric(slide, x, y, w, value, label, color=VERT):
 def image(slide, path, x, y, w, h):
     """Insère une image ajustée dans la boîte (x, y, w, h), sans déformation."""
     from PIL import Image
+    path = Path(path)
+    if path.suffix == ".png" and not path.exists() and path.with_suffix(".jpg").exists():
+        path = path.with_suffix(".jpg")  # photo réelle importée à la place de l'image factice
     with Image.open(path) as im:
         iw, ih = im.size
     r = min(w / iw, h / ih)

@@ -12,7 +12,8 @@
 \definecolor{acompleter}{HTML}{E65100}
 
 % --- Champ à compléter -------------------------------------------------------
-\newcommand{\AC}[1]{\textcolor{acompleter}{[À COMPLÉTER : #1]}}
+% Robuste : reste valable dans \MakeUppercase (couverture) sans changer le nom de la couleur
+\DeclareRobustCommand{\AC}[1]{\textcolor{acompleter}{[À COMPLÉTER : #1]}}
 
 % --- Bannière verte (titres liminaires et intercalaires) ---------------------
 \newcommand{\banniere}[1]{%
