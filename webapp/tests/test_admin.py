@@ -129,3 +129,22 @@ def test_tableau_de_bord_affiche_les_indicateurs_du_stage_actif(client, awa, sta
     page = client.get(reverse("admin:index")).content.decode()
     assert "Stage Awa" in page
     assert "Notes à compléter" in page
+
+
+def test_aide_du_slug_lisible_dans_l_admin(client, awa, stage_awa, settings, tmp_path):
+    """L'admin rend l'aide en HTML : « <slug> » y disparaissait (« img/fig_.jpg »)."""
+    import io
+
+    from django.core.files.uploadedfile import SimpleUploadedFile
+    from PIL import Image
+
+    from carnet.models import Photo
+
+    settings.MEDIA_ROOT = tmp_path
+    tampon = io.BytesIO()
+    Image.new("RGB", (40, 30)).save(tampon, "JPEG")
+    photo = Photo.ajouter(stage_awa, SimpleUploadedFile("a.jpg", tampon.getvalue(), content_type="image/jpeg"))
+    client.force_login(awa)
+    contenu = client.get(reverse("admin:carnet_photo_change", args=[photo.pk])).content.decode()
+    assert "img/fig_.jpg" not in contenu
+    assert "fig_compresseur.jpg" in contenu

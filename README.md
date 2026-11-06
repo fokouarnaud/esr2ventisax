@@ -55,6 +55,7 @@ Ces deux options, ainsi que le dépannage, sont détaillées dans **[docs/rappor
 |---|---|
 | [docs/manuel/manuel-utilisation.md](docs/manuel/manuel-utilisation.md) | Manuel de l'apprenant, écran par écran, avec le compte de démonstration |
 | [docs/manuel/scenario-stage.md](docs/manuel/scenario-stage.md) | Scénario visuel : l'usage du Carnet du premier au dernier jour du stage |
+| [docs/formation/](docs/formation/) | Fiches de formation imprimables, une par samedi de stage (samedi 1 : 7 novembre 2026) |
 | [docs/rapport-local.md](docs/rapport-local.md) | Du zip au PDF et au PPTX : les deux options, le dépannage, la démo en local |
 | [webapp/DEPLOIEMENT.md](webapp/DEPLOIEMENT.md) | Installation et mise à jour sur PythonAnywhere, maintien du compte gratuit |
 | [AGENTS.md](AGENTS.md) | Consignes, GOALS, PRD (user stories, modèle de données, Definition of Done), décisions |
