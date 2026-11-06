@@ -78,7 +78,7 @@ class DonneeTechnique(ModeleDeStage):
         ordering = ["grandeur"]
 
     def __str__(self):
-        return f"{self.grandeur} = {self.valeur.normalize()} {self.unite}"
+        return f"{self.grandeur} = {format(self.valeur.normalize(), 'f')} {self.unite}"
 
     def clean(self):
         if self.nature == self.Nature.REFERENCE and not self.reference_id:

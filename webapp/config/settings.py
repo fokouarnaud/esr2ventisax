@@ -125,7 +125,7 @@ UNFOLD = {
     "SITE_HEADER": "Carnet de stage",
     "SITE_SUBHEADER": "Journal de terrain du rapport",
     "SITE_SYMBOL": "menu_book",
-    "SITE_URL": "/carnet/note/",
+    "SITE_URL": "/",  # accueil public ; un utilisateur connecté y est renvoyé à la note rapide (A39)
     "SHOW_HISTORY": False,
     "SHOW_VIEW_ON_SITE": False,
     "BORDER_RADIUS": "12px",

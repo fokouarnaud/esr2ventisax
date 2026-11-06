@@ -139,3 +139,11 @@ def test_sigle_unique_par_stage(stage):
     Abreviation.objects.create(stage=stage, sigle="PER", signification="Polyéthylène réticulé")
     with pytest.raises(IntegrityError):
         Abreviation.objects.create(stage=stage, sigle="PER", signification="Doublon")
+
+
+@pytest.mark.parametrize("valeur, attendu", [("10", "10"), ("10.0000", "10"), ("0.20", "0.2"), ("260", "260")])
+def test_libelle_d_une_donnee_sans_notation_scientifique(stage, valeur, attendu):
+    """Decimal("10").normalize() s'écrit « 1E+1 » : le libellé de l'admin doit afficher « 10 »."""
+    d = DonneeTechnique(stage=stage, grandeur="Pression d'essai", valeur=Decimal(valeur), unite="bar",
+                        nature=DonneeTechnique.Nature.RELEVE, date=datetime.date(2026, 3, 3))
+    assert str(d) == f"Pression d'essai = {attendu} bar"

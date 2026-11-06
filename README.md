@@ -16,6 +16,9 @@ Le compte contient un stage fictif complet : « Entreprise de démonstration »,
 jour travaillé et 12 photos. Le résultat de la chaîne est dans
 [`demo/rapport_demo.pdf`](demo/rapport_demo.pdf) (50 pages) et [`demo/presentation_demo.pptx`](demo/presentation_demo.pptx).
 
+Prise en main : [manuel d'utilisation](docs/manuel/manuel-utilisation.md) et
+[scénario du premier au dernier jour](docs/manuel/scenario-stage.md).
+
 > Données inventées ; le compte est réinitialisé régulièrement : n'y saisissez rien d'important.
 
 ## Démarrage rapide
@@ -50,6 +53,8 @@ Ces deux options, ainsi que le dépannage, sont détaillées dans **[docs/rappor
 
 | Document | Contenu |
 |---|---|
+| [docs/manuel/manuel-utilisation.md](docs/manuel/manuel-utilisation.md) | Manuel de l'apprenant, écran par écran, avec le compte de démonstration |
+| [docs/manuel/scenario-stage.md](docs/manuel/scenario-stage.md) | Scénario visuel : l'usage du Carnet du premier au dernier jour du stage |
 | [docs/rapport-local.md](docs/rapport-local.md) | Du zip au PDF et au PPTX : les deux options, le dépannage, la démo en local |
 | [webapp/DEPLOIEMENT.md](webapp/DEPLOIEMENT.md) | Installation et mise à jour sur PythonAnywhere, maintien du compte gratuit |
 | [AGENTS.md](AGENTS.md) | Consignes, GOALS, PRD (user stories, modèle de données, Definition of Done), décisions |
