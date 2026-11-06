@@ -149,3 +149,15 @@ blockquote { margin: 4px 0 6px; font-size: 10.5pt; font-weight: 500; }
 .avant { margin: 0; color: var(--discret); }
 .suite { margin-top: 6mm; padding-top: 3mm; border-top: 2px solid var(--marine); color: var(--discret); font-size: 9pt; }
 .cloture em, .regle em { color: #68ddce; }
+
+/* --- Samedi 2 : classement des chiffres ----------------------------------------------------- */
+.encadre-seul { border-radius: 12px; padding: 4mm 5mm; margin-bottom: 6mm; }
+.classement { width: 100%; border-collapse: collapse; margin-bottom: 3mm; font-size: 9.5pt; }
+.classement th { text-align: left; font-size: 8.5pt; color: var(--discret); font-weight: 600; padding: 0 6px 4px; border-bottom: 1px solid var(--trait); }
+.classement th:not(:first-child), .classement td:not(:first-child) { width: 12mm; text-align: center; }
+.classement td { padding: 6px; border-bottom: 1px solid var(--trait); }
+.classement td:not(:first-child)::before {
+  content: ""; display: inline-block; width: 12px; height: 12px; border: 1.5px solid var(--marine); border-radius: 3px;
+}
+.solution { font-size: 8pt; color: var(--discret); margin-bottom: 6mm; }
+.capture-moyenne img { width: 72%; }

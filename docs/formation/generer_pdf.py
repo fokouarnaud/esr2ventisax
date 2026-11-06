@@ -19,6 +19,11 @@ RECADRAGES = {
     "creer_stage": (MANUEL / "21_creer_stage.jpg", (0, 70, 940, 470)),
     "jours_travailles": (ICI / "img" / "onglet_suivi.jpg", (0, 296, 640, 480)),
     "rapport_activite": (MANUEL / "08b_note_rapport_activite.jpg", (0, 70, 1160, 640)),
+    # samedi 2
+    "refus_source": (ICI / "img" / "refus_sans_source.jpg", (0, 380, 1000, 700)),
+    "equipement": (ICI / "img" / "equipement_ajout.jpg", (0, 60, 960, 440)),
+    "tableau_vide": (MANUEL / "22_premier_jour_tableau.jpg", (0, 70, 1280, 420)),
+    "couverture": (MANUEL / "03b_stage_couverture.jpg", (0, 60, 940, 520)),
 }
 NBSP = " "
 TIRETS_INTERDITS = ("—", "–")
