@@ -20,6 +20,7 @@ class Stage(ModeleBase):
         null=True,
         blank=True,
         related_name="stages_suivis",
+        verbose_name="formateur référent",
     )
     intitule = models.CharField("intitulé", max_length=200)
     slug = models.SlugField(max_length=80, blank=True)

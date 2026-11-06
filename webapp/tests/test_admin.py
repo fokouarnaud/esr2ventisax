@@ -148,3 +148,11 @@ def test_aide_du_slug_lisible_dans_l_admin(client, awa, stage_awa, settings, tmp
     contenu = client.get(reverse("admin:carnet_photo_change", args=[photo.pk])).content.decode()
     assert "img/fig_.jpg" not in contenu
     assert "fig_compresseur.jpg" in contenu
+
+
+def test_libelle_du_formateur_referent_accentue(client, awa, stage_awa):
+    """Sans libellé, Django affichait « Formateur referent » dans l'onglet Suivi."""
+    client.force_login(awa)
+    contenu = client.get(reverse("admin:carnet_stage_change", args=[stage_awa.pk])).content.decode()
+    assert "Formateur referent" not in contenu
+    assert "Formateur référent" in contenu
