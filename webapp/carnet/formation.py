@@ -36,6 +36,8 @@ FICHES = [
           "Relire son dossier terrain, rattraper un samedi manqué, commencer le bilan, les critiques et les suggestions."),
     Fiche(5, datetime.date(2026, 12, 5), "Les données du chapitre technique",
           "Choisir le petit calcul du thème, recueillir ses données mesurées ou sourcées, compléter les lieux."),
+    Fiche(6, datetime.date(2026, 12, 12), "Les figures du rapport",
+          "Faire valider l'organigramme, dater les tâches du planning, choisir et légender les photos."),
 ]
 
 
