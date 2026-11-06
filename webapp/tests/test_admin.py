@@ -156,3 +156,18 @@ def test_libelle_du_formateur_referent_accentue(client, awa, stage_awa):
     contenu = client.get(reverse("admin:carnet_stage_change", args=[stage_awa.pk])).content.decode()
     assert "Formateur referent" not in contenu
     assert "Formateur référent" in contenu
+
+
+def test_valeurs_techniques_sans_zeros_inutiles_dans_la_liste(client, awa, stage_awa):
+    """La liste affichait « 0,2000 » pour 0,20 L/s : quatre décimales qui n'ont pas été mesurées."""
+    from decimal import Decimal
+
+    from carnet.models import DonneeTechnique, Reference
+
+    ref = Reference.objects.create(stage=stage_awa, type="norme", auteur="AFNOR", titre="NF DTU 60.11", annee=2013)
+    DonneeTechnique.objects.create(stage=stage_awa, grandeur="Débit de base d'un lavabo", valeur=Decimal("0.20"),
+                                   unite="L/s", nature="reference", date=D(2026, 3, 3), reference=ref)
+    client.force_login(awa)
+    contenu = client.get(reverse("admin:carnet_donneetechnique_changelist")).content.decode()
+    assert "0,2000" not in contenu
+    assert "0,2" in contenu
