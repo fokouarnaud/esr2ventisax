@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Samedi 1 : premier jour de stage avec le Carnet</title>
+<link rel="stylesheet" href="formation.css">
+</head>
+<body>
+
+<!-- ============================ PAGE 1 : la journée en un coup d'œil ============================ -->
+<section class="page">
+    <header class="entete-doc">
+        <span class="marque">Carnet de stage</span>
+        <span>Formation de l'apprenant, samedi 1</span>
+    </header>
+
+    <div class="ouverture">
+        <div>
+            <p class="surtitre">Samedi 7 novembre 2026</p>
+            <h1>Votre premier jour de stage, pas à pas.</h1>
+            <p class="chapo">Ce que vous faites avant de partir, sur place et le soir, pour que rien de cette journée ne manque au rapport.</p>
+        </div>
+        <figure class="telephone">
+            <img src="../manuel/img/31_note_rapide_remplie.jpg" alt="Note rapide remplie sur un téléphone">
+        </figure>
+    </div>
+
+    <div class="regle">
+        <h2>Votre stage a lieu le samedi</h2>
+        <p>Une semaine sépare deux journées : ce que vous ne notez pas le jour même sera oublié le samedi suivant. Chaque samedi forme donc un cycle complet, à boucler avant de dormir.</p>
+        <ol class="cycle">
+            <li><strong>Sur place</strong><span>Notes rapides et photos, sur le téléphone.</span></li>
+            <li><strong>Le soir</strong><span>Compléter les notes et les fiches, trier les photos.</span></li>
+            <li><strong>Avant de dormir</strong><span>Télécharger le dossier terrain (sauvegarde).</span></li>
+        </ol>
+    </div>
+
+    <h2 class="titre-section">Le déroulé de la journée</h2>
+    <table class="deroule">
+        <thead><tr><th>Moment</th><th>Dans l'application</th><th>Durée</th></tr></thead>
+        <tbody>
+            <tr><td>Vendredi soir ou samedi matin</td><td>Se connecter, créer le stage, régler les jours travaillés sur le samedi.</td><td>10 min</td></tr>
+            <tr><td>Accueil dans l'entreprise</td><td>Première note rapide. Noter les noms et les fonctions sur papier ou dans la note.</td><td>1 min</td></tr>
+            <tr><td>Visite des lieux</td><td>Note rapide sur le site, pour capter la position. Photos du matériel, avec accord.</td><td>2 à 3 min</td></tr>
+            <tr><td>Chaque tâche confiée</td><td>Une note rapide par tâche : ce que vous avez fait, vu ou appris.</td><td>1 min</td></tr>
+            <tr><td>Fin de journée</td><td>Note de synthèse : la journée en trois phrases.</td><td>1 min</td></tr>
+            <tr><td>Le soir</td><td>Compléter les notes, Personnes, Lieux, Organigramme, Fiche entreprise. Trier les photos. Sauvegarder.</td><td>30 à 45 min</td></tr>
+        </tbody>
+    </table>
+
+    <div class="a-emporter">
+        <h2>À préparer pour demain</h2>
+        <ul class="cases">
+            <li>Téléphone chargé, avec des données mobiles.</li>
+            <li>Identifiant et mot de passe reçus de l'administrateur.</li>
+            <li>Date de fin du stage et nom de votre tuteur (convention de stage).</li>
+            <li>Un petit carnet papier, si le réseau manque.</li>
+            <li>Vos EPI : chaussures de sécurité, tenue de travail.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ============================ PAGE 2 : avant de partir ============================ -->
+<section class="page">
+    <header class="entete-doc"><span class="marque">Carnet de stage</span><span>Avant de partir</span></header>
+    <h2 class="titre-page">Avant de partir : dix minutes, une seule fois</h2>
+    <p class="intro">À faire le vendredi soir ou le samedi matin, sur ordinateur ou sur téléphone, à l'adresse <strong>esrventisax.pythonanywhere.com</strong>.</p>
+
+    <div class="etape">
+        <div class="etape__texte">
+            <h3>Se connecter</h3>
+            <p>Bouton <em>Se connecter</em> en haut de l'accueil, puis votre identifiant et votre mot de passe. Ils sont personnels : ne les prêtez à personne.</p>
+            <p class="saisie">Mon identifiant : <span class="ligne"></span></p>
+        </div>
+        <img src="img/connexion.jpg" alt="Page de connexion">
+    </div>
+
+    <div class="etape">
+        <div class="etape__texte">
+            <h3>Créer votre stage</h3>
+            <p>Le tableau de bord affiche <em>Créer mon stage</em>. Remplissez ce que vous savez déjà :</p>
+            <ul class="puces">
+                <li><strong>Intitulé</strong> : par exemple « Stage en entreprise, froid et climatisation ».</li>
+                <li><strong>Spécialité</strong>, <strong>entreprise</strong>, <strong>date de début</strong> : 07/11/2026.</li>
+                <li><strong>Date de fin</strong> : celle de la convention. À défaut, une date provisoire que vous corrigerez.</li>
+            </ul>
+            <p>Le thème et le reste de la couverture attendront : un champ vide ne bloque rien.</p>
+        </div>
+        <img src="img/creer_stage.jpg" alt="Formulaire de création du stage">
+    </div>
+
+    <div class="etape etape--important">
+        <div class="etape__texte">
+            <h3>Régler les jours travaillés sur le samedi</h3>
+            <p>Onglet <em>Suivi</em> du stage, champ <em>Jours travaillés</em>. Par défaut il contient <code>[0, 1, 2, 3, 4, 5]</code>, c'est-à-dire du lundi au samedi. Remplacez tout par :</p>
+            <p class="code-grand"><code>[5]</code></p>
+            <p>Le chiffre 5 désigne le samedi (lundi = 0). Sans ce réglage, le tableau de bord compterait cinq « jours sans note » chaque semaine. Cliquez ensuite sur <em>Enregistrer</em>.</p>
+        </div>
+        <img src="img/jours_travailles.jpg" alt="Onglet Suivi avec le champ Jours travaillés">
+    </div>
+
+    <p class="verifier"><strong>Vérifier :</strong> le tableau de bord affiche votre stage, avec <em>Jours sans note : 0</em> le vendredi.</p>
+</section>
+
+<!-- ============================ PAGE 3 : sur place ============================ -->
+<section class="page">
+    <header class="entete-doc"><span class="marque">Carnet de stage</span><span>Sur place</span></header>
+    <h2 class="titre-page">Sur place : noter vite, noter juste</h2>
+
+    <div class="colonnes">
+        <div>
+            <h3>Une note rapide en trois gestes</h3>
+            <ol class="gestes">
+                <li><strong>Écrire</strong> quelques phrases : le fait, le chiffre, le nom de l'outil.</li>
+                <li><strong>Photographier</strong> avec <em>Prendre</em>, si c'est permis.</li>
+                <li><strong>Enregistrer la note</strong>. La date, l'heure et la position s'ajoutent seules.</li>
+            </ol>
+            <p>Autorisez la localisation quand le téléphone la demande. Sans réseau, écrivez quand même : le texte reste gardé dans le téléphone et vous enregistrerez plus tard.</p>
+            <p class="encadre">Faites une note <strong>sur le site même</strong> (siège ou chantier) : sa position servira à créer le lieu le soir.</p>
+        </div>
+        <figure class="telephone telephone--petit">
+            <img src="../manuel/img/33_note_enregistree.jpg" alt="Message Note enregistrée avec 1 photo">
+            <figcaption>Le message qui confirme l'enregistrement.</figcaption>
+        </figure>
+    </div>
+
+    <h3>Ce qu'il faut demander dès le premier jour</h3>
+    <p class="intro">Ces informations sont faciles à obtenir le jour de l'accueil, et difficiles une fois le stage terminé.</p>
+    <div class="questions">
+        <div>
+            <h4>L'entreprise</h4>
+            <ul class="puces">
+                <li>Nom exact, sigle, année de création.</li>
+                <li>Adresse et repères pour s'y rendre.</li>
+                <li>Activités, principaux clients.</li>
+                <li>Effectif et organisation (divisions, équipes).</li>
+            </ul>
+        </div>
+        <div>
+            <h4>Les personnes</h4>
+            <ul class="puces">
+                <li>Nom et fonction de votre tuteur.</li>
+                <li>Votre chef d'équipe et vos collègues directs.</li>
+                <li>À qui vous êtes rattaché : votre place dans l'organigramme.</li>
+                <li>Si chacun accepte d'être nommé dans le rapport.</li>
+            </ul>
+        </div>
+        <div>
+            <h4>Le travail</h4>
+            <ul class="puces">
+                <li>Votre poste et ce qu'on attend de vous.</li>
+                <li>Les règles de sécurité et les EPI exigés.</li>
+                <li>Le chantier ou l'atelier où vous travaillerez.</li>
+                <li><strong>Si vous pouvez photographier</strong>, et quoi.</li>
+            </ul>
+        </div>
+    </div>
+    <p class="attention"><strong>Photos :</strong> demandez toujours l'accord avant de photographier. Pas de visage sans permission, pas de document interne. Les photos de l'application sont accessibles par leur adresse.</p>
+</section>
+
+<!-- ============================ PAGE 4 : le soir ============================ -->
+<section class="page">
+    <header class="entete-doc"><span class="marque">Carnet de stage</span><span>Le soir</span></header>
+    <h2 class="titre-page">Le soir : transformer les notes en matière de rapport</h2>
+    <p class="intro">Sur ordinateur de préférence, dans le tableau de bord. Comptez 30 à 45 minutes ce premier samedi : il y a plus à saisir que les suivants.</p>
+
+    <div class="soir">
+        <div class="soir__item">
+            <h3>Compléter chaque note</h3>
+            <p><em>Journal</em>, ouvrir la note, onglet <em>Rapport d'activité</em> : objectifs, moyens, méthodologie, difficultés, solutions. Cocher <em>Complétée</em>.</p>
+        </div>
+        <div class="soir__item">
+            <h3>Saisir les personnes</h3>
+            <p><em>Personnes</em> : nom, fonction, rôle. Cocher <em>À remercier</em>, et <em>Nom publiable</em> seulement si la personne est d'accord.</p>
+        </div>
+        <div class="soir__item">
+            <h3>Créer les lieux</h3>
+            <p><em>Lieux</em> : siège et chantier, avec des repères (« face à la pharmacie… »). Latitude et longitude se recopient depuis l'onglet <em>Liens</em> de la note prise sur place.</p>
+        </div>
+        <div class="soir__item">
+            <h3>Commencer l'organigramme</h3>
+            <p><em>Organigramme</em> : un poste par ligne, avec son supérieur. Marquer votre poste comme <em>Poste du stagiaire</em>.</p>
+        </div>
+        <div class="soir__item">
+            <h3>Ouvrir la fiche entreprise</h3>
+            <p><em>Fiches entreprise</em> : remplir au moins <em>Présentation</em>, <em>Organisation générale</em> et <em>Historique</em> avec ce que vous avez appris.</p>
+        </div>
+        <div class="soir__item">
+            <h3>Trier les photos</h3>
+            <p><em>Trier les photos</em> : corps, annexe ou preuve. Une photo pour le rapport demande une légende et un slug (bouton <em>Légende et slug</em>).</p>
+        </div>
+    </div>
+
+    <figure class="capture-large">
+        <img src="img/rapport_activite.jpg" alt="Onglet Rapport d'activité d'une note">
+        <figcaption>L'onglet Rapport d'activité d'une note, dans le compte de démonstration.</figcaption>
+    </figure>
+
+    <div class="cloture">
+        <h3>Avant de dormir : sauvegarder</h3>
+        <p>Tableau de bord, bouton <em>Dossier terrain</em>. Gardez le zip sur une clé USB ou dans un dossier à part. Puis vérifiez :</p>
+        <ul class="cases cases--2">
+            <li>Notes à compléter : <strong>0</strong></li>
+            <li>Jours sans note : <strong>0</strong></li>
+            <li>Photos à trier : <strong>0</strong></li>
+            <li>Dernière sauvegarde : <strong>Aujourd'hui</strong></li>
+            <li>Rubriques du cours remplies : <strong>au moins 3 / 20</strong></li>
+            <li>Toutes les cases du tableau de bord sans orange.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ============================ PAGE 5 : formation ============================ -->
+<section class="page">
+    <header class="entete-doc"><span class="marque">Carnet de stage</span><span>Formation</span></header>
+    <h2 class="titre-page">Formation : s'entraîner avant samedi</h2>
+    <p class="intro">Cinq exercices sur le <strong>compte de démonstration</strong>, à faire ce vendredi soir. Ils reprennent exactement les gestes de demain. Le compte démo est partagé et remis à zéro régulièrement : n'y saisissez rien de personnel.</p>
+
+    <div class="identifiants">
+        <div><span>Adresse</span><code>esrventisax.pythonanywhere.com</code></div>
+        <div><span>Identifiant</span><code>demo.apprenant</code></div>
+        <div><span>Mot de passe</span><code>demo-local-2026</code></div>
+    </div>
+
+    <ol class="exercices">
+        <li>
+            <h3>Faire une note rapide avec photo</h3>
+            <p><strong>À faire :</strong> sur le téléphone, écrire « Visite du local technique : deux réducteurs de pression, réglés à 3 bar. », ajouter une photo de n'importe quel objet, ouvrir <em>Étiquettes du rapport</em> et cocher <em>Présentation</em> (Partie I), enregistrer.</p>
+            <p class="attendu"><strong>Résultat attendu :</strong> le message « Note enregistrée avec 1 photo. » et « Position captée » si la localisation est autorisée.</p>
+        </li>
+        <li>
+            <h3>Retrouver et compléter la note</h3>
+            <p><strong>À faire :</strong> <em>Journal</em>, filtre <em>Complétée : Non</em>, ouvrir votre note. Remplir <em>Objectifs</em> et <em>Difficultés</em>, cocher <em>Complétée</em>, enregistrer.</p>
+            <p class="attendu"><strong>Résultat attendu :</strong> la note porte une coche verte dans la liste du journal.</p>
+        </li>
+        <li>
+            <h3>Trier la photo</h3>
+            <p><strong>À faire :</strong> <em>Trier les photos</em>, filtre <em>À trier</em>, choisir <em>Corps</em> pour votre photo, puis <em>Légende et slug</em> : légende « Réducteur de pression », slug « reducteur_essai ».</p>
+            <p class="attendu"><strong>Résultat attendu :</strong> la photo apparaît sous le filtre <em>Corps du rapport</em>.</p>
+        </li>
+        <li>
+            <h3>Lire le tableau de bord</h3>
+            <p><strong>À faire :</strong> ouvrir le tableau de bord et repérer les cases orange.</p>
+            <p class="attendu"><strong>Résultat attendu :</strong> vous savez dire, pour chaque case orange, quelle action la fait passer au vert.</p>
+        </li>
+        <li>
+            <h3>Télécharger le dossier terrain</h3>
+            <p><strong>À faire :</strong> bouton <em>Dossier terrain</em>, puis ouvrir le zip et repérer <code>terrain.md</code>.</p>
+            <p class="attendu"><strong>Résultat attendu :</strong> un fichier <code>dossier-terrain-stage-demo-….zip</code> et <em>Dernière sauvegarde : Aujourd'hui</em>.</p>
+        </li>
+    </ol>
+</section>
+
+<!-- ============================ PAGE 6 : une bonne note ============================ -->
+<section class="page">
+    <header class="entete-doc"><span class="marque">Carnet de stage</span><span>Formation</span></header>
+    <h2 class="titre-page">Une note utile pour le rapport</h2>
+    <p class="intro">Le rapport ne raconte pas vos journées : il en tire des faits, des chiffres et des méthodes. Une note utile contient au moins l'un des trois.</p>
+
+    <div class="comparaison">
+        <div class="comparaison__mauvais">
+            <h3>Note à reprendre</h3>
+            <blockquote>« Aujourd'hui on a fait de la plomberie avec le chef, c'était bien. »</blockquote>
+            <ul class="puces">
+                <li>Aucun fait précis.</li>
+                <li>Aucun chiffre, aucun matériel nommé.</li>
+                <li>« Le chef » : quelle fonction ?</li>
+            </ul>
+        </div>
+        <div class="comparaison__bon">
+            <h3>Note utile</h3>
+            <blockquote>« Pose de 6 m de tube PPR de 25 mm au 2e étage avec le chef d'équipe plomberie. Soudure au polyfuseur, matrice de 25. Une fuite à l'essai : soudure trop courte, refaite. »</blockquote>
+            <ul class="puces">
+                <li>Un fait : la pose, l'essai, la reprise.</li>
+                <li>Des chiffres et du matériel nommés.</li>
+                <li>Une difficulté et sa solution.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Exercice : réécrire ces notes</h3>
+    <p class="intro">Réécrivez chaque note pour qu'elle serve au rapport. Inventez les détails pour vous entraîner ; demain, vous noterez les vrais.</p>
+    <div class="reecriture">
+        <div><p class="avant">« Accueil, présentation de la boîte. »</p><span class="ligne ligne--longue"></span><span class="ligne ligne--longue"></span></div>
+        <div><p class="avant">« On a vu des climatiseurs. »</p><span class="ligne ligne--longue"></span><span class="ligne ligne--longue"></span></div>
+        <div><p class="avant">« Le chef m'a montré les outils. »</p><span class="ligne ligne--longue"></span><span class="ligne ligne--longue"></span></div>
+    </div>
+
+    <h3>Vérifier ses acquis</h3>
+    <ul class="cases">
+        <li>Je sais pourquoi le champ <em>Jours travaillés</em> doit valoir <code>[5]</code>.</li>
+        <li>Je sais faire une note rapide en moins d'une minute.</li>
+        <li>Je sais quelles questions poser demain sur l'entreprise et les personnes.</li>
+        <li>Je sais compléter une note et cocher <em>Complétée</em>.</li>
+        <li>Je sais sauvegarder avec <em>Dossier terrain</em> avant de dormir.</li>
+    </ul>
+
+    <footer class="suite">
+        <p><strong>Samedi 14 novembre :</strong> la fiche de la deuxième journée suivra. Le manuel complet, écran par écran, est sur le dépôt du projet : <code>docs/manuel/manuel-utilisation.md</code>.</p>
+    </footer>
+</section>
+
+</body>
+</html>

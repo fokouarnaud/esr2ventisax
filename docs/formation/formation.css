@@ -1,0 +1,151 @@
+/* Supports de formation imprimables (A4). Charte du Carnet : Lexend, marine #0b2d46, turquoise foncé #0d665e.
+   Thème clair unique (document imprimé). Rayons : encadrés 12px, captures 8px. Pas d'animation. */
+
+@font-face {
+  font-family: "Lexend"; font-weight: 100 900; font-display: swap;
+  src: url("../../webapp/carnet/static/carnet/fonts/lexend-latin.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+@font-face {
+  font-family: "Lexend"; font-weight: 100 900; font-display: swap;
+  src: url("../../webapp/carnet/static/carnet/fonts/lexend-latin-ext.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --marine: #0b2d46;
+  --accent: #0d665e;
+  --voile: #e3f4f1;
+  --encre: #13212c;
+  --discret: #4a5d69;
+  --trait: #d5dfe4;
+  --papier: #f4f7f8;
+  --alerte: #fff0c2;
+  --alerte-encre: #53410a;
+}
+
+@page { size: A4; margin: 14mm 15mm 16mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font-family: "Lexend", system-ui, sans-serif; font-size: 10pt; line-height: 1.5; color: var(--encre); }
+
+.page { break-after: page; }
+.page:last-child { break-after: auto; }
+
+h1, h2, h3, h4 { margin: 0; line-height: 1.2; letter-spacing: -0.01em; color: var(--marine); }
+h1 { font-size: 26pt; font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; }
+h2 { font-size: 13pt; font-weight: 600; }
+h3 { font-size: 11pt; font-weight: 600; margin-bottom: 4px; }
+h4 { font-size: 10pt; font-weight: 600; margin-bottom: 4px; }
+p { margin: 0 0 6px; }
+em { font-style: normal; font-weight: 600; color: var(--accent); }
+code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 9.5pt; background: var(--voile); color: var(--marine); padding: 1px 5px; border-radius: 4px; }
+figure { margin: 0; }
+img { display: block; max-width: 100%; border-radius: 8px; border: 1px solid var(--trait); }
+
+.entete-doc {
+  display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 6px; margin-bottom: 14px;
+  border-bottom: 2px solid var(--marine); font-size: 8.5pt; color: var(--discret);
+}
+.marque { font-weight: 600; color: var(--marine); }
+
+/* --- Page 1 ---------------------------------------------------------------------------- */
+.ouverture { display: grid; grid-template-columns: 1fr 38mm; gap: 10mm; align-items: center; margin-bottom: 5mm; }
+.surtitre { font-weight: 600; color: var(--accent); font-size: 11pt; margin-bottom: 6px; }
+.chapo { font-size: 11.5pt; color: var(--discret); margin-top: 8px; max-width: 60ch; }
+.telephone img { border: 4px solid var(--marine); border-radius: 12px; }
+.ouverture .telephone img { height: 58mm; width: 100%; object-fit: cover; object-position: top; }
+.telephone figcaption { font-size: 8pt; color: var(--discret); margin-top: 4px; }
+.telephone--petit { width: 42mm; }
+
+.regle { background: var(--marine); color: #eef4f6; border-radius: 12px; padding: 5mm 6mm; margin-bottom: 6mm; }
+.regle h2 { color: #fff; margin-bottom: 4px; }
+.regle p { color: #c9d6dc; max-width: 75ch; }
+.cycle { list-style: none; padding: 0; margin: 8px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; counter-reset: c; }
+.cycle li { border-top: 2px solid #68ddce; padding-top: 6px; display: grid; gap: 2px; }
+.cycle strong { color: #68ddce; }
+.cycle span { color: #e3eef2; font-size: 9pt; }
+
+.titre-section { margin-bottom: 6px; }
+.deroule { width: 100%; border-collapse: collapse; margin-bottom: 7mm; font-size: 9.5pt; }
+.deroule th { text-align: left; font-weight: 600; color: var(--discret); font-size: 8.5pt; padding: 0 8px 4px 0; border-bottom: 1px solid var(--trait); }
+.deroule td { padding: 6px 8px 6px 0; vertical-align: top; }
+.deroule tbody tr:nth-child(odd) td { background: var(--papier); }
+.deroule td:first-child { font-weight: 600; width: 46mm; padding-left: 6px; }
+.deroule td:last-child { width: 22mm; color: var(--discret); white-space: nowrap; }
+
+.a-emporter { border: 1px solid var(--trait); border-radius: 12px; padding: 4mm 6mm; }
+.a-emporter h2 { margin-bottom: 6px; }
+
+/* Cases à cocher imprimables */
+.cases { list-style: none; padding: 0; margin: 0; display: grid; gap: 5px; }
+.cases li { position: relative; padding-left: 22px; }
+.cases li::before {
+  content: ""; position: absolute; left: 0; top: 2px; width: 12px; height: 12px;
+  border: 1.5px solid var(--marine); border-radius: 3px; background: #fff;
+}
+.cases--2 { grid-template-columns: 1fr 1fr; column-gap: 8mm; }
+
+.puces { margin: 4px 0 6px; padding-left: 16px; }
+.puces li { margin-bottom: 2px; }
+.puces li::marker { color: var(--accent); }
+
+/* --- Pages 2 à 4 ------------------------------------------------------------------------ */
+.titre-page { font-size: 16pt; margin-bottom: 4px; }
+.intro { color: var(--discret); max-width: 85ch; margin-bottom: 5mm; }
+
+.etape { display: grid; grid-template-columns: 1fr 78mm; gap: 7mm; align-items: start; padding: 5mm 0; border-top: 1px solid var(--trait); }
+.etape--important { background: var(--voile); border: 0; border-radius: 12px; padding: 5mm; margin-top: 2mm; }
+.code-grand { margin: 6px 0 8px; }
+.code-grand code { font-size: 20pt; padding: 4px 14px; background: #fff; border: 2px solid var(--accent); border-radius: 8px; }
+.saisie { margin-top: 8px; color: var(--discret); }
+.ligne { display: inline-block; width: 52mm; border-bottom: 1px solid var(--discret); height: 1em; vertical-align: bottom; }
+.ligne--longue { display: block; width: 100%; height: 7mm; }
+.verifier { margin-top: 5mm; padding: 3mm 5mm; border-left: 3px solid var(--accent); background: var(--papier); }
+
+.colonnes { display: grid; grid-template-columns: 1fr 44mm; gap: 8mm; align-items: start; margin-bottom: 6mm; }
+.gestes { padding-left: 18px; margin: 4px 0 8px; }
+.gestes li { margin-bottom: 4px; }
+.gestes li::marker { color: var(--accent); font-weight: 600; }
+.encadre { background: var(--voile); border-radius: 8px; padding: 3mm 4mm; }
+.questions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; margin-bottom: 5mm; }
+.questions > div { border-top: 2px solid var(--marine); padding-top: 6px; }
+.attention { background: var(--alerte); color: var(--alerte-encre); border-radius: 8px; padding: 3mm 4mm; }
+
+.soir { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm 8mm; margin-bottom: 5mm; }
+.soir__item { border-left: 3px solid var(--accent); padding-left: 4mm; }
+.soir__item p { color: var(--discret); margin: 0; }
+.capture-large { margin: 0 0 5mm; }
+.capture-large img { width: 100%; }
+.capture-large figcaption { font-size: 8pt; color: var(--discret); margin-top: 3px; }
+.cloture { background: var(--marine); color: #eef4f6; border-radius: 12px; padding: 5mm 6mm; }
+.cloture h3 { color: #fff; }
+.cloture p { color: #c9d6dc; }
+.cloture strong { color: #68ddce; }
+.cloture .cases li::before { border-color: #68ddce; background: transparent; }
+
+/* --- Pages 5 et 6 : formation ------------------------------------------------------------ */
+.identifiants { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 4mm; margin-bottom: 6mm; }
+.identifiants div { background: var(--papier); border-radius: 8px; padding: 3mm 4mm; display: grid; gap: 2px; }
+.identifiants span { font-size: 8pt; color: var(--discret); }
+.identifiants code { font-size: 10pt; background: none; padding: 0; }
+
+.exercices { list-style: none; padding: 0; margin: 0; counter-reset: ex; display: grid; gap: 4mm; }
+.exercices li { counter-increment: ex; position: relative; padding: 0 0 4mm 12mm; border-bottom: 1px solid var(--trait); break-inside: avoid; }
+.exercices li:last-child { border-bottom: 0; }
+.exercices li::before {
+  content: counter(ex); position: absolute; left: 0; top: 0; width: 8mm; height: 8mm; border-radius: 50%;
+  background: var(--marine); color: #fff; font-weight: 600; display: grid; place-items: center; font-size: 10pt;
+}
+.attendu { background: var(--voile); border-radius: 6px; padding: 2mm 3mm; margin-bottom: 0; }
+
+.comparaison { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-bottom: 6mm; }
+.comparaison > div { border-radius: 12px; padding: 4mm 5mm; }
+.comparaison__mauvais { background: var(--alerte); }
+.comparaison__mauvais h3 { color: var(--alerte-encre); }
+.comparaison__bon { background: var(--voile); }
+blockquote { margin: 4px 0 6px; font-size: 10.5pt; font-weight: 500; }
+.reecriture { display: grid; gap: 3mm; margin-bottom: 6mm; }
+.avant { margin: 0; color: var(--discret); }
+.suite { margin-top: 6mm; padding-top: 3mm; border-top: 2px solid var(--marine); color: var(--discret); font-size: 9pt; }
+.cloture em, .regle em { color: #68ddce; }
