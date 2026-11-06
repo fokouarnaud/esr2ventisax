@@ -16,6 +16,23 @@ from .services.quota import QuotaDepasse, octets_restants
 from .services.stage_actif import choisir_stage_actif, stage_actif
 
 
+DEPOT = "https://github.com/fokouarnaud/esr2ventisax/blob/develop"
+
+
+def accueil(request):
+    """Page publique avant la connexion (A39) : présentation, démo et manuel. Aucune donnée d'apprenant."""
+    if request.user.is_authenticated:
+        return redirect("carnet:note_rapide")
+    from .demo.donnees import IDENTIFIANT, MOT_DE_PASSE  # identifiants publics par choix (A38)
+
+    return render(request, "carnet/accueil.html", {
+        "demo_identifiant": IDENTIFIANT, "demo_mot_de_passe": MOT_DE_PASSE,
+        "manuel": f"{DEPOT}/docs/manuel/manuel-utilisation.md",
+        "scenario": f"{DEPOT}/docs/manuel/scenario-stage.md",
+        "rapport_demo": f"{DEPOT}/demo/rapport_demo.pdf",
+    })
+
+
 @login_required
 def note_rapide(request):
     stage = stage_actif(request)

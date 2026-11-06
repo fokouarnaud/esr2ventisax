@@ -19,6 +19,7 @@ from .models import (
 
 admin.site.site_header = admin.site.site_title = "Carnet de stage"
 admin.site.index_title = "Tableau de bord"
+admin.site.login_template = "carnet/connexion.html"  # ajoute le lien vers l'accueil public (A39)
 
 _get_app_list = admin.site.get_app_list
 

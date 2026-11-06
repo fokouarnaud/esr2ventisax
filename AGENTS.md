@@ -188,7 +188,8 @@ Par ordre de livraison (A20) :
   cela se fait en local (A4, A31).
 - Éditeur de texte visuel (WYSIWYG), titres, tableaux ou images dans les champs texte (A34).
 - Contrôle d'accès aux photos et retrait de l'EXIF (A22).
-- Front-end séparé (React, Vue…) : seuls l'admin Unfold et les pages Note rapide et Tri des photos (A9).
+- Front-end séparé (React, Vue…) : seuls l'admin Unfold, les pages Note rapide et Tri des photos (A9) et
+  l'accueil public (A39).
 - Base de données autre que SQLite, hébergement payant, tâches planifiées sur le serveur.
 - Code en dur pour une spécialité ou un thème donné (A2).
 - Tout ce qui touche à `archive/` et à `exemple_rapport/`. Aucun commit ni push de données réelles d'un
@@ -424,6 +425,7 @@ PythonAnywhere est changé.
 | A35 | Photos du rapport ? | Destination à trier, corps, annexe ou preuve ; seules corps et annexe sont exportées ; vue de tri en grille. |
 | A36 | Personnes ? | Cases « à remercier » et « nom publiable » ; téléphone jamais exporté. |
 | A38 | Démo publique (2026-10-18) ? | `charger_demo` : compte `demo.apprenant` / `demo-local-2026` (identifiant public assumé, données fictives) et stage complet (EDEMO, logo démo, chantier R+10). `rediger_demo` remplit les `\AC{}` des parties. Résultat versionné dans `demo/`. Champ `Lieu.niveaux` (→ `\InfoChantierNiveaux`). Organigramme : écart mesuré entre blocs (plus de chevauchement). |
+| A39 | Aide en ligne avant la connexion (2026-11-06) ? | Page d'accueil publique sur `/` (gabarit Django, `carnet/accueil.css`, sans framework) conçue avec `design-taste-frontend` : héros avec capture réelle, rythme jour/soir/samedi, bento, pages du rapport de démo, identifiants démo (A38), liens vers `docs/manuel/` sur GitHub. Aucune donnée d'apprenant. Connecté : redirection vers la Note rapide. Lien « Découvrir le Carnet et la démo » sous la connexion, `SITE_URL` = `/`. Images WebP (≈ 175 Ko) dans `static/carnet/accueil/`. Tests : `tests/test_accueil.py`. |
 | A37 | Revue visuelle Playwright (2026-10-18) ? | Voir « Charte appliquée » ci-dessous : traduction d'Unfold, primaire `#0d665e`, tri sans accents, accessibilité de la navigation mobile. |
 
 ### Charte appliquée (revue visuelle du 2026-10-18)

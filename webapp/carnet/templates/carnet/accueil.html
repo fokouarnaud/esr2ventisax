@@ -1,0 +1,134 @@
+{% load static %}<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Carnet de stage : notez votre stage au jour le jour sur le téléphone, puis produisez un rapport conforme au cours Module 2.">
+    <meta name="theme-color" content="#f4f7f8" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a1c28" media="(prefers-color-scheme: dark)">
+    <title>Carnet de stage : le terrain d'abord, le rapport ensuite</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'carnet/favicon.svg' %}">
+    <link rel="stylesheet" href="{% static 'carnet/css/polices.css' %}">
+    <link rel="stylesheet" href="{% static 'unfold/fonts/material-symbols/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'carnet/css/carnet.css' %}">
+    <link rel="stylesheet" href="{% static 'carnet/css/accueil.css' %}">
+    <link rel="preload" as="image" href="{% static 'carnet/accueil/note_rapide.webp' %}">
+</head>
+<body class="accueil">
+{% url 'admin:login' as connexion %}
+<header class="entete">
+    <div class="entete__interieur">
+        <a class="marque" href="/">
+            <span class="marque__pastille"><span class="icone" aria-hidden="true">menu_book</span></span>
+            Carnet de stage
+        </a>
+        <a class="bouton bouton--petit" href="{{ connexion }}">Se connecter</a>
+    </div>
+</header>
+
+<main>
+    <section class="heros" aria-labelledby="titre-heros">
+        <div class="heros__texte">
+            <h1 id="titre-heros">Le terrain d'abord. Le rapport ensuite.</h1>
+            <p class="heros__sous-titre">Une note, une photo, la position GPS : moins d'une minute sur le chantier. Rien ne se perd pour le rapport.</p>
+            <div class="heros__actions">
+                <a class="bouton" href="{{ connexion }}"><span class="icone" aria-hidden="true">login</span>Se connecter</a>
+                <a class="bouton bouton--contour" href="#demo">Essayer la démo</a>
+            </div>
+        </div>
+        <figure class="heros__ecran">
+            <img src="{% static 'carnet/accueil/note_rapide.webp' %}" width="560" height="1212"
+                 alt="La note rapide sur un téléphone : texte saisi, photo d'un manomètre, position captée.">
+        </figure>
+    </section>
+
+    <section class="rythme" aria-labelledby="titre-rythme">
+        <h2 id="titre-rythme">Trois gestes, du premier au dernier jour</h2>
+        <ol class="rythme__liste">
+            <li>
+                <span class="rythme__moment"><span class="icone" aria-hidden="true">construction</span>Sur le chantier</span>
+                <p><strong>Note rapide</strong> depuis le téléphone. Date, heure et lieu se remplissent seuls ; le brouillon survit à une coupure de réseau.</p>
+            </li>
+            <li>
+                <span class="rythme__moment"><span class="icone" aria-hidden="true">nights_stay</span>Le soir</span>
+                <p><strong>Compléter la note</strong> avec les rubriques du rapport d'activité : objectifs, moyens, méthode, difficultés, solutions.</p>
+            </li>
+            <li>
+                <span class="rythme__moment"><span class="icone" aria-hidden="true">event_available</span>Le samedi</span>
+                <p><strong>Trier les photos</strong>, corriger ce que le tableau de bord signale en orange, télécharger le dossier terrain en sauvegarde.</p>
+            </li>
+        </ol>
+    </section>
+
+    <section class="atouts" aria-labelledby="titre-atouts">
+        <h2 id="titre-atouts">Ce que le carnet garde pour vous</h2>
+        <div class="bento">
+            <article class="bento__case bento__case--large">
+                <h3>Le tableau de bord dit ce qui manque</h3>
+                <p>Notes à compléter, jours sans note, rubriques du cours vides, photos à trier, dernière sauvegarde.</p>
+                <img src="{% static 'carnet/accueil/tableau_de_bord.webp' %}" width="1100" height="327" loading="lazy"
+                     alt="Tableau de bord du stage de démonstration : tous les indicateurs sont au vert.">
+            </article>
+            <article class="bento__case">
+                <h3>Un clic par photo</h3>
+                <p>Corps du rapport, annexe ou simple preuve.</p>
+                <img src="{% static 'carnet/accueil/tri_photos.webp' %}" width="900" height="497" loading="lazy"
+                     alt="Tri des photos en grille, avec leur destination.">
+            </article>
+            <article class="bento__case bento__case--teinte">
+                <h3>Chaque chiffre a sa source</h3>
+                <p>Un relevé est rattaché à la note du jour. Une valeur de norme ou de notice est refusée sans sa référence.</p>
+                <img src="{% static 'carnet/accueil/donnee_source.webp' %}" width="900" height="436" loading="lazy"
+                     alt="Pression d'essai d'étanchéité de 10 bar, avec sa source bibliographique.">
+            </article>
+            <article class="bento__case bento__case--marine">
+                <span class="icone bento__icone" aria-hidden="true">folder_zip</span>
+                <h3>Un zip pour tout garder</h3>
+                <p>Le dossier terrain sert de sauvegarde chaque semaine, puis de matière première du rapport.</p>
+            </article>
+            <article class="bento__case">
+                <span class="icone bento__icone" aria-hidden="true">lock</span>
+                <h3>Chacun ses données</h3>
+                <p>Un apprenant ne voit que ses stages. Le formateur référent lit et annote, sans rien modifier.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="rapport" aria-labelledby="titre-rapport">
+        <h2 id="titre-rapport">Du carnet au rapport de stage</h2>
+        <p class="rapport__intro">En fin de stage, le dossier terrain devient un rapport conforme au plan du cours : couverture, organigramme, planning, photos, tableaux et bibliographie.</p>
+        <div class="rapport__pages">
+            <img src="{% static 'carnet/accueil/rapport_couverture.webp' %}" width="420" height="594" loading="lazy" alt="Couverture du rapport de démonstration.">
+            <img src="{% static 'carnet/accueil/rapport_organigramme.webp' %}" width="420" height="594" loading="lazy" alt="Organigramme généré à partir du carnet.">
+            <img src="{% static 'carnet/accueil/rapport_gantt.webp' %}" width="420" height="594" loading="lazy" alt="Diagramme de Gantt généré à partir des tâches.">
+            <img src="{% static 'carnet/accueil/rapport_photos.webp' %}" width="420" height="594" loading="lazy" alt="Photos du corps du rapport avec leurs légendes.">
+        </div>
+        <p><a href="{{ rapport_demo }}">Lire le rapport de démonstration (PDF, 50 pages)</a></p>
+    </section>
+
+    <section class="demo" id="demo" aria-labelledby="titre-demo">
+        <div class="demo__texte">
+            <h2 id="titre-demo">Essayer avec le compte de démonstration</h2>
+            <p>Un stage fictif complet : seize semaines de notes, photos, organigramme et données techniques. Le compte est remis à zéro régulièrement.</p>
+        </div>
+        <dl class="demo__identifiants">
+            <div><dt>Identifiant</dt><dd><code>{{ demo_identifiant }}</code></dd></div>
+            <div><dt>Mot de passe</dt><dd><code>{{ demo_mot_de_passe }}</code></dd></div>
+        </dl>
+        <a class="bouton" href="{{ connexion }}"><span class="icone" aria-hidden="true">login</span>Se connecter</a>
+    </section>
+
+    <section class="guide" aria-labelledby="titre-guide">
+        <h2 id="titre-guide">Pour aller plus loin</h2>
+        <ul class="guide__liens">
+            <li><a href="{{ manuel }}"><span class="icone" aria-hidden="true">menu_book</span><span><strong>Manuel d'utilisation</strong>Chaque écran expliqué, captures à l'appui.</span></a></li>
+            <li><a href="{{ scenario }}"><span class="icone" aria-hidden="true">route</span><span><strong>Scénario d'un stage</strong>Du premier au dernier jour, semaine par semaine.</span></a></li>
+        </ul>
+    </section>
+</main>
+
+<footer class="pied">
+    <p>Les comptes sont créés par l'administrateur du centre : il n'y a pas d'inscription libre. Mot de passe oublié : adressez-vous à lui.</p>
+</footer>
+</body>
+</html>

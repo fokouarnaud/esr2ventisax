@@ -1,0 +1,139 @@
+/* Accueil public (A39). Jetons, boutons pilule et en-tête viennent de carnet.css ; clair et sombre suivent le système.
+   Rayons : sections 24px, cases 20px, images 12px, boutons pilule. Mouvement limité au survol et à l'appui. */
+
+.accueil main { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+.accueil h2 { font-size: clamp(1.4rem, 2vw + .8rem, 2rem); font-weight: 600; }
+.accueil h3 { font-size: 1.05rem; font-weight: 600; margin: 0; line-height: 1.3; }
+.accueil p { margin: 0; }
+.accueil section { padding: 56px 0; }
+.accueil section + section { border-top: 1px solid var(--trait); }
+.accueil img { display: block; max-width: 100%; height: auto; }
+
+/* --- Héros : texte à gauche, écran réel à droite ------------------------------------------ */
+.heros {
+  display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center;
+  padding-top: 48px !important; min-height: calc(100dvh - 60px);
+}
+.heros h1 { font-size: clamp(2rem, 2.4vw + 1rem, 3rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; text-wrap: balance; }
+.heros__sous-titre { margin-top: 20px !important; font-size: 1.15rem; color: var(--discret); max-width: 42ch; }
+.heros__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.heros__ecran { margin: 0; justify-self: center; }
+.heros__ecran img {
+  width: min(300px, 100%); border-radius: var(--r-carte);
+  border: 8px solid var(--marine); box-shadow: 0 24px 60px rgb(11 45 70 / .22);
+}
+
+/* --- Rythme : trois moments en liste, pas en cartes ---------------------------------------- */
+.rythme__liste { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 0; }
+.rythme__liste li {
+  display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: baseline; padding: 20px 0;
+}
+.rythme__liste li + li { border-top: 1px dashed var(--trait); }
+.rythme__moment {
+  display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 1.1rem; color: var(--turquoise-encre);
+}
+.rythme__liste p { color: var(--discret); max-width: 65ch; }
+.rythme__liste strong { color: var(--encre); font-weight: 600; }
+
+/* --- Bento : cinq cases, cinq contenus ---------------------------------------------------- */
+.bento {
+  margin-top: 28px; display: grid; gap: 16px;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-areas:
+    "large large large large marine marine"
+    "large large large large prive  prive"
+    "tri   tri   tri   teinte teinte teinte";
+}
+.bento__case {
+  display: flex; flex-direction: column; gap: 8px; padding: 24px; border-radius: var(--r-surface);
+  background: var(--surface); border: 1px solid var(--trait); overflow: hidden;
+}
+.bento__case p { color: var(--discret); }
+.bento__case img { margin-top: auto; border-radius: var(--r-champ); border: 1px solid var(--trait); }
+.bento__case:nth-child(1) { grid-area: large; }
+.bento__case:nth-child(2) { grid-area: tri; }
+.bento__case:nth-child(3) { grid-area: teinte; }
+.bento__case:nth-child(4) { grid-area: marine; }
+.bento__case:nth-child(5) { grid-area: prive; }
+.bento__case--large img { margin-top: 16px; }
+.bento__case--teinte { background: var(--turquoise-voile); border-color: transparent; }
+.bento__case--teinte p { color: var(--encre); }
+.bento__case--marine { background: var(--marine); border-color: transparent; color: #f4f7f8; }
+.bento__case--marine p { color: #c9d6dc; }
+.bento__icone { font-size: 1.8rem; color: var(--turquoise-encre); margin-bottom: 4px; }
+.bento__case--marine .bento__icone { color: var(--turquoise); }
+
+/* --- Rapport : pages réelles, défilement horizontal sur téléphone ------------------------- */
+.rapport__intro { margin-top: 12px !important; color: var(--discret); max-width: 65ch; }
+.rapport__pages { margin: 28px 0 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.rapport__pages img { border-radius: var(--r-champ); border: 1px solid var(--trait); box-shadow: var(--ombre); }
+.rapport a { font-weight: 500; }
+
+/* --- Démo : bandeau marine, identifiants lisibles ----------------------------------------- */
+.accueil .demo {
+  margin: 56px 0; padding: 40px !important; border: 0 !important; border-radius: var(--r-carte);
+  background: var(--marine); color: #f4f7f8;
+  display: grid; grid-template-columns: 1.3fr 1fr auto; gap: 32px; align-items: center;
+}
+.demo + section { border-top: 0 !important; }
+.demo__texte { display: grid; gap: 10px; }
+.demo__texte p { color: #c9d6dc; max-width: 52ch; }
+.demo__identifiants { margin: 0; display: grid; gap: 12px; }
+.demo__identifiants div { display: grid; gap: 2px; }
+.demo__identifiants dt { font-size: .85rem; color: #a7bac4; }
+.demo__identifiants dd { margin: 0; }
+.demo__identifiants code {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 1rem;
+  background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .16); border-radius: var(--r-champ);
+  padding: 6px 12px; display: inline-block; color: #e3f4f1; user-select: all;
+}
+.demo .bouton { background: var(--turquoise); color: var(--marine); }
+.demo .bouton:hover { background: #8fe7dc; }
+
+/* --- Guide : deux liens larges ------------------------------------------------------------ */
+.guide__liens { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.guide__liens a {
+  display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; border-radius: var(--r-surface);
+  border: 1px solid var(--trait); text-decoration: none; color: var(--discret);
+  transition: background-color .2s ease, transform .1s ease;
+}
+.guide__liens a:hover { background: var(--brume); }
+.guide__liens a:active { transform: translateY(1px); }
+.guide__liens .icone { font-size: 1.6rem; color: var(--turquoise-encre); }
+.guide__liens strong { display: block; color: var(--encre); font-weight: 600; margin-bottom: 2px; }
+
+.pied { max-width: 1160px; margin: 0 auto; padding: 24px 16px 48px; color: var(--discret); font-size: .9rem; }
+
+.accueil a:focus-visible, .accueil .bouton:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--turquoise) 70%, transparent); outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bento__case--marine { background: #16324a; }
+  .accueil .demo { background: #16324a; }
+  .heros__ecran img { border-color: #16324a; box-shadow: 0 24px 60px rgb(0 0 0 / .45); }
+}
+
+/* --- Tablette et téléphone : une colonne -------------------------------------------------- */
+@media (max-width: 900px) {
+  .heros { grid-template-columns: 1fr; min-height: 0; gap: 32px; }
+  .heros__ecran img { width: min(260px, 100%); }
+  .bento { grid-template-columns: 1fr; grid-template-areas: "large" "tri" "teinte" "marine" "prive"; }
+  .accueil .demo { grid-template-columns: 1fr; padding: 28px !important; gap: 20px; }
+  .demo .bouton { justify-self: start; }
+  .guide__liens { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .accueil section { padding: 40px 0; }
+  .heros { padding-top: 32px !important; }
+  .rythme__liste li { grid-template-columns: 1fr; gap: 6px; }
+  .rapport__pages {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 62%;
+    overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; overscroll-behavior-x: contain;
+  }
+  .rapport__pages img { scroll-snap-align: start; }
+  .heros__actions .bouton { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide__liens a, .bouton { transition: none; }
+}
