@@ -9,7 +9,8 @@ simulation sur le compte de démonstration.
 | Samedi 1 | 7 novembre 2026 | [samedi-01.pdf](samedi-01.pdf) | Créer le stage, régler les jours travaillés sur `[5]`, premières notes, questions à poser, soirée de complétion, sauvegarde ; 5 exercices et une réécriture de notes |
 | Samedi 2 | 14 novembre 2026 | [samedi-02.pdf](samedi-02.pdf) | Relire et préparer ses questions, compléter la couverture ; recueillir matériel, mesures et planning ; le soir : Équipements, Références puis Données techniques, Tâches, Mission, Abréviations ; 5 exercices dont deux refus volontaires et un classement de chiffres |
 | Samedi 3 | 21 novembre 2026 | [samedi-03.pdf](samedi-03.pdf) | Choisir le thème, créer les chapitres de la Partie III ; suivre une opération étape par étape, noter pannes et sécurité ; le soir : étiqueter, onglet Intervention, légende et slug ; exercices sur les chapitres, l'étiquetage et le refus d'export, remise en ordre d'un tirage au vide |
-| Samedi 4 | 28 novembre 2026 | à venir | |
+| Samedi 4 | 28 novembre 2026 | [samedi-04.pdf](samedi-04.pdf) | Lire `terrain.md` et ses « Rien de saisi », vérifier le formateur référent ; rattraper un samedi (absence ou note datée) ; avis du tuteur, remarques du formateur, bilan personnel, critiques et suggestions ; transformer un reproche en constat suivi d'une suggestion |
+| Samedi 5 | 5 décembre 2026 | à venir | |
 
 ## Publication
 

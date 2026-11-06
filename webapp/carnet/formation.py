@@ -32,6 +32,8 @@ FICHES = [
           "Recueillir outils, mesures et planning, puis ranger chaque chiffre avec sa source."),
     Fiche(3, datetime.date(2026, 11, 21), "Le thème du rapport",
           "Poser les chapitres de la Partie III, suivre une opération de bout en bout, légender les photos."),
+    Fiche(4, datetime.date(2026, 11, 28), "Le point à mi-parcours",
+          "Relire son dossier terrain, rattraper un samedi manqué, commencer le bilan, les critiques et les suggestions."),
 ]
 
 
