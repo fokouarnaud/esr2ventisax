@@ -34,6 +34,8 @@ FICHES = [
           "Poser les chapitres de la Partie III, suivre une opération de bout en bout, légender les photos."),
     Fiche(4, datetime.date(2026, 11, 28), "Le point à mi-parcours",
           "Relire son dossier terrain, rattraper un samedi manqué, commencer le bilan, les critiques et les suggestions."),
+    Fiche(5, datetime.date(2026, 12, 5), "Les données du chapitre technique",
+          "Choisir le petit calcul du thème, recueillir ses données mesurées ou sourcées, compléter les lieux."),
 ]
 
 

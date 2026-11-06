@@ -171,3 +171,13 @@ code { white-space: nowrap; }
   margin: 0; padding: 4mm; background: var(--papier); border: 1px solid var(--trait); border-radius: 8px;
   font-family: Consolas, "Cascadia Mono", monospace; font-size: 8pt; line-height: 1.45; white-space: pre-wrap; color: var(--encre);
 }
+
+/* --- Samedi 5 : tableaux à remplir à la main ------------------------------------------------- */
+.tableau-donnees td, .tableau-manques td { height: 9mm; }
+.tableau-donnees td:not(:last-child)::before, .tableau-manques td::before { content: none !important; }
+.tableau-donnees th:nth-child(2), .tableau-donnees td:nth-child(2) { width: 18mm; }
+.tableau-donnees th:nth-child(3), .tableau-donnees td:nth-child(3) { width: 60mm; text-align: left; }
+.tableau-manques th:nth-child(2), .tableau-manques td:nth-child(2) { width: 85mm; text-align: left; }
+.tableau-donnees td + td, .tableau-manques td + td { border-left: 1px solid var(--trait); }
+.ligne--moyenne { width: 110mm; }
+.capture-petite img { width: 55%; border: 0; }
