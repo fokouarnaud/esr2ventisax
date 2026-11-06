@@ -161,3 +161,5 @@ blockquote { margin: 4px 0 6px; font-size: 10.5pt; font-weight: 500; }
 }
 .solution { font-size: 8pt; color: var(--discret); margin-bottom: 6mm; }
 .capture-moyenne img { width: 72%; }
+.classement--ordre td:not(:first-child)::before { width: 22px; height: 18px; }
+code { white-space: nowrap; }
