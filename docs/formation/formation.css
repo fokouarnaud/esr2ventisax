@@ -163,3 +163,11 @@ blockquote { margin: 4px 0 6px; font-size: 10.5pt; font-weight: 500; }
 .capture-moyenne img { width: 72%; }
 .classement--ordre td:not(:first-child)::before { width: 22px; height: 18px; }
 code { white-space: nowrap; }
+
+/* --- Samedi 4 : extrait de terrain.md ------------------------------------------------------- */
+.colonnes--larges { grid-template-columns: 1fr 74mm; }
+.extrait figcaption { font-size: 8pt; color: var(--discret); margin-bottom: 4px; }
+.extrait pre {
+  margin: 0; padding: 4mm; background: var(--papier); border: 1px solid var(--trait); border-radius: 8px;
+  font-family: Consolas, "Cascadia Mono", monospace; font-size: 8pt; line-height: 1.45; white-space: pre-wrap; color: var(--encre);
+}

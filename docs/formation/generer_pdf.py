@@ -33,6 +33,9 @@ RECADRAGES = {
     "chapitre": (ICI / "img" / "rubrique_ajout.jpg", (0, 80, 700, 440)),
     "photo_legende": (ICI / "img" / "photo_fiche.jpg", (0, 70, 960, 300)),
     "etiquettes_note": (MANUEL / "08c_note_intervention.jpg", (0, 130, 1280, 520)),
+    # samedi 4
+    "absence": (ICI / "img" / "absence_ajout.jpg", (0, 80, 600, 430)),
+    "note_datee": (ICI / "img" / "note_ajout.jpg", (0, 80, 600, 330)),
 }
 NBSP = " "
 TIRETS_INTERDITS = ("—", "–")

@@ -74,10 +74,15 @@ def test_chaque_fiche_a_son_pdf_et_sa_couverture():
     (datetime.date(2026, 11, 7), 1),   # le jour même
     (datetime.date(2026, 11, 8), 2),
     (datetime.date(2026, 11, 21), 3),
-    (datetime.date(2027, 1, 1), 3),    # après la dernière fiche publiée : la dernière
+    (datetime.date(2026, 11, 22), 4),
 ])
 def test_la_fiche_a_la_une_est_celle_du_prochain_samedi(jour, numero):
     assert fiche_a_la_une(jour).numero == numero
+
+
+def test_apres_la_derniere_fiche_publiee_la_derniere_reste_a_la_une():
+    lendemain = FICHES[-1].date + datetime.timedelta(days=1)
+    assert fiche_a_la_une(lendemain) == FICHES[-1]
 
 
 @pytest.mark.django_db
