@@ -11,7 +11,8 @@ simulation sur le compte de démonstration.
 | Samedi 3 | 21 novembre 2026 | [samedi-03.pdf](samedi-03.pdf) | Choisir le thème, créer les chapitres de la Partie III ; suivre une opération étape par étape, noter pannes et sécurité ; le soir : étiqueter, onglet Intervention, légende et slug ; exercices sur les chapitres, l'étiquetage et le refus d'export, remise en ordre d'un tirage au vide |
 | Samedi 4 | 28 novembre 2026 | [samedi-04.pdf](samedi-04.pdf) | Lire `terrain.md` et ses « Rien de saisi », vérifier le formateur référent ; rattraper un samedi (absence ou note datée) ; avis du tuteur, remarques du formateur, bilan personnel, critiques et suggestions ; transformer un reproche en constat suivi d'une suggestion |
 | Samedi 5 | 5 décembre 2026 | [samedi-05.pdf](samedi-05.pdf) | Choisir le calcul du chapitre technique et lister ses données ; mesurer, lire, situer le siège ; le soir : Références, Données techniques, Lieux, Équipements ; suivre une donnée jusqu'au tableau du rapport, compléter des données incomplètes |
-| Samedi 6 | 12 décembre 2026 | à venir | |
+| Samedi 6 | 12 décembre 2026 | [samedi-06.pdf](samedi-06.pdf) | Relire ce qui sera dessiné (organigramme, tâches), photographier les chapitres sans photo ; corps, annexe ou preuve, légendes utiles ; comparer les listes de la démo et les figures du rapport |
+| Samedi 7 | 19 décembre 2026 | à venir | |
 
 ## Publication
 
