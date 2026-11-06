@@ -25,7 +25,7 @@ class Photo(ModeleDeStage):
     longitude = models.FloatField(null=True, blank=True)
     prise_le = models.DateTimeField("prise le", null=True, blank=True)
     legende = models.CharField("légende", max_length=250, blank=True)
-    slug = models.SlugField(max_length=60, blank=True, help_text="Nom du fichier dans le rapport : img/fig_<slug>.jpg")
+    slug = models.SlugField(max_length=60, blank=True, help_text="Nom du fichier dans le rapport, en minuscules sans espace : « compresseur » donne img/fig_compresseur.jpg.")
     destination = models.CharField(max_length=10, choices=Destination.choices, default=Destination.A_TRIER)
     entree = models.ForeignKey("carnet.EntreeJournal", on_delete=models.SET_NULL, null=True, blank=True,
                                related_name="photos", verbose_name="note de journal")
