@@ -24,8 +24,11 @@ def accueil(request):
     if request.user.is_authenticated:
         return redirect("carnet:note_rapide")
     from .demo.donnees import IDENTIFIANT, MOT_DE_PASSE  # identifiants publics par choix (A38)
+    from .formation import FICHES, fiche_a_la_une
 
+    une = fiche_a_la_une(timezone.localdate())
     return render(request, "carnet/accueil.html", {
+        "fiche_une": une, "fiches_autres": [f for f in FICHES if f != une],
         "demo_identifiant": IDENTIFIANT, "demo_mot_de_passe": MOT_DE_PASSE,
         "manuel": f"{DEPOT}/docs/manuel/manuel-utilisation.md",
         "scenario": f"{DEPOT}/docs/manuel/scenario-stage.md",

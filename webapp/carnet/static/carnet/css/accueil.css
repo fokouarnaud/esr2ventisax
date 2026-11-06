@@ -137,3 +137,35 @@
 @media (prefers-reduced-motion: reduce) {
   .guide__liens a, .bouton { transition: none; }
 }
+
+/* --- Formation (A40) : la fiche du prochain samedi à la une, les autres en lignes ------------ */
+.formation__intro { margin-top: 12px !important; color: var(--discret); max-width: 65ch; }
+.formation__une {
+  margin-top: 28px; display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: center;
+  padding: 28px; border-radius: var(--r-carte); background: var(--turquoise-voile);
+}
+.formation__couverture img { border-radius: var(--r-champ); box-shadow: 0 16px 40px rgb(11 45 70 / .18); transform: rotate(-2deg); }
+.formation__texte { display: grid; gap: 10px; justify-items: start; }
+.formation__texte h3 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+.formation__texte p { color: var(--encre); max-width: 52ch; }
+.formation__date { font-weight: 600; color: var(--turquoise-encre); font-size: .95rem; }
+.formation__format { color: var(--discret) !important; font-size: .85rem; }
+.formation__autres { list-style: none; margin: 16px 0 0; padding: 0; }
+.formation__autres li {
+  display: grid; grid-template-columns: 200px 1fr auto; gap: 16px; align-items: baseline; padding: 16px 4px;
+}
+.formation__autres li + li { border-top: 1px solid var(--trait); }
+.formation__titre { font-weight: 500; }
+.formation__autres a { font-weight: 500; white-space: nowrap; }
+@media (prefers-color-scheme: dark) {
+  .formation__couverture img { box-shadow: 0 16px 40px rgb(0 0 0 / .45); }
+}
+@media (max-width: 640px) {
+  .formation__une { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
+  .formation__couverture img { width: 160px; }
+  .formation__autres li { grid-template-columns: 1fr; gap: 4px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .formation__couverture img { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .formation__une:hover .formation__couverture img { transform: rotate(0deg) translateY(-2px); }
+}

@@ -4,15 +4,20 @@ Usage (Python système, avec Playwright et Pillow) :  python docs/formation/gene
 Sans argument, tous les fichiers samedi-*.html sont convertis.
 """
 
+import io
 import re
+import shutil
 import sys
 from pathlib import Path
+
+import fitz  # PyMuPDF : couverture de la fiche pour l'accueil
 
 from PIL import Image
 from playwright.sync_api import sync_playwright
 
 ICI = Path(__file__).resolve().parent
 MANUEL = ICI.parent / "manuel" / "img"
+PUBLICATION = ICI.parents[1] / "webapp" / "carnet" / "static" / "carnet" / "formation"  # accueil public (A40)
 # Captures recadrées sur la zone utile : nom -> (source, boîte gauche, haut, droite, bas)
 RECADRAGES = {
     "connexion": (MANUEL / "01_connexion.jpg", (440, 230, 1000, 640)),
@@ -24,6 +29,10 @@ RECADRAGES = {
     "equipement": (ICI / "img" / "equipement_ajout.jpg", (0, 60, 960, 440)),
     "tableau_vide": (MANUEL / "22_premier_jour_tableau.jpg", (0, 70, 1280, 420)),
     "couverture": (MANUEL / "03b_stage_couverture.jpg", (0, 60, 940, 520)),
+    # samedi 3
+    "chapitre": (ICI / "img" / "rubrique_ajout.jpg", (0, 80, 700, 440)),
+    "photo_legende": (ICI / "img" / "photo_fiche.jpg", (0, 70, 960, 300)),
+    "etiquettes_note": (MANUEL / "08c_note_intervention.jpg", (0, 130, 1280, 520)),
 }
 NBSP = " "
 TIRETS_INTERDITS = ("—", "–")
@@ -68,7 +77,17 @@ def generer(nom):
             navigateur.close()
     finally:
         temporaire.unlink(missing_ok=True)
+    publier(cible)
     print(f"{cible.name} : {cible.stat().st_size // 1024} Ko")
+
+
+def publier(pdf):
+    """Copie la fiche dans les fichiers statiques de l'application, avec sa couverture en WebP."""
+    PUBLICATION.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(pdf, PUBLICATION / pdf.name)
+    page = fitz.open(pdf)[0].get_pixmap(dpi=60)
+    Image.open(io.BytesIO(page.tobytes("png"))).convert("RGB").save(
+        PUBLICATION / f"{pdf.stem}.webp", "WEBP", quality=80, method=6)
 
 
 if __name__ == "__main__":

@@ -106,6 +106,34 @@
         <p><a href="{{ rapport_demo }}">Lire le rapport de démonstration (PDF, 50 pages)</a></p>
     </section>
 
+    <section class="formation" id="formation" aria-labelledby="titre-formation">
+        <h2 id="titre-formation">Se former, samedi après samedi</h2>
+        <p class="formation__intro">Pour un stage qui a lieu le samedi : une fiche par journée, à imprimer ou à lire sur le téléphone. Les exercices se font sur le compte de démonstration.</p>
+        <article class="formation__une">
+            <a class="formation__couverture" href="{% static fiche_une.pdf %}" download tabindex="-1" aria-hidden="true">
+                <img src="{% static fiche_une.couverture %}" width="496" height="702" loading="lazy" alt="">
+            </a>
+            <div class="formation__texte">
+                <p class="formation__date">Samedi {{ fiche_une.numero }}, {{ fiche_une.date|date:"j F Y" }}</p>
+                <h3>{{ fiche_une.titre }}</h3>
+                <p>{{ fiche_une.resume }}</p>
+                <a class="bouton" href="{% static fiche_une.pdf %}" download><span class="icone" aria-hidden="true">download</span>Télécharger la fiche</a>
+                <p class="formation__format">PDF, {{ fiche_une.pages }} pages</p>
+            </div>
+        </article>
+        {% if fiches_autres %}
+        <ul class="formation__autres">
+            {% for f in fiches_autres %}
+            <li>
+                <span class="formation__date">Samedi {{ f.numero }}, {{ f.date|date:"j F" }}</span>
+                <span class="formation__titre">{{ f.titre }}</span>
+                <a href="{% static f.pdf %}" download>Télécharger la fiche<span class="visuellement-cache"> du samedi {{ f.numero }} (PDF)</span></a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </section>
+
     <section class="demo" id="demo" aria-labelledby="titre-demo">
         <div class="demo__texte">
             <h2 id="titre-demo">Essayer avec le compte de démonstration</h2>

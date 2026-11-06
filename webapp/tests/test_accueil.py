@@ -52,3 +52,38 @@ def test_accueil_sans_tiret_cadratin(client):
     """Charte éditoriale de la page : aucun tiret cadratin ni demi-cadratin visible."""
     contenu = client.get("/").content.decode()
     assert "—" not in contenu and "–" not in contenu
+
+
+# --- Fiches de formation publiées sur l'accueil (A40) -------------------------------------------
+
+import datetime
+
+from django.contrib.staticfiles import finders
+
+from carnet.formation import FICHES, fiche_a_la_une
+
+
+def test_chaque_fiche_a_son_pdf_et_sa_couverture():
+    for fiche in FICHES:
+        assert finders.find(fiche.pdf), fiche.pdf
+        assert finders.find(fiche.couverture), fiche.couverture
+
+
+@pytest.mark.parametrize("jour, numero", [
+    (datetime.date(2026, 11, 6), 1),   # veille du premier samedi
+    (datetime.date(2026, 11, 7), 1),   # le jour même
+    (datetime.date(2026, 11, 8), 2),
+    (datetime.date(2026, 11, 21), 3),
+    (datetime.date(2027, 1, 1), 3),    # après la dernière fiche publiée : la dernière
+])
+def test_la_fiche_a_la_une_est_celle_du_prochain_samedi(jour, numero):
+    assert fiche_a_la_une(jour).numero == numero
+
+
+@pytest.mark.django_db
+def test_accueil_propose_les_fiches_a_telecharger(client):
+    contenu = client.get("/").content.decode()
+    assert "Se former, samedi après samedi" in contenu
+    for fiche in FICHES:
+        assert f"carnet/formation/samedi-{fiche.numero:02d}" in contenu and ".pdf" in contenu
+    assert contenu.count("Télécharger la fiche") == len(FICHES)
