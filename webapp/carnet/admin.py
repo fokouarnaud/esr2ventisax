@@ -259,8 +259,13 @@ class ReferenceAdmin(CloisonneAdmin):
 
 @admin.register(DonneeTechnique)
 class DonneeTechniqueAdmin(CloisonneAdmin):
-    list_display = ["grandeur", "valeur", "unite", "nature", "reference"]
+    list_display = ["grandeur", "valeur_lisible", "unite", "nature", "reference"]
     list_filter = ["nature"]
+
+    @admin.display(description="valeur", ordering="valeur")
+    def valeur_lisible(self, obj):
+        """0,2 et non 0,2000 : pas de zéros ajoutés par le stockage."""
+        return format(obj.valeur.normalize(), "f").replace(".", ",")
 
 
 @admin.register(NoeudOrganigramme)

@@ -36,6 +36,9 @@ RECADRAGES = {
     # samedi 4
     "absence": (ICI / "img" / "absence_ajout.jpg", (0, 80, 600, 430)),
     "note_datee": (ICI / "img" / "note_ajout.jpg", (0, 80, 600, 330)),
+    # samedi 5
+    "references_valeurs": (ICI / "img" / "donnees_references.jpg", (0, 140, 1280, 410)),
+    "lieux": (ICI / "img" / "lieux_liste.jpg", (0, 60, 1280, 260)),
 }
 NBSP = " "
 TIRETS_INTERDITS = ("—", "–")
