@@ -29,8 +29,8 @@ def compte(nom, role, **extra):
 
 # --- B15 : le profil porte les droits ---
 
-def test_deux_profils_seulement():
-    assert [r for r, _ in Profil.Role.choices] == ["apprenant", "administrateur"]
+def test_trois_profils():
+    assert [r for r, _ in Profil.Role.choices] == ["apprenant", "administrateur", "demonstration"]
 
 
 @pytest.mark.parametrize("role, groupes_attendus, superuser", [

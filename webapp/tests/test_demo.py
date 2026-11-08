@@ -29,11 +29,11 @@ def demo(db):
     return Stage.objects.get(proprietaire__username="demo.apprenant")
 
 
-def test_compte_demo_apprenant(demo):
+def test_compte_demo_en_lecture_seule(demo):
     user = User.objects.get(username="demo.apprenant")
     assert user.check_password("demo-local-2026")
     assert user.is_staff and not user.is_superuser
-    assert user.groups.filter(name="Apprenant").exists()
+    assert list(user.groups.values_list("name", flat=True)) == ["Démonstration"]  # B21
 
 
 def test_mot_de_passe_reglable(db):

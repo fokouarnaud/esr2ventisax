@@ -7,9 +7,10 @@ Il n'y a plus de compte formateur (B17) : son nom est un simple libellé de la c
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
-from carnet.acces import GROUPE_APPRENANT
+from carnet.acces import GROUPE_APPRENANT, GROUPE_DEMONSTRATION
 
-GROUPES_PAR_ROLE = {"apprenant": [GROUPE_APPRENANT], "administrateur": []}
+GROUPES_PAR_ROLE = {"apprenant": [GROUPE_APPRENANT], "administrateur": [],
+                    "demonstration": [GROUPE_DEMONSTRATION]}  # B21 : droits de consultation seuls
 
 
 def appliquer_role(user, role):

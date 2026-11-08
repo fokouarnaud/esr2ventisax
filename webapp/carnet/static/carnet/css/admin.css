@@ -71,3 +71,7 @@
   .carnet-deconnexion__libelle { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .carnet-deconnexion button { padding: 6px 8px; }
 }
+
+/* Bandeau du compte de démonstration en lecture seule (B21) */
+.carnet-lecture-seule { display: flex; gap: 10px; align-items: flex-start; margin: 0; background: #fff0c2; color: #53410a; border-color: #f1d98a; }
+.dark .carnet-lecture-seule { background: #3a300f; color: #f6dd98; border-color: #5a4a17; }

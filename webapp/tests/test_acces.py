@@ -23,7 +23,7 @@ def stage_de_bruno(autre_apprenant):
 def test_creer_groupes_est_idempotent(db):
     call_command("creer_groupes")
     call_command("creer_groupes")
-    assert sorted(Group.objects.values_list("name", flat=True)) == ["Apprenant"]
+    assert sorted(Group.objects.values_list("name", flat=True)) == ["Apprenant", "Démonstration"]
 
 
 def test_apprenant_ne_voit_que_ses_stages(stage, stage_de_bruno, apprenant):

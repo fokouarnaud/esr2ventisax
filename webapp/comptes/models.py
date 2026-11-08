@@ -30,6 +30,7 @@ class Profil(ModeleBase):
     class Role(models.TextChoices):
         APPRENANT = "apprenant", "Apprenant"
         ADMINISTRATEUR = "administrateur", "Administrateur"
+        DEMONSTRATION = "demonstration", "Démonstration"  # consultation seule (B21)
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profil")
     role = models.CharField("profil", max_length=20, choices=Role.choices, default=Role.APPRENANT)

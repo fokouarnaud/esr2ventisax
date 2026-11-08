@@ -97,13 +97,13 @@ def verifier_exportable(stage):
         raise ExportImpossible("Export impossible : " + " ; ".join(problemes))
 
 
-def iter_zip(stage):
+def iter_zip(stage, marquer_sauvegarde=True):
     """Génère le zip morceau par morceau (A33 : rien n'est stocké sur le serveur). Vérifie avant de commencer."""
     verifier_exportable(stage)
-    return _generer(stage)
+    return _generer(stage, marquer_sauvegarde)
 
 
-def _generer(stage):
+def _generer(stage, marquer_sauvegarde=True):
     sommes, flux = {}, _FluxSansRetour()
 
     with zipfile.ZipFile(flux, "w", zipfile.ZIP_DEFLATED) as z:
@@ -144,7 +144,8 @@ def _generer(stage):
         z.writestr("manifest.json", json.dumps(manifeste, ensure_ascii=False, indent=1))
     yield flux.vider()
 
-    Stage.objects.filter(pk=stage.pk).update(derniere_sauvegarde=timezone.now())
+    if marquer_sauvegarde:  # pas pour le compte démo en lecture seule (B21)
+        Stage.objects.filter(pk=stage.pk).update(derniere_sauvegarde=timezone.now())
 
 
 def ecrire_zip(stage, flux):

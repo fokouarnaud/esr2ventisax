@@ -2,7 +2,7 @@
 
 from django.conf import settings
 
-from .acces import stages_visibles
+from .acces import peut_ecrire, stages_visibles
 from .referentiel import RUBRIQUES_ENTREPRISE, RUBRIQUES_MISSION
 from .services.quota import OCTETS_PAR_MO
 from .services.stage_actif import stage_actif
@@ -15,6 +15,7 @@ TOTAL_RUBRIQUES_FORMULAIRES = len(RUBRIQUES_ENTREPRISE) + len(RUBRIQUES_MISSION)
 def dashboard_callback(request, context):
     stage = stage_actif(request)
     context["carnet_stage"] = stage
+    context["carnet_lecture_seule"] = not request.user.is_superuser and not peut_ecrire(request.user)  # B21
     context["carnet_indicateurs"] = indicateurs(stage) if stage else None
     if stage:
         context["carnet_rubriques_total"] = TOTAL_RUBRIQUES_FORMULAIRES

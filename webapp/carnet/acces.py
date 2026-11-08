@@ -6,6 +6,12 @@ Deux profils seulement : l'apprenant voit ses stages, l'administrateur voit tout
 from .models import Stage
 
 GROUPE_APPRENANT = "Apprenant"
+GROUPE_DEMONSTRATION = "Démonstration"
+
+
+def peut_ecrire(user):
+    """Faux pour le profil Démonstration (B21) : il consulte tout son stage mais n'écrit rien."""
+    return user.has_perm("carnet.add_entreejournal")
 
 
 def stages_visibles(user):
