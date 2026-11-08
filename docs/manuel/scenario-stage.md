@@ -250,7 +250,7 @@ saisi en 16 semaines, classé selon le plan du cours. L'apprenant le garde et le
 
 ![Sauvegarde faite](img/20_sauvegarde_faite.jpg)
 
-Le journal complet, consultable par le formateur référent :
+Le journal complet, à montrer au formateur pour la relecture :
 
 ![Journal complet](img/07_journal_liste.jpg)
 

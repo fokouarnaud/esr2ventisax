@@ -3,15 +3,13 @@
 import unicodedata
 
 from django.contrib import admin
-from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.http import Http404
 from django.urls import reverse
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
-from .acces import GROUPE_FORMATEUR, est_formateur, filtrer_modifiables, filtrer_visibles, stages_modifiables, \
-    stages_visibles
+from .acces import filtrer_modifiables, filtrer_visibles, stages_modifiables, stages_visibles
 from .models import (
     Abreviation, Absence, BilanPersonnel, DonneeTechnique, EntreeJournal, Equipement, FicheEntreprise, Lieu,
     Mission, NoeudOrganigramme, Personne, Photo, Reference, Rubrique, Stage, Tache,
@@ -98,7 +96,7 @@ class StageAdmin(CloisonneAdmin):
             "cfp", "cfp_sigle", "logo_cfp", "diplome", "annee_etude", "session",
             "tuteur_pro", "tuteur_pro_poste", "tuteur_acad", "tuteur_acad_poste"]}),
         ("Suivi", {"classes": ["tab"], "fields": [
-            "formateur_referent", "jours_travailles", "quota_mo", "derniere_sauvegarde"]}),
+            "jours_travailles", "quota_mo", "derniere_sauvegarde"]}),
     ]
 
     def get_queryset(self, request):
@@ -111,28 +109,19 @@ class StageAdmin(CloisonneAdmin):
         champs = list(super().get_readonly_fields(request, obj))
         return champs if request.user.is_superuser else champs + ["quota_mo"]
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "formateur_referent":
-            kwargs["queryset"] = get_user_model().objects.filter(groups__name=GROUPE_FORMATEUR)
-            return super(CloisonneAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
     def save_model(self, request, obj, form, change):
         if not change:
             obj.proprietaire = request.user
         super().save_model(request, obj, form, change)
 
     def get_changeform_initial_data(self, request):
-        """Premier stage : nom de l'apprenant et formateur du code d'invitation (US-38)."""
+        """Premier stage : nom de l'apprenant (US-38)."""
         initial = super().get_changeform_initial_data(request)
         user = request.user
         if Stage.objects.filter(proprietaire=user).exists():
             return initial
         if user.get_full_name():
             initial.setdefault("apprenant_nom", user.get_full_name())
-        profil = getattr(user, "profil", None)
-        if profil and profil.code_utilise_id:
-            initial.setdefault("formateur_referent", profil.code_utilise.formateur_id)
         return initial
 
     @admin.display(description="Dossier terrain")
@@ -176,26 +165,12 @@ class EntreeJournalAdmin(CloisonneAdmin):
             "intervention_nature", "intervention_duree_h", "intervention_cout", "intervention_ressources"]}),
         ("Liens", {"classes": ["tab"], "fields": [
             "lieu", "tache", "equipements", "personnes", "latitude", "longitude"]}),
-        ("Formateur", {"classes": ["tab"], "fields": ["remarque_formateur"]}),
     ]
 
     @admin.display(description="note")
     def apercu(self, obj):
         return obj.texte[:80]
 
-    def _referent(self, request, obj):
-        return obj is not None and est_formateur(request.user) and obj.stage.formateur_referent_id == request.user.pk
-
-    def has_change_permission(self, request, obj=None):
-        if self._referent(request, obj):
-            return True
-        return super().has_change_permission(request, obj)
-
-    def get_readonly_fields(self, request, obj=None):
-        if self._referent(request, obj):
-            tous = [f.name for f in EntreeJournal._meta.get_fields() if f.concrete and f.editable and not f.auto_created]
-            return [c for c in tous if c != "remarque_formateur"]
-        return ["remarque_formateur"] if not request.user.is_superuser else []
 
 
 @admin.register(Photo)

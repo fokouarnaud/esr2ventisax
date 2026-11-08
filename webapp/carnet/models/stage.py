@@ -14,14 +14,6 @@ class Stage(ModeleBase):
     proprietaire = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="stages"
     )
-    formateur_referent = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="stages_suivis",
-        verbose_name="formateur référent",
-    )
     intitule = models.CharField("intitulé", max_length=200)
     slug = models.SlugField(max_length=80, blank=True)
     specialite = models.CharField("spécialité", max_length=150, blank=True)
@@ -34,8 +26,11 @@ class Stage(ModeleBase):
     type_rapport = models.CharField("type de rapport", max_length=100, default="Rapport de stage")
     tuteur_pro = models.CharField("responsable professionnel", max_length=200, blank=True)
     tuteur_pro_poste = models.CharField("poste du responsable professionnel", max_length=200, blank=True)
-    tuteur_acad = models.CharField("responsable académique", max_length=200, blank=True)
-    tuteur_acad_poste = models.CharField("poste du responsable académique", max_length=200, blank=True)
+    tuteur_acad = models.CharField(
+        "formateur (responsable académique)", max_length=200, blank=True,
+        help_text="Nom de votre formateur tel qu'il sera imprimé sur la couverture du rapport. Saisi librement : "
+                  "le formateur n'a pas besoin de compte.")
+    tuteur_acad_poste = models.CharField("poste du formateur", max_length=200, blank=True)
     entreprise = models.CharField("entreprise", max_length=200, blank=True)
     entreprise_sigle = models.CharField("sigle de l'entreprise", max_length=50, blank=True)
     cfp = models.CharField("centre de formation", max_length=200, blank=True)
@@ -45,8 +40,8 @@ class Stage(ModeleBase):
     session = models.CharField("session", max_length=50, blank=True)
     date_debut = models.DateField("date de début")
     date_fin = models.DateField("date de fin")
-    logo_entreprise = models.ImageField(upload_to="logos/", blank=True)
-    logo_cfp = models.ImageField(upload_to="logos/", blank=True)
+    logo_entreprise = models.ImageField("logo de l'entreprise", upload_to="logos/", blank=True)
+    logo_cfp = models.ImageField("logo du CFP", upload_to="logos/", blank=True)
 
     jours_travailles = models.JSONField("jours travaillés", default=jours_lundi_samedi)
     quota_mo = models.PositiveIntegerField("quota (Mo)", default=80)

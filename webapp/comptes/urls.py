@@ -7,9 +7,7 @@ from .connexion import FormulaireConnexion, FormulaireMotDePasseOublie, Formulai
 app_name = "comptes"
 
 urlpatterns = [
-    path("connexion/", auth.LoginView.as_view(
-        template_name="comptes/connexion.html", authentication_form=FormulaireConnexion,
-        redirect_authenticated_user=True), name="connexion"),
+    path("connexion/", views.Connexion.as_view(authentication_form=FormulaireConnexion), name="connexion"),
     path("deconnexion/", auth.LogoutView.as_view(), name="deconnexion"),
     path("mot-de-passe/", auth.PasswordResetView.as_view(
         template_name="comptes/mdp_oublie.html", form_class=FormulaireMotDePasseOublie,

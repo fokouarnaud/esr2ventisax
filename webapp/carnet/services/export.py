@@ -159,9 +159,9 @@ def restaurer(zip_ouvert, proprietaire):
     for objet in donnees:
         if objet["model"] == "carnet.stage":
             objet["fields"]["proprietaire"] = proprietaire.pk
-            objet["fields"]["formateur_referent"] = None
     stage_pk = None
-    for objet in serializers.deserialize("python", donnees):
+    # ignorenonexistent : un ancien zip peut contenir formateur_referent ou remarque_formateur (B17)
+    for objet in serializers.deserialize("python", donnees, ignorenonexistent=True):
         objet.save()
         if isinstance(objet.object, Stage):
             stage_pk = objet.object.pk

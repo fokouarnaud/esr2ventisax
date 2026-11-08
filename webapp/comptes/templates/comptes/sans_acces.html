@@ -4,7 +4,7 @@
 <section class="carte auth__seul">
     <span class="icone auth__icone" aria-hidden="true">block</span>
     <h1>Accès refusé</h1>
-    <p>Votre compte « {{ request.user.get_username }} » n'a pas accès à l'administration. Demandez à votre formateur ou à l'administrateur du centre de l'activer.</p>
+    <p>Votre compte « {{ request.user.get_username }} » n'a pas accès à l'administration. Demandez à l'administrateur du centre de l'activer.</p>
     <form method="post" action="{% url 'comptes:deconnexion' %}">{% csrf_token %}
         <button class="bouton" type="submit">Se déconnecter</button>
     </form>

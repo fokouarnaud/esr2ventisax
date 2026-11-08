@@ -178,3 +178,30 @@
 }
 @media (max-width: 360px) { .entete__actions .bouton--petit { padding: 0 10px; font-size: .8rem; } }
 .pied a { color: var(--turquoise-encre); }
+
+/* Par où commencer (B18) : trois étapes numérotées, puis le formateur sur la couverture */
+.commencer { max-width: 1160px; margin: 0 auto; padding: 48px 16px 8px; display: grid; gap: 20px; }
+.commencer__etapes { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: etape; }
+@media (min-width: 760px) { .commencer__etapes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .commencer__etapes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.commencer__etapes li {
+  counter-increment: etape; position: relative; display: grid; gap: 6px; align-content: start;
+  padding: 18px 18px 20px; border-radius: var(--r-surface); background: var(--surface); border: 1px solid var(--trait);
+}
+.commencer__etapes li::before {
+  content: counter(etape); position: absolute; top: 16px; right: 18px; font-weight: 600; font-size: 1.4rem;
+  color: var(--turquoise-encre); font-variant-numeric: tabular-nums;
+}
+.commencer__icone {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px;
+  background: var(--turquoise-voile); color: var(--turquoise-encre);
+}
+.commencer__etapes h3 { margin: 6px 0 0; font-size: 1rem; }
+.commencer__etapes p { margin: 0; color: var(--discret); font-size: .92rem; }
+.commencer__seul {
+  margin: 0; padding: 14px 18px; border-radius: var(--r-surface); background: var(--turquoise-voile);
+  color: var(--encre); max-width: 80ch;
+}
+
+/* Ancres (#commencer, #demo, #formation) : le titre ne passe pas sous l'en-tête collant */
+section[id] { scroll-margin-top: 76px; }

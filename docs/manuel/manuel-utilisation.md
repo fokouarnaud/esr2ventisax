@@ -21,7 +21,7 @@ Le scénario complet, du premier au dernier jour du stage, est dans [scenario-st
 11. [Calendrier et absences](#11-calendrier-et-absences)
 12. [Dossier terrain : export et sauvegarde](#12-dossier-terrain--export-et-sauvegarde)
 13. [Et ensuite : le rapport](#13-et-ensuite--le-rapport)
-14. [Rôle du formateur](#14-rôle-du-formateur)
+14. [Le formateur et le rapport](#14-le-formateur-et-le-rapport)
 15. [Questions fréquentes](#15-questions-fréquentes)
 
 ---
@@ -35,8 +35,9 @@ Le scénario complet, du premier au dernier jour du stage, est dans [scenario-st
 | Identifiant | `demo.apprenant` |
 | Mot de passe | `demo-local-2026` (public par choix, décision A38) |
 
-Les comptes réels sont créés par le superutilisateur : il n'y a ni inscription libre ni réinitialisation du mot
-de passe par courriel. En cas d'oubli, demandez un nouveau mot de passe au superutilisateur.
+Chaque apprenant crée lui-même son compte sur la page **Créer un compte** (inscription libre, sans code) et
+l'active par le lien reçu par courriel. Mot de passe oublié : lien **Mot de passe oublié ?** sous la connexion.
+Le formateur n'a pas de compte : son nom se saisit dans la couverture du stage (section 14).
 
 ![Page de connexion](img/01_connexion.jpg)
 
@@ -97,10 +98,10 @@ Le formulaire du stage se trouve aussi dans **Stages**.
 - **Partie générale** : intitulé, spécialité, thème, sous-thème, dates de début et de fin. Rien n'est imposé :
   l'application ne connaît à l'avance ni l'entreprise, ni la spécialité, ni le thème.
 - **Onglet Couverture** : les champs de la page de couverture exigés par le cours (nom du stagiaire, titre du
-  rapport, entreprise et sigle, CFP et sigle, diplôme, année d'étude, session, tuteurs professionnel et
-  académique avec leurs postes), ainsi que les logos de l'entreprise et du CFP.
-- **Onglet Suivi** : formateur référent, jours travaillés (lundi à samedi par défaut), quota (réglé par le
-  superutilisateur, en lecture seule) et date de la dernière sauvegarde.
+  rapport, entreprise et sigle, CFP et sigle, diplôme, année d'étude, session, responsable professionnel et
+  **formateur (responsable académique)** avec leurs postes), ainsi que les logos de l'entreprise et du CFP.
+- **Onglet Suivi** : jours travaillés (lundi à samedi par défaut), quota (réglé par l'administrateur, en
+  lecture seule) et date de la dernière sauvegarde.
 
 ![Onglet Couverture](img/03b_stage_couverture.jpg)
 
@@ -166,7 +167,6 @@ Une note s'ouvre sur sa partie générale (date, heure, texte saisi sur le terra
 | Rapport d'activité | objectifs visés, moyens humains, moyens matériels, méthodologie, activités, éléments théoriques, difficultés, solutions, appréciation | la Partie II et la Partie III |
 | Intervention | nature, durée d'immobilisation (h), coût (F CFA), ressources | les interventions de dépannage ou de reprise |
 | Liens | lieu, tâche, équipements, personnes | relier les faits entre eux |
-| Formateur | remarque du formateur | lecture seule pour l'apprenant |
 
 ![Onglet Rapport d'activité](img/08b_note_rapport_activite.jpg)
 
@@ -410,12 +410,12 @@ L'application ne rédige rien et ne compile rien. En fin de stage :
 La procédure est dans [docs/rapport-local.md](../rapport-local.md). Le résultat de la démo :
 [demo/rapport_demo.pdf](../../demo/rapport_demo.pdf) et [demo/presentation_demo.pptx](../../demo/presentation_demo.pptx).
 
-## 14. Rôle du formateur
+## 14. Le formateur et le rapport
 
-Un formateur référent se connecte avec son propre compte. Il voit **en lecture** les stages dont il est
-référent (bloc « Stages suivis » du tableau de bord) et ne peut modifier qu'un champ : la **remarque du
-formateur**, sur chaque note. L'apprenant la lit dans l'onglet **Formateur** de la note. Les autres stages lui
-sont invisibles.
+Le formateur n'a pas de compte dans le Carnet (B17). Son nom est un simple libellé : saisissez-le dans le
+stage, onglet **Couverture**, champ **Formateur (responsable académique)**, avec son poste. Il est imprimé sur
+la couverture du rapport. Pour faire relire votre travail, montrez-lui vos notes sur le téléphone ou
+envoyez-lui le dossier terrain. Personne d'autre que vous (et l'administrateur du centre) ne voit vos notes.
 
 ## 15. Questions fréquentes
 

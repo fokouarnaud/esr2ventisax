@@ -40,7 +40,8 @@ def accueil(request):
 def note_rapide(request):
     stage = stage_actif(request)
     if stage is None:
-        messages.warning(request, "Créez d'abord votre stage.")
+        messages.warning(request, "Créez d'abord votre stage : seuls l'intitulé et les dates sont obligatoires, "
+                                  "le reste se complète au fil du stage.")
         return redirect("admin:carnet_stage_add")
     form = NoteRapideForm(request.POST or None, stage=stage)
     if request.method == "POST" and form.is_valid():

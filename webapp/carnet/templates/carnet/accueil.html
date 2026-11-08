@@ -35,14 +35,39 @@
             <h1 id="titre-heros">Le terrain d'abord. Le rapport ensuite.</h1>
             <p class="heros__sous-titre">Une note, une photo, la position GPS : moins d'une minute sur le chantier. Rien ne se perd pour le rapport.</p>
             <div class="heros__actions">
-                <a class="bouton" href="{{ connexion }}"><span class="icone" aria-hidden="true">login</span>Se connecter</a>
-                <a class="bouton bouton--contour" href="#demo">Essayer la démo</a>
+                <a class="bouton" href="#commencer"><span class="icone" aria-hidden="true">arrow_downward</span>Par où commencer</a>
+                <a class="bouton bouton--contour" href="{{ connexion }}">Se connecter</a>
             </div>
         </div>
         <figure class="heros__ecran">
             <img src="{% static 'carnet/accueil/note_rapide.webp' %}" width="560" height="1212"
                  alt="La note rapide sur un téléphone : texte saisi, photo d'un manomètre, position captée.">
         </figure>
+    </section>
+
+    <section class="commencer" id="commencer" aria-labelledby="titre-commencer">
+        <h2 id="titre-commencer">Par où commencer</h2>
+        <ol class="commencer__etapes">
+            <li>
+                <span class="commencer__icone icone" aria-hidden="true">person_add</span>
+                <h3>Créer votre compte</h3>
+                <p>L'inscription est libre : nom, identifiant, courriel et mot de passe. Ouvrez ensuite le lien reçu par courriel pour activer le compte.</p>
+                <a href="{{ inscription }}">Créer un compte</a>
+            </li>
+            <li>
+                <span class="commencer__icone icone" aria-hidden="true">school</span>
+                <h3>Décrire votre stage</h3>
+                <p>À la première connexion : l'intitulé et les dates suffisent, le reste se complète au fil du stage.</p>
+            </li>
+            <li>
+                <span class="commencer__icone icone" aria-hidden="true">edit_note</span>
+                <h3>Prendre la première note</h3>
+                <p>Un texte, une photo : la date, l'heure et la position se remplissent seules.</p>
+            </li>
+        </ol>
+        <p class="commencer__seul"><strong>Votre formateur n'a pas de compte à créer.</strong> Son nom figure sur la
+            couverture du rapport : vous le saisissez vous-même dans la description du stage. Pour vous entraîner
+            d'abord, utilisez le <a href="#demo">compte de démonstration</a>.</p>
     </section>
 
     <section class="rythme" aria-labelledby="titre-rythme">
@@ -92,7 +117,7 @@
             <article class="bento__case">
                 <span class="icone bento__icone" aria-hidden="true">lock</span>
                 <h3>Chacun ses données</h3>
-                <p>Un apprenant ne voit que ses stages. Le formateur référent lit et annote, sans rien modifier.</p>
+                <p>Un apprenant ne voit que ses stages. Personne d'autre ne lit vos notes.</p>
             </article>
         </div>
     </section>
@@ -159,7 +184,7 @@
 </main>
 
 <footer class="pied">
-    <p>L'inscription demande un code d'invitation remis par votre formateur : <a href="{{ inscription }}">créer un compte</a>. Mot de passe oublié : <a href="{% url 'comptes:mdp_oublie' %}">recevoir un lien par courriel</a>.</p>
+    <p>L'inscription est libre et gratuite pour tout apprenant : <a href="{{ inscription }}">créer un compte</a>. Mot de passe oublié : <a href="{% url 'comptes:mdp_oublie' %}">recevoir un lien par courriel</a>.</p>
 </footer>
 </body>
 </html>

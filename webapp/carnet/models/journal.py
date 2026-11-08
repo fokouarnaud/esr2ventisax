@@ -119,8 +119,6 @@ class EntreeJournal(ModeleDeStage):
     intervention_cout = models.DecimalField("coût (F CFA)", max_digits=12, decimal_places=0, null=True, blank=True)
     intervention_ressources = models.CharField("ressources mobilisées", max_length=250, blank=True)
 
-    remarque_formateur = models.TextField("remarque du formateur", blank=True)
-
     class Meta:
         verbose_name = "note de journal"
         verbose_name_plural = "journal"

@@ -9,7 +9,6 @@ from django.core import mail
 from django.utils import timezone
 
 from comptes import inscription as svc
-from comptes.models import CodeInvitation
 
 
 @pytest.fixture(autouse=True)
@@ -22,15 +21,13 @@ def _reglages(settings, tmp_path):
 
 @pytest.fixture
 def code(db):
-    prof = User.objects.create_user("prof", password="x", is_staff=True)
-    prof.groups.add(Group.objects.get_or_create(name="Formateur")[0])
-    return CodeInvitation.objects.create(formateur=prof, code="ABCDEFGH")
+    """Plus de code d'invitation (B19) : la fixture ne sert qu'à ouvrir l'accès à la base."""
 
 
 def inscrire(client, nom="awa"):
     client.post("/inscription/", {
         "first_name": "Awa", "last_name": "Ndongo", "username": nom, "email": f"{nom}@exemple.cm",
-        "password1": "Chantier-R10-solide", "password2": "Chantier-R10-solide", "code": "ABCDEFGH",
+        "password1": "Chantier-R10-solide", "password2": "Chantier-R10-solide",
         "avertissement_photos": "on",
     })
     lien = re.search(r"https?://\S+/inscription/verifier/\S+/", mail.outbox[-1].body).group(0)
@@ -66,13 +63,11 @@ def test_lien_falsifie_refuse(client, code):
     assert user.is_active is False
 
 
-def test_purge_des_comptes_non_confirmes_apres_7_jours_rend_le_code(client, code):
+def test_purge_des_comptes_non_confirmes_apres_7_jours(client, code):
     user, _ = inscrire(client)
     User.objects.filter(pk=user.pk).update(date_joined=timezone.now() - datetime.timedelta(days=8))
     assert svc.purger_comptes_non_confirmes() == 1
     assert not User.objects.filter(pk=user.pk).exists()
-    code.refresh_from_db()
-    assert code.usages == 0
 
 
 def test_purge_epargne_les_comptes_recents_actifs_ou_crees_par_l_admin(client, code):

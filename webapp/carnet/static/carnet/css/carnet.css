@@ -353,6 +353,7 @@ details.etiquettes[open] summary .icone { transform: rotate(180deg); }
 }
 .champ-auth--case label { font-weight: 400; font-size: .92rem; cursor: pointer; }
 .champ-auth--case .champ-auth__erreur { grid-column: 1 / -1; }
+.champ-auth--case .champ-auth__aide { grid-column: 2; }
 
 /* Pot de miel : hors écran pour un humain, rempli par les robots (US-36) */
 .piege { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }

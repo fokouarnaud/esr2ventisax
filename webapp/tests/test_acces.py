@@ -6,16 +6,8 @@ import pytest
 from django.contrib.auth.models import Group, User
 from django.core.management import call_command
 
-from carnet.acces import est_formateur, stages_visibles, stages_modifiables
+from carnet.acces import stages_modifiables, stages_visibles
 from carnet.models import Stage
-
-
-@pytest.fixture
-def formateur(db):
-    call_command("creer_groupes")
-    user = User.objects.create_user("prof", password="x")
-    user.groups.add(Group.objects.get(name="Formateur"))
-    return user
 
 
 @pytest.fixture
@@ -31,24 +23,11 @@ def stage_de_bruno(autre_apprenant):
 def test_creer_groupes_est_idempotent(db):
     call_command("creer_groupes")
     call_command("creer_groupes")
-    assert sorted(Group.objects.values_list("name", flat=True)) == ["Apprenant", "Formateur"]
+    assert sorted(Group.objects.values_list("name", flat=True)) == ["Apprenant"]
 
 
 def test_apprenant_ne_voit_que_ses_stages(stage, stage_de_bruno, apprenant):
     assert list(stages_visibles(apprenant)) == [stage]
-
-
-def test_formateur_ne_voit_que_les_stages_dont_il_est_referent(stage, stage_de_bruno, formateur):
-    stage.formateur_referent = formateur
-    stage.save()
-    assert list(stages_visibles(formateur)) == [stage]
-
-
-def test_formateur_ne_peut_modifier_aucun_stage(stage, formateur):
-    stage.formateur_referent = formateur
-    stage.save()
-    assert list(stages_modifiables(formateur)) == []
-    assert est_formateur(formateur)
 
 
 def test_superutilisateur_voit_tout(stage, stage_de_bruno):
