@@ -5,7 +5,18 @@ static/carnet/formation/. Ajouter une fiche : l'écrire dans docs/formation/, la
 """
 
 import datetime
+import functools
+import re
 from dataclasses import dataclass
+from pathlib import Path
+
+STATIQUE = Path(__file__).resolve().parent / "static"
+
+
+@functools.lru_cache(maxsize=None)
+def _pages(chemin):
+    """Nombre de pages du PDF publié : jamais recopié à la main, donc jamais faux (B18)."""
+    return len(re.findall(rb"/Type\s*/Page[^s]", (STATIQUE / chemin).read_bytes()))
 
 
 @dataclass(frozen=True)
@@ -14,11 +25,14 @@ class Fiche:
     date: datetime.date
     titre: str
     resume: str
-    pages: int = 6
 
     @property
     def pdf(self):
         return f"carnet/formation/samedi-{self.numero:02d}.pdf"
+
+    @property
+    def pages(self):
+        return _pages(self.pdf)
 
     @property
     def couverture(self):
@@ -27,7 +41,8 @@ class Fiche:
 
 FICHES = [
     Fiche(1, datetime.date(2026, 11, 7), "Premier jour de stage",
-          "Créer son stage, régler les jours travaillés sur le samedi, prendre ses premières notes et sauvegarder."),
+          "Créer son compte et son stage, régler les jours travaillés sur le samedi, prendre ses premières notes "
+          "et sauvegarder."),
     Fiche(2, datetime.date(2026, 11, 14), "Le matériel et les chiffres",
           "Recueillir outils, mesures et planning, puis ranger chaque chiffre avec sa source."),
     Fiche(3, datetime.date(2026, 11, 21), "Le thème du rapport",

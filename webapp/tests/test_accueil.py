@@ -102,3 +102,27 @@ def test_accueil_propose_les_fiches_a_telecharger(client):
     for fiche in FICHES:
         assert f"carnet/formation/samedi-{fiche.numero:02d}" in contenu and ".pdf" in contenu
     assert contenu.count("Télécharger la fiche") == len(FICHES)
+
+
+def _pages_du_pdf(chemin):
+    import re
+
+    return len(re.findall(rb"/Type\s*/Page[^s]", chemin.read_bytes()))
+
+
+def test_fiches_publiees_annoncent_leur_vrai_nombre_de_pages():
+    """L'accueil affiche « PDF, n pages » : n doit être celui du PDF publié (B18)."""
+    from django.conf import settings
+
+    from carnet.formation import FICHES
+
+    for fiche in FICHES:
+        pdf = settings.BASE_DIR / "carnet" / "static" / fiche.pdf
+        assert pdf.exists(), fiche.pdf
+        assert fiche.pages == _pages_du_pdf(pdf), f"samedi {fiche.numero}"
+
+
+def test_premiere_fiche_commence_par_creer_son_compte():
+    from carnet.formation import FICHES
+
+    assert "compte" in FICHES[0].resume
