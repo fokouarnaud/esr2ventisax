@@ -75,13 +75,17 @@ tous les visiteurs ; la limite de 5 inscriptions par heure utilise donc l'IP ré
 
 ## Comptes
 
-- **Formateurs** : créés par le superutilisateur seulement. Admin → *Administration* → *Utilisateurs* →
-  « Ajouter », choisir le groupe **Formateur** (le statut équipe est réglé automatiquement).
-- **Apprenants** : ils s'inscrivent eux-mêmes sur `/inscription/` avec un **code d'invitation** que le
-  formateur crée dans *Administration* → *Codes d'invitation* (5 usages, 90 jours par défaut). Le compte
-  s'active par le lien reçu par courriel ; sans confirmation, il est supprimé après 7 jours. Le
-  superutilisateur peut toujours créer un apprenant à la main (groupe **Apprenant**).
-- L'inscription se ferme d'elle-même au-delà de 80 % du disque ou de `MAX_APPRENANTS` apprenants actifs.
+- **Deux profils, qui portent les droits (B15)** : *Apprenant* (ses propres stages) et *Administrateur*
+  (tout). Un utilisateur = un profil : Admin → *Administration* → *Utilisateurs*, champ **Profil**. Groupes,
+  statut équipe et superutilisateur en découlent ; ne pas les régler à la main.
+- **Plus de compte formateur (B17)** : le nom du formateur est un simple libellé, saisi par l'apprenant dans
+  la couverture du stage (« Formateur (responsable académique) »). `creer_groupes` supprime l'ancien groupe.
+- **Apprenants** : inscription **libre**, sans code, sur `/inscription/` (B19). Le compte s'active par le lien
+  reçu par courriel ; sans confirmation, il est supprimé après 7 jours. L'administrateur peut aussi créer un
+  apprenant à la main (profil **Apprenant**).
+- Garde-fous du compte gratuit : 5 inscriptions par heure et par IP (`INSCRIPTION_IP_HEADER`), fermeture
+  automatique au-delà de 80 % du disque ou de `MAX_APPRENANTS` apprenants actifs (le compte démo n'est pas
+  compté). Augmenter `MAX_APPRENANTS` seulement si le disque le permet (80 Mo par stage).
 - Le quota d'un stage (80 Mo par défaut) se règle dans l'onglet *Suivi* du stage.
 
 ## Mise à jour

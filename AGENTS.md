@@ -101,9 +101,9 @@ Les décisions détaillées sont dans le journal A1–A38 ci-dessous.
 Par ordre de livraison (A20) :
 
 **Incrément 1 : saisie et déploiement**
-1. **Comptes et cloisonnement** (A1, A13, A32) : comptes créés par le superutilisateur. Un apprenant ne
-   voit que ses propres stages et peut en avoir plusieurs. Un formateur ne voit que les stages dont il
-   est référent et peut laisser une remarque sur chaque note.
+1. **Comptes et cloisonnement** (A1, A13, A32) : inscription libre en tant qu'apprenant (B19). Un
+   apprenant ne voit que ses propres stages et peut en avoir plusieurs. Plus de compte formateur (B17) : son
+   nom est un libellé de la couverture.
 2. **Stage et couverture** (A3, A11) : les 9 champs de couverture du cours, les logos de l'entreprise et du
    CFP, la spécialité, le thème et le sous-thème, tous saisis librement (A2).
 3. **Note rapide sur mobile** (A29) : une page hors de l'admin. Date et heure sont préremplies ; on saisit
@@ -182,8 +182,8 @@ Par ordre de livraison (A20) :
 ### 3. Hors périmètre (strict)
 
 - Application hors ligne ou PWA, application mobile native, synchronisation différée (A6).
-- Inscription sans code d'invitation, connexion via un réseau social (A13, revu par B1 : l'inscription
-  avec code et la réinitialisation par courriel relèvent désormais de l'incrément 4 ci-dessous).
+- Connexion via un réseau social (A13 revu par B19 : inscription libre et réinitialisation par courriel,
+  incrément 4 ci-dessous). Compte formateur (B17).
 - Rédaction automatique dans l'application, appel à l'API Claude ou à un autre LLM depuis le serveur (A4).
 - Compilation LaTeX, génération du PDF ou du PPTX, et génération des cartes sur PythonAnywhere : tout
   cela se fait en local (A4, A31).
@@ -198,210 +198,143 @@ Par ordre de livraison (A20) :
 
 ## GOALS — incrément 4 : comptes ouverts et revue UI/UX (`webapp/`)
 
-Reprendre le système de connexion et d'inscription de comptafiscaventisax.pythonanywhere.com (source
-locale : `c-fiscalite-syscohada/accounts/`, lue directement : REA est inutile sur du code source), en le
-limitant aux apprenants munis d'un code d'invitation, et corriger les défauts d'interface relevés :
-champs de formulaire invisibles, bouton « Ajouter un utilisateur » absent, déconnexion inaccessible
-quand le menu de gauche est long. Décisions détaillées : journal B1–B14 ci-dessous.
+Ouvrir le Carnet à tout apprenant par une inscription libre, sur le modèle de comptafiscaventisax.pythonanywhere.com
+(source locale : `c-fiscalite-syscohada/accounts/`, lue directement : REA est inutile sur du code source), et
+corriger les défauts d'interface relevés : champs invisibles, bouton « Ajouter un utilisateur » absent,
+déconnexion inaccessible quand le menu est long. Décisions : journal B1–B19 (B15 à B19, issus du scénario
+apprenant du 2026-11-08, remplacent B1, B2, B7 et la partie formateur de B8 à B11).
 
 ### 1. Objectifs fonctionnels prioritaires
 
-Par ordre de livraison (B14) : deux lots, chacun testé puis déployé.
-
-**Lot 1 : interface (aucune dépendance à l'inscription)**
-1. **Gestion des utilisateurs dans Unfold** (B12) : `User` et `Group` réenregistrés avec les classes et
-   les formulaires d'Unfold (champs enfin stylés et visibles). Bouton « Ajouter un utilisateur » sur la
-   liste. Colonnes : identifiant, nom, courriel, groupe, courriel vérifié, actif, inscrit le, code utilisé.
-   Filtres : groupe, actif, vérifié. Le formulaire d'ajout choisit le groupe (Apprenant ou Formateur),
-   qui règle `is_staff`. Réservé au superutilisateur.
-2. **Menu court et déconnexion partout** (B11) : navigation Unfold définie à la main, en groupes
-   repliables (Mon stage, Journal, Données, Références, Administration réservée au superutilisateur),
-   sans la liste automatique de toutes les applications. Bouton « Se déconnecter » toujours visible dans
-   l'en-tête de l'admin et dans celui des pages Note rapide et Tri des photos ; retour à l'accueil après
-   déconnexion.
-3. **Revue UI/UX de tous les écrans** (B13), avec `design-taste-frontend` et Playwright : pages
-   d'authentification, tous les formulaires d'ajout et de modification de l'admin, Note rapide, Tri des
-   photos, accueil ; en clair et en sombre, à 390 et à 1440 px. Chaque champ a un bord au contraste d'au
-   moins 3:1, un libellé et un focus visibles, sans débordement. Résultat consigné dans « Charte
-   appliquée ».
+**Lot 1 : interface**
+1. **Gestion des utilisateurs dans Unfold** (B12, B15) : `User` et `Group` avec les classes et formulaires
+   d'Unfold, bouton libellé « Ajouter un utilisateur ». Un utilisateur = **un profil**, seul champ de droits du
+   formulaire : Apprenant ou Administrateur. Groupes, statut équipe et superutilisateur en découlent.
+   Colonnes : identifiant, nom, courriel, profil, courriel vérifié, actif, inscrit le. Réservé à
+   l'administrateur.
+2. **Menu court et déconnexion partout** (B11) : navigation Unfold en groupes repliables (Mon stage, Journal,
+   Données, Références, Administration réservée à l'administrateur) ; « Se déconnecter » toujours visible
+   dans l'en-tête de l'admin, de la Note rapide et du Tri des photos.
+3. **Revue UI/UX de tous les écrans** (B13) : bords de champ au contraste ≥ 3:1, libellé et focus visibles,
+   aucun débordement, en clair et en sombre, à 390 et 1440 px.
 
 **Lot 2 : comptes ouverts**
-4. **Inscription par code d'invitation** (B1, B2, B9) : prénom, nom, identifiant, courriel, mot de passe
-   deux fois, code, pot de miel, et une case obligatoire « mes photos sont accessibles par leur lien et
-   gardent leur position GPS » (A22). Le compte est créé inactif, `is_staff`, dans le groupe Apprenant ;
-   le formateur du code devient le référent par défaut de ses stages ; prénom et nom préremplissent
-   `apprenant_nom` du premier stage.
-5. **Vérification du courriel** (B4) : lien à usage unique qui active le compte ; les comptes jamais
-   confirmés sont purgés après 7 jours, au plus une fois par heure lors d'une requête (pas de tâche
-   planifiée).
-6. **Connexion unique et protégée** (B4, B6) : une seule page publique `/connexion/`, aussi utilisée par
-   l'admin (`/admin/login/` y redirige) ; blocage de 15 min après 5 échecs pour un même identifiant.
-7. **Mot de passe oublié** (B4) : réinitialisation par courriel, lien valable 24 h. Le changement de mot
-   de passe d'un utilisateur connecté reste celui de l'admin Unfold.
-8. **Codes du formateur** (B2, B7) : chaque formateur crée, désactive et régénère ses propres codes dans
-   l'admin et voit combien d'apprenants les ont utilisés. Un code a 5 usages et 90 jours de validité par
-   défaut. Les comptes formateurs restent créés par le superutilisateur.
-9. **Garde-fous du disque** (B8) : inscription refusée, avec un message clair, au-delà de 80 % de 512 Mo
-   ou quand le nombre d'apprenants actifs atteint `MAX_APPRENANTS` (6 par défaut).
-10. **Comptes existants et démo** (B10) : un profil vérifié est créé pour chaque compte existant ; le
-    compte `demo.apprenant` ne peut ni changer son mot de passe, ni demander une réinitialisation, ni
-    changer son courriel.
+4. **Inscription libre en tant qu'apprenant** (B19, B9) : prénom, nom, identifiant, courriel, mot de passe
+   deux fois, case d'avertissement A22 (photos publiques par leur lien, GPS conservé), pot de miel. Aucun
+   code. Compte créé inactif, profil Apprenant ; prénom et nom préremplissent `apprenant_nom` du premier stage.
+5. **Vérification du courriel** (B4) : lien à usage unique ; comptes jamais confirmés purgés après 7 jours,
+   au plus une fois par heure lors d'une requête (pas de tâche planifiée).
+6. **Connexion unique et protégée** (B4, B6, B16) : `/connexion/` (et `/admin/login/` y redirige), blocage de
+   15 min après 5 échecs pour un même identifiant. L'apprenant arrive sur la Note rapide, l'administrateur
+   sur le tableau de bord.
+7. **Mot de passe oublié** (B4) : lien par courriel valable 24 h ; compte démo exclu.
+8. **Garde-fous du compte gratuit** (B8, B19) : 5 inscriptions par heure et par IP (HMAC), inscription fermée
+   au-delà de 80 % de 512 Mo ou de `MAX_APPRENANTS` (6) apprenants actifs, compte démo non compté.
+9. **Le formateur est un libellé** (B17) : pas de compte formateur. Son nom et son poste se saisissent dans la
+   couverture du stage, champ « Formateur (responsable académique) », et s'impriment sur le rapport.
+10. **L'accueil guide le premier pas** (B18) : héros « Par où commencer » → trois étapes (créer le compte,
+    décrire le stage, première note), rappel que le formateur n'a pas de compte, lien vers la démo.
+11. **Comptes existants et démo** (B10, B15) : chaque compte reçoit un profil (superutilisateur →
+    Administrateur, autres → Apprenant, droits réappliqués) ; le compte démo ne change ni de mot de passe ni
+    de courriel.
 
 ### 2. Contraintes techniques
 
-- **Modèle utilisateur** (B3) : on garde `django.contrib.auth.User` et les groupes Apprenant et
-  Formateur, sans `AUTH_USER_MODEL` personnalisé. Nouveaux modèles à clé UUID : `Profil` (1-1 avec User :
-  `email_verifie`, `code_utilise`), `CodeInvitation` (formateur, code, `expire_le`, `usages_max`, actif),
-  `EchecConnexion`, `LimiteInscription`.
-- **Port de comptafisca** : vues `django.contrib.auth` écrites à la main, sans django-allauth ni service
-  de captcha. Jeton de vérification dérivé de `PasswordResetTokenGenerator`. Codes de 8 caractères sans
-  0, O, 1, I ni L. Limite de 5 inscriptions par heure et par IP, l'IP n'étant stockée que sous forme de
-  HMAC. Pas d'`i18n_patterns` : URL en français seulement.
-- **Courriel** (B5) : SMTP Gmail du compte de comptafisca (port 587, TLS). `EMAIL_HOST_USER` et
-  `EMAIL_HOST_PASSWORD` uniquement dans le `.env` du serveur, collés par l'utilisateur ; console en local
-  quand `DEBUG` est actif sans mot de passe. Un contrôle `check --deploy` signale un SMTP absent.
-  `.env.example` et `DEPLOIEMENT.md` mis à jour.
-- **Interface** : gabarits Django et `carnet.css` (structure `.auth` en deux colonnes, `.panel`,
-  `.field` reprise de comptafisca et adaptée aux jetons du Carnet), clair et sombre, 390 px. Pas de
-  front-end séparé. Surcharges Unfold limitées aux blocs documentés, à revérifier après une montée de
-  version.
-- **Qualité** : TDD avec pytest-django. Tests repris de `accounts/tests/` de comptafisca et adaptés,
-  plus le cloisonnement des codes (formateur A contre formateur B), le verrou du compte démo, la présence
-  du bouton « Ajouter un utilisateur » et de la déconnexion. La Definition of Done (P5) s'applique à
-  chaque story.
-- **Déploiement** (B14) : un déploiement par lot avec le skill `deploy`, puis contrôle Playwright du site
-  en ligne. Aucun secret dans le dépôt, la conversation ou les journaux.
+- **Modèle utilisateur** (B3, B15) : `django.contrib.auth.User` conservé, sans `AUTH_USER_MODEL` personnalisé.
+  `Profil` 1-1 porte le rôle (`apprenant`, `administrateur`) ; `comptes.droits.appliquer_role` règle groupes et
+  statuts à chaque enregistrement du profil. `creer_groupes` définit les droits du groupe Apprenant et supprime
+  l'ancien groupe Formateur.
+- **Port de comptafisca** : vues `django.contrib.auth` écrites à la main, sans django-allauth ni captcha
+  externe ; jeton de vérification dérivé de `PasswordResetTokenGenerator` ; IP stockée seulement en HMAC.
+- **Courriel** (B5) : SMTP Gmail du compte de comptafisca, `EMAIL_HOST_USER` et `EMAIL_HOST_PASSWORD`
+  uniquement dans le `.env` du serveur, collés par l'utilisateur ; contrôle `comptes.E001` sous `check --deploy`.
+- **Restauration** : `restaurer_dossier` ignore les champs disparus (`formateur_referent`, `remarque_formateur`)
+  d'un ancien zip.
+- **Interface, qualité, déploiement** : gabarits Django et `carnet.css` ; TDD pytest-django ; P5 et P4-5
+  s'appliquent ; un déploiement par lot avec le skill `deploy` ; aucun secret dans le dépôt.
 
 ### 3. Hors périmètre (strict)
 
-- Inscription sans code d'invitation, et toute inscription d'un formateur ou d'un administrateur (B1, B7).
-- Connexion via un réseau social, django-allauth, captcha externe, double authentification.
-- `AUTH_USER_MODEL` personnalisé ou reprise des migrations initiales (B3).
-- Promotions ou classes de comptafisca, import CSV d'apprenants (B2, B12).
-- Page publique de changement du mot de passe hors de l'admin (B4).
-- Version anglaise et sélecteur de langue.
-- Tâche planifiée sur le serveur pour la purge (B4) ; fournisseur de courriel autre que Gmail SMTP (B5).
-- Le reste du hors-périmètre de la section précédente demeure (PWA, LLM sur le serveur, contrôle d'accès
-  aux photos, etc.).
+- Compte formateur, suivi ou annotation des notes par un formateur, codes d'invitation (B17, B19).
+- Inscription d'un administrateur par le formulaire public ; connexion via un réseau social, django-allauth,
+  captcha externe, double authentification.
+- `AUTH_USER_MODEL` personnalisé ; version anglaise ; tâche planifiée sur le serveur ; fournisseur de courriel
+  autre que Gmail SMTP.
+- Le reste du hors-périmètre de la section générale demeure.
 
 ## PRD — incrément 4 : comptes ouverts et revue UI/UX
 
-Ce PRD complète le PRD général (section suivante), dont les conventions (UUID, `cree_le`/`modifie_le`,
-français, cloisonnement) s'appliquent. Les stories US-32 à US-43 renvoient au journal B1–B14.
+Complète le PRD général (conventions : UUID, `cree_le`/`modifie_le`, français, cloisonnement). Les stories
+renvoient au journal B1–B19. US-41 (codes du formateur) est **retirée** par B17 et B19.
 
 ### P4-1. Problème, utilisateurs, mesure du succès
 
-- **Problème** :
-  - Chaque compte doit aujourd'hui être créé à la main par le superutilisateur, qui devient le goulot
-    d'étranglement à chaque rentrée.
-  - Un mot de passe oublié n'a pas d'issue sans lui.
-  - Dans l'admin, les champs des utilisateurs s'affichent sans style (invisibles), le bouton « Ajouter un
-    utilisateur » manque, et la déconnexion se cache au bas d'un menu trop long.
-- **Personas** : ceux du PRD général, plus le **visiteur invité**, un futur apprenant qui a reçu un code
-  de son formateur et s'inscrit depuis son téléphone.
-- **Mesures du succès** :
-  - Un invité crée son compte et arrive sur la Note rapide en **moins de 3 minutes**, ouverture du
-    courriel comprise.
-  - **Aucun compte** n'est créé sans code valide ; aucun inconnu n'occupe le disque.
-  - La déconnexion est atteignable en **un clic, sans défiler**, sur chaque écran connecté, à 390 et à
-    1440 px.
-  - **Aucun champ de formulaire** n'a un bord sous 3:1 de contraste, en clair comme en sombre.
-  - Le superutilisateur n'intervient plus que pour créer les formateurs.
+- **Problème** : chaque compte devait être créé par le superutilisateur ; un mot de passe oublié n'avait pas
+  d'issue ; dans l'admin, champs illisibles, bouton d'ajout absent, déconnexion cachée. Le scénario du
+  2026-11-08 a montré en plus qu'un compte formateur et un code d'invitation bloquaient l'apprenant seul.
+- **Personas** : l'apprenant (téléphone, connexion médiocre) et l'administrateur. Le formateur n'est plus un
+  utilisateur : c'est un nom sur la couverture.
+- **Mesures du succès** : un visiteur crée son compte et arrive sur la Note rapide en moins de 3 minutes en
+  ne lisant que l'accueil ; déconnexion en un clic sans défiler ; aucun champ sous 3:1 ; l'administrateur
+  n'intervient plus pour créer les comptes.
 
 ### P4-2. User stories
 
-**É9. Interface (lot 1)**
-
 | ID | En tant que… | je veux… | afin de… | Critères d'acceptation | Prio |
 |---|---|---|---|---|---|
-| US-32 | superutilisateur | gérer les utilisateurs et les groupes dans l'admin Unfold, avec un bouton « Ajouter un utilisateur » | créer et suivre les comptes sans formulaire illisible | `User` et `Group` réenregistrés avec `unfold.admin.ModelAdmin` et les formulaires `unfold.forms` (création, modification, mot de passe). Le bouton « Ajouter un utilisateur » figure sur la liste. Colonnes : identifiant, nom, courriel, groupe, courriel vérifié, actif, inscrit le, code utilisé. Filtres : groupe, actif, vérifié. À l'ajout, le choix du groupe Apprenant ou Formateur règle `is_staff=True`. Apprenant et formateur : 403 sur ces pages et aucune entrée dans le menu. (B12) | M |
-| US-33 | apprenant, formateur ou superutilisateur | un menu de gauche court, en groupes repliables | trouver vite un écran et voir la fin du menu | `UNFOLD["SIDEBAR"]["navigation"]` défini à la main : Mon stage, Journal, Données, Références, Administration ; `show_all_applications=False`. Chaque entrée n'apparaît qu'à qui a le droit de voir le modèle. Le groupe Administration (utilisateurs, groupes, codes de tous) est réservé au superutilisateur. (B11) | M |
-| US-34 | utilisateur connecté | un bouton « Se déconnecter » toujours visible | quitter ma session sur un téléphone prêté | Le bouton (formulaire POST, jeton CSRF) est dans l'en-tête de l'admin et dans celui de `carnet/base.html` (Note rapide, Tri des photos). Il est visible sans défiler à 390 et à 1440 px. Après la déconnexion, on revient sur `/`. (B11) | M |
-| US-35 | utilisateur | des formulaires lisibles sur tous les écrans | ne plus chercher où saisir | Revue `design-taste-frontend` + Playwright de chaque écran (auth, chaque formulaire d'ajout et de modification de l'admin, Note rapide, Tri des photos, accueil), en clair et en sombre, à 390 et à 1440 px. Chaque champ a un bord ≥ 3:1 sur son fond, un libellé visible et un focus visible ; aucun débordement horizontal. Écarts corrigés (dont `--trait` en sombre dans `carnet.css`) et consignés dans « Charte appliquée ». (B13) | M |
-
-**É10. Comptes ouverts (lot 2)**
-
-| ID | En tant que… | je veux… | afin de… | Critères d'acceptation | Prio |
-|---|---|---|---|---|---|
-| US-36 | visiteur invité | créer mon compte avec le code de mon formateur | commencer mon carnet sans attendre l'administrateur | Page `/inscription/` : prénom, nom, identifiant, courriel, mot de passe ×2, code, case A22 obligatoire, pot de miel `site_web`. Refus avec un message par champ : code inconnu, désactivé, expiré ou épuisé ; courriel déjà utilisé par un compte confirmé (sans tenir compte de la casse) ; mot de passe refusé par les 4 validateurs Django ; case non cochée. Pot de miel rempli : fausse réussite, rien n'est créé. Plus de 5 inscriptions par heure pour une même IP (stockée en HMAC) : réponse 429. Succès : User inactif, `is_staff=True`, groupe Apprenant ; Profil avec `email_verifie=False` et `code_utilise` ; un usage de plus sur le code, compté dans la même transaction. (B1, B2, B9) | M |
-| US-37 | visiteur invité | confirmer mon courriel par un lien | activer mon compte | Le courriel texte contient un lien `/inscription/verifier/<uidb64>/<jeton>/`. Le jeton couvre pk, horodatage, `is_active`, `email_verifie` et courriel, et ne sert donc qu'une fois. Lien valide : compte actif, `email_verifie=True`, message de réussite, redirection vers `/connexion/`. Lien faux ou déjà utilisé : 400 avec un message clair. Une erreur SMTP supprime le compte et affiche une erreur dans le formulaire. Une nouvelle inscription avec le même identifiant ou le même courriel remplace un compte jamais confirmé. Les comptes jamais confirmés sont purgés après 7 jours, au plus une fois par heure, par un middleware (sans tâche planifiée) ; l'usage du code est alors rendu. (B4, B10) | M |
-| US-38 | apprenant inscrit | que mon premier stage connaisse déjà mon nom et mon formateur | gagner du temps et être suivi | À la création de son premier stage, `apprenant_nom` vaut « Prénom Nom » et `formateur_referent` le formateur du code utilisé. Les deux restent modifiables. (B2, B9) | S |
-| US-39 | utilisateur | me connecter sur une page unique et protégée | accéder au Carnet sans risque d'attaque par essais | `/connexion/` est la seule page de connexion, et `/admin/login/` y redirige en gardant `next`. Après 5 échecs en 15 min pour un même identifiant (mis en minuscules), la connexion est bloquée 15 min, avec un message dédié ; une réussite remet le compteur à zéro. Un compte inactif ou non vérifié est refusé, avec un message générique. Liens « Créer un compte » et « Mot de passe oublié ». Une fois connecté, on arrive sur la Note rapide, et un utilisateur déjà connecté qui ouvre la page y est redirigé. `LOGIN_URL = "comptes:connexion"`. (B4, B6) | M |
-| US-40 | utilisateur | réinitialiser mon mot de passe par courriel | ne pas rester bloqué | `/mot-de-passe/` puis `envoye/`, `<uidb64>/<jeton>/` et `termine/`, en français, avec le style des pages d'authentification. La réponse est la même que le courriel soit connu ou non. Le lien vaut 24 h (`PASSWORD_RESET_TIMEOUT`). Le compte démo est exclu : aucun courriel n'est envoyé. (B4, B10) | M |
-| US-41 | formateur | créer et gérer mes codes d'invitation dans l'admin | inviter mes apprenants | `CodeInvitationAdmin` : un formateur ne voit, ne crée et ne modifie que ses codes (404 sur ceux d'un autre) ; le superutilisateur voit tout et choisit le formateur. Code généré de 8 caractères sans 0/O/1/I/L, unique. Par défaut : 5 usages et une expiration à 90 jours. Actions « désactiver », « activer » et « régénérer ». Colonnes : code, usages/maximum, expire le, actif, et le nombre d'apprenants inscrits avec le code. Apprenant : aucun accès. (B2, B7) | M |
-| US-42 | superutilisateur | que l'inscription se ferme d'elle-même quand le compte gratuit est plein | protéger les stages en cours | L'inscription est refusée, avec un message qui invite à contacter le formateur, si l'occupation globale dépasse 80 % de 512 Mo (même calcul que US-26) ou si le nombre d'apprenants actifs atteint `MAX_APPRENANTS` (6 par défaut, lu dans le `.env`). La page affiche alors ce message sans formulaire. (B8) | M |
-| US-43 | superutilisateur | que les comptes existants et le compte démo restent sûrs | ne rien casser en ouvrant l'inscription | Une migration de données crée un Profil avec `email_verifie=True` pour chaque User existant, et un signal en crée un pour tout User ajouté dans l'admin. La purge ne touche jamais un compte actif ni un compte vérifié. `demo.apprenant` ne peut changer ni son mot de passe (403 sur la page de l'admin) ni son courriel, et ne reçoit pas de réinitialisation ; `charger_demo` reste idempotent. (B10) | M |
-
-**É11. Mise en service**
-
-| ID | En tant que… | je veux… | afin de… | Critères d'acceptation | Prio |
-|---|---|---|---|---|---|
-| US-44 | superutilisateur | configurer l'envoi des courriels sans exposer le secret | mettre l'inscription en ligne | Réglages SMTP Gmail (587, TLS) lus dans le `.env` : `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` (« Carnet de stage <…> »). Console si `DEBUG` et pas de mot de passe. Le check `comptes.E001` échoue sous `--deploy` si le SMTP manque. `.env.example` (sans valeur) et `DEPLOIEMENT.md` mis à jour. L'utilisateur colle lui-même le mot de passe. (B5, B14) | M |
+| US-32 | administrateur | gérer les utilisateurs dans Unfold, un profil par utilisateur | attribuer les droits sans erreur | Classes et formulaires Unfold ; bouton « Ajouter un utilisateur » ; seul champ de droits : **Profil** (pas de groupes, permissions, équipe, superutilisateur) ; colonnes et filtre par profil ; 403 pour l'apprenant. (B12, B15) | M |
+| US-33 | utilisateur | un menu court en groupes repliables | trouver vite un écran | Navigation définie à la main, filtrée par les droits, chaque modèle présent ; Administration réservée à l'administrateur. (B11) | M |
+| US-34 | utilisateur connecté | « Se déconnecter » toujours visible | quitter ma session | Formulaire POST dans l'en-tête admin et public, visible à 390 et 1440 px, retour à `/`. (B11) | M |
+| US-35 | utilisateur | des formulaires lisibles | ne plus chercher où saisir | Bord ≥ 3:1, libellé et focus visibles, aucun débordement, clair et sombre, 390 et 1440 px. (B13) | M |
+| US-36 | visiteur | créer mon compte librement, en tant qu'apprenant | commencer sans attendre personne | `/inscription/` sans code ; refus par champ (courriel déjà confirmé, mot de passe faible, case A22) ; pot de miel ; 429 au-delà de 5 par heure et par IP ; compte inactif, profil Apprenant. (B9, B19) | M |
+| US-37 | visiteur | confirmer mon courriel | activer mon compte | Lien à usage unique ; 400 si faux ou réutilisé ; erreur SMTP : compte supprimé ; purge à 7 jours par middleware. (B4) | M |
+| US-38 | apprenant | que mon premier stage connaisse mon nom | gagner du temps | `apprenant_nom` prérempli au premier stage seulement. (B9) | S |
+| US-39 | utilisateur | une connexion unique et protégée | éviter les essais en série | `/connexion/`, `/admin/login/` y redirige ; blocage 5 échecs / 15 min ; destination selon le profil ; un compte sans accès à l'admin voit « Accès refusé » (403) sans boucle. (B6, B16) | M |
+| US-40 | utilisateur | réinitialiser mon mot de passe | ne pas rester bloqué | Réponse identique pour un courriel inconnu ; lien 24 h ; compte démo exclu. (B4, B10) | M |
+| US-42 | administrateur | que l'inscription se ferme quand le disque est plein | protéger les stages en cours | Fermeture au-delà de 80 % ou de `MAX_APPRENANTS` actifs, démo non comptée ; message sans formulaire. (B8) | M |
+| US-43 | administrateur | que les comptes existants et la démo restent sûrs | ne rien casser | Migration : profil et droits pour chaque compte, anciens formateurs → apprenants ; démo verrouillée. (B10, B15) | M |
+| US-44 | administrateur | configurer le SMTP sans exposer le secret | mettre l'inscription en ligne | `.env` seulement ; console en local ; `comptes.E001`. (B5) | M |
+| US-45 | apprenant | saisir moi-même le nom de mon formateur | l'imprimer sur la couverture sans lui créer de compte | Champ « Formateur (responsable académique) » avec aide ; plus de `formateur_referent` ni de `remarque_formateur` ; ancien zip restaurable. (B17) | M |
+| US-46 | visiteur | que l'accueil me dise par où commencer | avancer sans aide extérieure | Héros « Par où commencer » + « Se connecter » ; section `#commencer` en trois étapes avec le lien d'inscription ; aucune mention de code ni de formateur référent ; message du premier stage explicite. (B18) | M |
 
 ### P4-3. Modèle logique des données
 
-Conventions du PRD général (UUID, `cree_le`, `modifie_le`). Nouvelle application Django `comptes/`.
-
 | Entité | Attributs principaux | Relations | Règles |
 |---|---|---|---|
-| **User** (Django, inchangé) | identifiant, courriel, prénom, nom, `is_active`, `is_staff`, groupes, `date_joined` | — | Pas d'`AUTH_USER_MODEL` personnalisé (B3). Inscrit : `is_active=False` jusqu'à la vérification, `is_staff=True`, groupe Apprenant. |
-| **Profil** | `email_verifie` (booléen), `inscrit_par_formulaire` (booléen) | 1–1 → User ; → CodeInvitation `code_utilise`? | Créé par migration (existants : vérifié) et par signal. Purgeable seulement si `inscrit_par_formulaire`, non vérifié, inactif et `date_joined` de plus de 7 jours. |
-| **CodeInvitation** | `code` (8 caractères), `usages_max` (5), `usages` (0), `expire_le` (+90 j), `actif` | → User `formateur` (groupe Formateur ou superutilisateur) | `code` unique, sans 0/O/1/I/L. Utilisable si actif, non expiré et `usages < usages_max`. L'incrément de `usages` se fait sous verrou (`select_for_update`) dans la transaction de l'inscription. Cloisonné par formateur. |
-| **EchecConnexion** | `identifiant` (minuscules), `survenu_le` | — | Compté sur 15 min ; supprimé après une réussite ou au-delà de 24 h. |
-| **LimiteInscription** | `ip_hachee` (HMAC-SHA256 avec `SECRET_KEY`), `survenu_le` | — | Lignes de plus d'1 h supprimées à chaque contrôle. Jamais d'IP en clair. |
-| **Stage** (existant) | — | `formateur_referent` prérempli depuis `Profil.code_utilise.formateur` | Préremplissage au premier stage seulement (US-38). |
+| **User** (Django) | identifiant, courriel, prénom, nom, `is_active` | — | Droits jamais réglés à la main : ils viennent du profil (B15). |
+| **Profil** | `role` (apprenant, administrateur), `email_verifie`, `inscrit_par_formulaire` | 1–1 → User | Créé par signal (rôle déduit) ; `save()` applique groupes et statuts. Purgeable seulement si inscrit par le formulaire, non vérifié, inactif, plus de 7 jours. |
+| **EchecConnexion** | `identifiant`, `survenu_le` | — | Compté sur 15 min. |
+| **LimiteInscription** | `ip_hachee` (HMAC), `survenu_le` | — | Lignes de plus d'1 h supprimées ; jamais d'IP en clair. |
+| **Stage** (existant) | `tuteur_acad` = « Formateur (responsable académique) », libellé saisi librement | — | `formateur_referent` supprimé (B17). |
+| **EntreeJournal** (existant) | — | — | `remarque_formateur` supprimé (B17). |
 
-Réglages ajoutés : `MAX_APPRENANTS` (6), `LOGIN_MAX_ECHECS` (5), `LOGIN_BLOCAGE` (15 min),
-`INSCRIPTIONS_MAX_PAR_HEURE` (5), `INSCRIPTION_IP_HEADER` (`REMOTE_ADDR`, `HTTP_X_REAL_IP` en production),
-`PASSWORD_RESET_TIMEOUT` (24 h), `LOGOUT_REDIRECT_URL = "/"`.
+Réglages : `MAX_APPRENANTS` (6), `LOGIN_MAX_ECHECS` (5), `LOGIN_BLOCAGE` (15 min), `INSCRIPTIONS_MAX_PAR_HEURE`
+(5), `INSCRIPTION_IP_HEADER`, `PASSWORD_RESET_TIMEOUT` (24 h), `LOGOUT_REDIRECT_URL = "/"`, `COMPTE_DEMO`.
 
 ### P4-4. Contrat des URL et des courriels
 
 ```
-/connexion/                                    comptes:connexion        (GET, POST)
-/deconnexion/                                  comptes:deconnexion      (POST seulement)
-/inscription/                                  comptes:inscription      (GET, POST ; 429 si limite)
-/inscription/envoye/                           comptes:inscription_envoyee
-/inscription/verifier/<uidb64>/<jeton>/        comptes:verifier         (400 si jeton invalide)
-/mot-de-passe/                                 comptes:mdp_oublie
-/mot-de-passe/envoye/                          comptes:mdp_envoye
-/mot-de-passe/<uidb64>/<jeton>/                comptes:mdp_nouveau
-/mot-de-passe/termine/                         comptes:mdp_termine
-/admin/login/                                  → redirection 302 vers /connexion/?next=…
+/connexion/  /deconnexion/ (POST)  /inscription/  /inscription/envoye/  /inscription/verifier/<uidb64>/<jeton>/
+/mot-de-passe/  /mot-de-passe/envoye/  /mot-de-passe/<uidb64>/<jeton>/  /mot-de-passe/termine/
+/admin/login/ → 302 vers /connexion/?next=…
 comptes/email/verifier.txt, mdp_oublie.txt, mdp_oublie_objet.txt   (texte brut, français)
 ```
 
 ### P4-5. Definition of Done (critères stricts)
 
-**Pour chaque story US-32 à US-44** : les 7 critères de P5 du PRD général s'appliquent tous, et en plus :
-1. **Cloisonnement des comptes** testé : apprenant contre formateur contre superutilisateur pour l'admin
-   des utilisateurs ; formateur A contre formateur B pour les codes ; aucune page d'authentification ne
-   révèle si un identifiant ou un courriel existe (hormis le doublon de courriel d'un compte confirmé à
-   l'inscription).
-2. **Sécurité** : chaque formulaire porte un jeton CSRF ; la déconnexion n'accepte que POST ; aucun
-   courriel, mot de passe, jeton ni IP en clair dans les journaux ; `check --deploy` ne signale rien de
-   nouveau, `comptes.E001` compris.
-3. **Courriels** testés avec `mail.outbox` (destinataire, objet, lien absolu, français) ; aucun appel SMTP
-   réel dans les tests.
-4. **Écrans** : capture Playwright en clair, en sombre, à 390 et à 1440 px pour chaque page touchée ;
-   aucun débordement ; champs au contraste ≥ 3:1, libellé et focus visibles ; déconnexion visible sans
-   défiler.
-5. **Secret** : le mot de passe SMTP n'apparaît dans aucun fichier du dépôt, aucun message, aucune
-   commande exécutée par l'agent.
-
-**Lot 1 (US-32 à US-35)** : terminé quand, sur le site en ligne, Playwright montre :
-- en superutilisateur, le bouton « Ajouter un utilisateur » et un formulaire d'ajout aux champs visibles ;
-- en apprenant, un menu sans « Utilisateurs » et la déconnexion visible à 390 px ;
-- la section « Charte appliquée » complétée.
-
-**Lot 2 (US-36 à US-44)** : terminé quand :
-- **En local** (courriel console) : Playwright enchaîne inscription avec code, ouverture du lien,
-  connexion, Note rapide avec photo, puis déconnexion ; un code épuisé, un code expiré, la 6ᵉ inscription
-  de l'heure et le 6ᵉ échec de connexion sont refusés.
-- **En ligne, après le collage du mot de passe SMTP par l'utilisateur** : une inscription réelle avec un
-  code de test reçoit le courriel et s'active, puis le compte et le code de test sont supprimés.
-- **Comptes existants** : `fokou` et `demo.apprenant` se connectent toujours, et le compte démo reste
-  verrouillé.
+**Pour chaque story** : les 7 critères de P5, et en plus :
+1. **Cloisonnement** testé : apprenant contre apprenant, apprenant contre administrateur ; aucune page
+   d'authentification ne révèle si un identifiant existe (hormis le doublon de courriel confirmé).
+2. **Droits par le profil** : aucun code ne règle `groups`, `is_staff` ou `is_superuser` à la main pour un
+   utilisateur de l'application ; les migrations de données suivent la même règle que `appliquer_role` et
+   sont testées avec l'état historique des modèles.
+3. **Sécurité** : CSRF partout, déconnexion en POST seulement, rien en clair dans les journaux, `check --deploy`
+   sans nouveauté (hormis `comptes.E001` tant que le SMTP manque).
+4. **Courriels** testés avec `mail.outbox` ; aucun appel SMTP réel.
+5. **Écrans** : Playwright en clair, en sombre, à 390 et 1440 px, aucun débordement, déconnexion visible.
+6. **Scénario apprenant** rejoué avec Playwright : depuis l'accueil seul, inscription, lien, connexion, premier
+   stage avec le nom du formateur, Note rapide.
+7. **Secret** : le mot de passe SMTP n'apparaît nulle part.
 
 ## PRD — « Carnet de stage »
 
@@ -413,7 +346,7 @@ comptes/email/verifier.txt, mdp_oublie.txt, mdp_oublie_objet.txt   (texte brut, 
   certaines informations ».
 - **Personas** :
   - **Apprenant** : sur le chantier, au téléphone, avec une connexion médiocre. Il saisit vite.
-  - **Formateur référent** : lit les notes et laisse des remarques.
+  - **Formateur** : n'a plus de compte (B17) ; son nom figure sur la couverture, saisi par l'apprenant.
   - **Superutilisateur** (le porteur du projet) : crée les comptes, règle les quotas, déploie, puis
     importe les dossiers en local pour produire le rapport.
 - **Mesures du succès** :
@@ -431,9 +364,9 @@ décision du journal A1–A36.
 
 | ID | En tant que… | je veux… | afin de… | Critères d'acceptation | Prio |
 |---|---|---|---|---|---|
-| US-01 | superutilisateur | créer les comptes des apprenants et des formateurs, et les placer dans un groupe | contrôler qui accède | Pas de page d'inscription. Commande `creer_groupes` idempotente. (A13) | M |
+| US-01 | superutilisateur | créer des comptes et leur attribuer un profil | contrôler qui accède | Révisée par B15 et B19 : inscription libre en tant qu'apprenant, profil Apprenant ou Administrateur dans l'admin, `creer_groupes` idempotente. | M |
 | US-02 | apprenant | ne voir et ne modifier que mes stages et tout ce qui en dépend | protéger mes données | Accès à l'objet d'un autre apprenant, par la liste ou par l'URL : 404. Testé pour **chaque** modèle. (A1) | M |
-| US-03 | formateur | voir en lecture les stages dont je suis référent et annoter une note | suivre l'apprenant | Seul `remarque_formateur` est modifiable. Les autres stages sont invisibles. (A32) | M |
+| US-03 | ~~formateur~~ | ~~voir en lecture les stages dont je suis référent et annoter une note~~ | — | **Retirée par B17** (2026-11-08) : plus de compte formateur ; `formateur_referent` et `remarque_formateur` supprimés. | — |
 | US-04 | apprenant | avoir plusieurs stages et choisir le stage actif | suivre plusieurs périodes | Le stage actif est mémorisé en session. La note rapide s'y rattache. (A1) | S |
 
 **É2. Stage, fiche entreprise, mission** (incrément 1)
@@ -508,15 +441,15 @@ Conventions communes :
 
 | Entité | Attributs principaux | Relations | Règles |
 |---|---|---|---|
-| **User** (Django) | identifiant, mot de passe, groupes | — | Groupes « Apprenant » et « Formateur ». |
-| **Stage** | intitule, specialite, theme, sous_theme ; couverture : apprenant_nom, cfp, cfp_sigle, diplome, annee_etude, session, entreprise, entreprise_sigle, tuteur_pro, tuteur_pro_poste, tuteur_acad, tuteur_acad_poste ; date_debut, date_fin ; logo_entreprise?, logo_cfp? ; jours_travailles (liste de jours, lundi–samedi) ; quota_mo (80) ; derniere_sauvegarde? ; slug | → User `proprietaire` ; → User `formateur_referent`? | `date_fin` ≥ `date_debut`. |
+| **User** (Django) | identifiant, mot de passe, groupes | — | Droits portés par `comptes.Profil` (B15) : Apprenant ou Administrateur. Plus de groupe Formateur (B17). |
+| **Stage** | intitule, specialite, theme, sous_theme ; couverture : apprenant_nom, cfp, cfp_sigle, diplome, annee_etude, session, entreprise, entreprise_sigle, tuteur_pro, tuteur_pro_poste, tuteur_acad, tuteur_acad_poste ; date_debut, date_fin ; logo_entreprise?, logo_cfp? ; jours_travailles (liste de jours, lundi–samedi) ; quota_mo (80) ; derniere_sauvegarde? ; slug | → User `proprietaire` ; → User `~~formateur_referent~~ (supprimé, B17) | `date_fin` ≥ `date_debut`. |
 | **FicheEntreprise** | presentation, organisation, historique, secteurs, marches, clients_fournisseurs, concurrence, chiffres_cles, perspectives_swot, mutations_technologiques, volonte_dirigeants ; adresse, contact, creation, effectif, capital | 1–1 avec Stage | 11 rubriques du cours, plus les champs d'identité de `infos.tex`. |
 | **Mission** | poste, position_organigramme, faits_importants, objectifs_enjeux, methodes_moyens, collaborateurs, responsabilites, resultats, difficultes_solutions | 1–1 avec Stage | 9 rubriques du cours. |
 | **BilanPersonnel** | pourquoi_ce_stage, appreciation, attentes_atteintes, apprecie_comme_stagiaire, resultats_remarques, travail_equipe, consequence_carriere, critiques, suggestions | 1–1 avec Stage | Questions de la p. 24 et Partie IV. |
 | **Rubrique** | code, libelle, niveau (cours, thème), partie (entreprise, mission, intro, thème, critiques, conclusion, bilan), ordre | → Stage? (vide pour le cours) ; → Rubrique `parent`? | Rubrique du cours : sans stage, non modifiable. Rubrique de thème : `parent` toujours de niveau 1. |
 | **Lieu** | nom, type (siège, chantier, fournisseur, autre), latitude, longitude, reperes, ville, quartier | → Stage | Coordonnées dans les bornes valides. |
 | **Tache** | libelle, date_debut, date_fin?, description? | → Stage ; → Lieu? ; → Rubrique? | Fin vide : arrêt à la fin du stage pour le Gantt. |
-| **EntreeJournal** | date, heure ; texte (note rapide) ; objectifs, moyens_humains, moyens_materiels, methodologie, activites, elements_theoriques, difficultes, solutions, appreciation ; intervention : nature?, duree_immobilisation?, cout?, ressources? ; completee (booléen) ; remarque_formateur? ; latitude?, longitude? | → Stage ; → Lieu? ; → Tache? ; ↔ Rubrique ; ↔ Equipement ; ↔ Personne | Plusieurs notes par jour. |
+| **EntreeJournal** | date, heure ; texte (note rapide) ; objectifs, moyens_humains, moyens_materiels, methodologie, activites, elements_theoriques, difficultes, solutions, appreciation ; intervention : nature?, duree_immobilisation?, cout?, ressources? ; completee (booléen) ; ~~remarque_formateur~~ (supprimé, B17) ; latitude?, longitude? | → Stage ; → Lieu? ; → Tache? ; ↔ Rubrique ; ↔ Equipement ; ↔ Personne | Plusieurs notes par jour. |
 | **Photo** | fichier (nom UUID), latitude?, longitude?, prise_le?, legende?, slug?, destination (à trier, corps, annexe, preuve), taille_octets | → Stage ; → EntreeJournal? ; → Lieu? ; ↔ Rubrique | Corps ou annexe : slug et légende exigés à l'export ; slug unique pour chaque stage. |
 | **Equipement** | designation, categorie (outillage, matériel ou matériau, EPI, mesure), caracteristiques, role, quantite? | → Stage ; → Photo? ; ↔ Rubrique | — |
 | **Reference** | type (norme, ouvrage, notice, web, oral), auteur, titre, annee?, editeur?, url?, cle_bibtex | → Stage | Clé générée, unique pour chaque stage. |
@@ -546,7 +479,7 @@ bib/references.bib
 1. Ses critères d'acceptation sont couverts par au moins un **test pytest** écrit avant le code (TDD), et
    `pytest` passe entièrement.
 2. Le **cloisonnement** est testé pour tout nouveau modèle ou toute nouvelle vue : apprenant A contre
-   apprenant B, formateur référent contre formateur non référent.
+   apprenant B, apprenant contre administrateur (plus de formateur, B17).
 3. `python manage.py check --deploy` ne signale rien de nouveau, et `makemigrations --check` n'en génère
    aucune.
 4. L'interface est en français et utilise les libellés du cours. Pour un écran, une capture Playwright en
@@ -608,7 +541,7 @@ PythonAnywhere est changé.
 | A10 | Langue ? | Français, libellés repris du cours. |
 | A11 | Identité visuelle ? | Nom « Carnet de stage », logo neutre, palette et police de ventisax. |
 | A12 | Versions ? | Django 5.2 LTS, django-unfold récent, Python 3.13 sur PythonAnywhere. |
-| A13 | Comptes ? | Créés par le superutilisateur ; groupes Apprenant et Formateur ; remarque du formateur sur les notes. |
+| A13 | Comptes ? | Créés par le superutilisateur ; groupes Apprenant et Formateur ; remarque du formateur sur les notes. **Remplacé par B15, B17 et B19.** |
 | A14 | Données personnelles et dépôt ? | Le dépôt reste **public** : jamais de base, de médias, de `.env`, de zips ni de rapports réels versionnés. |
 | A15 | Import local ? | `importer_dossier` : `infos.tex`, `img/fig_<slug>.jpg`, `donnees_terrain/{terrain.json, terrain.md}`. |
 | A16 | Sauvegarde ? | Le zip sert de sauvegarde ; restauration par `restaurer_dossier` ; alerte après 7 jours. |
@@ -627,7 +560,7 @@ PythonAnywhere est changé.
 | A29 | Saisie rapide ? | Page « Note rapide » mobile, complétée ensuite dans l'admin ; alertes pour les notes non complétées et les jours sans note. |
 | A30 | Jours ouvrés ? | Jours travaillés (lundi–samedi), absences, jours fériés fixes du Cameroun, taux de présence. |
 | A31 | Géolocalisation ? | Modèle Lieu, rattachement automatique à moins de 200 m, plan de situation OSM généré à l'import local. |
-| A32 | Que voit un formateur ? | Seulement les stages dont il est référent. |
+| A32 | Que voit un formateur ? | Seulement les stages dont il est référent. **Retiré par B17.** |
 | A33 | Quota disque ? | Environ 4 apprenants : 80 Mo par stage, zips générés en flux, alerte globale à 80 %. |
 | A34 | Format des textes ? | Markdown minimal, converti en LaTeX par un convertisseur testé. |
 | A35 | Photos du rapport ? | Destination à trier, corps, annexe ou preuve ; seules corps et annexe sont exportées ; vue de tri en grille. |
@@ -678,17 +611,17 @@ débordement horizontal.
 - Surcharges à revérifier après une montée de version d'Unfold : `add_link.html`, `userlinks.html`, le
   sélecteur de bords dans `admin.css`.
 
-## Journal des décisions : comptes ouverts et revue UI/UX (grilling du 2026-11-08)
+## Journal des décisions : comptes ouverts et revue UI/UX (grilling et scénario du 2026-11-08)
 
 | # | Question | Décision |
 |---|---|---|
-| B1 | Lever A13 et ouvrir l'inscription ? | Oui, comme comptafisca (courriel vérifié, pot de miel, limites), mais seulement avec un code d'invitation. Compte placé dans le groupe Apprenant. |
-| B2 | Qui émet le code, que porte-t-il ? | Modèle `CodeInvitation` lié à un formateur : 8 caractères sans 0/O/1/I/L, expiration, usages max. Le formateur devient le référent par défaut des stages de l'apprenant. |
+| B1 | Lever A13 et ouvrir l'inscription ? | Oui, comme comptafisca (courriel vérifié, pot de miel, limites), mais seulement avec un code d'invitation. Compte placé dans le groupe Apprenant. **Remplacé par B19 (sans code).** |
+| B2 | Qui émet le code, que porte-t-il ? (**retiré par B19**) | Modèle `CodeInvitation` lié à un formateur : 8 caractères sans 0/O/1/I/L, expiration, usages max. Le formateur devient le référent par défaut des stages de l'apprenant. |
 | B3 | Modèle utilisateur ? | Garder `django.contrib.auth.User` et les groupes ; nouveau `Profil` 1-1 (UUID, `email_verifie`, `code_utilise`). Pas d'`AUTH_USER_MODEL` personnalisé. |
 | B4 | Parcours repris ? | Tout comptafisca : inscription, vérification, connexion avec blocage (5 échecs → 15 min), déconnexion, mot de passe oublié par courriel. Changement connecté : admin Unfold. |
 | B5 | Compte d'envoi des courriels ? | Même Gmail SMTP que comptafisca, mot de passe d'application dans le `.env` du serveur seulement ; console en local. |
 | B6 | Page de connexion ? | Une seule page publique `/connexion/` (et `/inscription/`, `/mot-de-passe/…`), style comptafisca adapté à `carnet.css` ; `/admin/login/` y redirige. Inscrit : `is_staff` et groupe Apprenant. |
-| B7 | Formateurs et codes ? | Comptes formateurs créés par le superutilisateur seulement ; chaque formateur gère ses propres codes dans l'admin (cloisonnement testé) et voit leurs usages. |
+| B7 | Formateurs et codes ? (**retiré par B17 et B19**) | Comptes formateurs créés par le superutilisateur seulement ; chaque formateur gère ses propres codes dans l'admin (cloisonnement testé) et voit leurs usages. |
 | B8 | Garde-fou du disque ? | Code : 5 usages et 90 jours par défaut. Inscription refusée au-delà de 80 % de 512 Mo ou de `MAX_APPRENANTS` (6) apprenants actifs. |
 | B9 | Champs d'inscription ? | Prénom, nom, identifiant, courriel, mot de passe ×2, code, pot de miel, case obligatoire d'avertissement A22. Prénom et nom préremplissent `apprenant_nom`. |
 | B10 | Comptes existants et démo ? | Migration : profil vérifié pour chaque compte ; purge limitée aux inscrits inactifs non vérifiés. Compte démo verrouillé (mot de passe, réinitialisation, courriel). |
@@ -696,6 +629,11 @@ débordement horizontal.
 | B12 | Liste des utilisateurs ? | `UserAdmin` et `GroupAdmin` Unfold avec leurs formulaires ; bouton « Ajouter un utilisateur », colonnes et filtres utiles, choix du groupe à l'ajout ; réservé au superutilisateur. |
 | B13 | Portée de la revue UI/UX ? | Tous les écrans, en clair et en sombre, à 390 et 1440 px ; bord de champ ≥ 3:1, libellé et focus visibles, aucun débordement. |
 | B14 | Livraison ? | Deux lots (interface, puis comptes ouverts), deux déploiements ; l'utilisateur colle lui-même le mot de passe SMTP dans le `.env` du serveur. |
+| B15 | Où vivent les droits ? (2026-11-08) | Sur le **profil** : `Profil.role` (Apprenant ou Administrateur) ; on associe simplement un profil à chaque utilisateur. Groupes, statut équipe et superutilisateur en découlent (`comptes.droits.appliquer_role`). L'admin n'affiche qu'un champ « Profil ». |
+| B16 | Où arrive chacun après la connexion ? | L'apprenant sur la Note rapide, l'administrateur sur le tableau de bord (le scénario avait montré un 403 brut pour un compte sans stage à créer). |
+| B17 | Le compte formateur sert-il ? | Non : supprimé. Le nom du formateur n'est qu'un **libellé** de la couverture (« Formateur (responsable académique) »), saisi par l'apprenant. `formateur_referent`, `remarque_formateur`, groupe Formateur supprimés ; un ancien zip reste restaurable. |
+| B18 | L'accueil suffit-il pour démarrer ? | Non (scénario du 2026-11-08) : héros « Par où commencer », section en trois étapes, message du premier stage explicite, ancres non masquées par l'en-tête. |
+| B19 | Faut-il un code d'invitation ? | Non : **inscription libre pour tout le monde, en tant qu'apprenant**. Garde-fous conservés : courriel vérifié, pot de miel, 5 inscriptions par heure et par IP, fermeture à 80 % du disque ou à `MAX_APPRENANTS` (compte démo non compté). |
 
 ## Points à valider par l'utilisateur
 
