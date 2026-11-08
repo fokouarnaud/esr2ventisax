@@ -126,3 +126,9 @@ def test_premiere_fiche_commence_par_creer_son_compte():
     from carnet.formation import FICHES
 
     assert "compte" in FICHES[0].resume
+
+
+def test_accueil_propose_le_rapport_de_demo_en_word(client, db):
+    """B22 : la démo existe aussi en Word, à côté du PDF."""
+    contenu = client.get("/").content.decode()
+    assert "demo/rapport_demo.docx" in contenu and "demo/rapport_demo.pdf" in contenu

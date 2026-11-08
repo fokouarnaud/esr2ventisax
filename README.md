@@ -13,8 +13,9 @@ Carnet de stage (en ligne) → zip « dossier terrain » → import local → r�
 **<https://esrventisax.pythonanywhere.com>**, avec l'identifiant `demo.apprenant` et le mot de passe `demo-local-2026`.
 
 Le compte contient un stage fictif complet : « Entreprise de démonstration », chantier R+10 à Douala, une note par
-jour travaillé et 12 photos. Le résultat de la chaîne est dans
-[`demo/rapport_demo.pdf`](demo/rapport_demo.pdf) (50 pages) et [`demo/presentation_demo.pptx`](demo/presentation_demo.pptx).
+jour travaillé et 12 photos. Le résultat de la chaîne, produit à partir du dossier terrain téléchargé sur le site
+en ligne, est dans [`demo/rapport_demo.pdf`](demo/rapport_demo.pdf) (50 pages), sa version Word
+[`demo/rapport_demo.docx`](demo/rapport_demo.docx) et [`demo/presentation_demo.pptx`](demo/presentation_demo.pptx).
 
 Prise en main : [manuel d'utilisation](docs/manuel/manuel-utilisation.md) et
 [scénario du premier au dernier jour](docs/manuel/scenario-stage.md).

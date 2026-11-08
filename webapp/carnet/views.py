@@ -33,6 +33,7 @@ def accueil(request):
         "manuel": f"{DEPOT}/docs/manuel/manuel-utilisation.md",
         "scenario": f"{DEPOT}/docs/manuel/scenario-stage.md",
         "rapport_demo": f"{DEPOT}/demo/rapport_demo.pdf",
+        "rapport_demo_word": f"{DEPOT}/demo/rapport_demo.docx",  # B22
     })
 
 

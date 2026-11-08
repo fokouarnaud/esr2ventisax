@@ -14,8 +14,10 @@ Consignes pour tout agent (Claude Code, Codex…) qui travaille dans ce dépôt.
   - `reference/cours/01_partie1/02_module2/22.jpeg` … `27.jpeg` : cours « Module 2 : Techniques de
     rédaction des rapports ». C'est lui qui **fixe le plan obligatoire** et l'emporte sur l'exemple
     en cas de conflit.
-- `demo/` : rapport PDF et présentation PPTX produits par toute la chaîne à partir du stage fictif de
-  `charger_demo` (A38). Données inventées, versionnées.
+- `demo/` : rapport PDF, sa version Word (B22) et présentation PPTX produits par toute la chaîne à partir du
+  stage fictif de `charger_demo` (A38). Pour les regénérer : télécharger le dossier terrain du compte démo **sur le
+  site en ligne** (tableau de bord, « Dossier terrain »), puis `preparer.ps1`, `rediger_demo` et `finaliser.ps1`.
+  Données inventées, versionnées.
 - `archive/memoire_featherface/` : ancien mémoire de Master (détection faciale ECA-CBAM), archivé.
   Ne pas le modifier.
 
