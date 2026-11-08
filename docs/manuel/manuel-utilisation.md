@@ -98,8 +98,8 @@ Le formulaire du stage se trouve aussi dans **Stages**.
 - **Partie générale** : intitulé, spécialité, thème, sous-thème, dates de début et de fin. Rien n'est imposé :
   l'application ne connaît à l'avance ni l'entreprise, ni la spécialité, ni le thème.
 - **Onglet Couverture** : les champs de la page de couverture exigés par le cours (nom du stagiaire, titre du
-  rapport, entreprise et sigle, CFP et sigle, diplôme, année d'étude, session, responsable professionnel et
-  **formateur (responsable académique)** avec leurs postes), ainsi que les logos de l'entreprise et du CFP.
+  rapport, entreprise et sigle, centre de formation professionnelle et sigle, diplôme, année d'étude, session, responsable professionnel et
+  **formateur (responsable académique)** avec leurs postes), ainsi que les logos de l'entreprise et du centre de formation professionnelle.
 - **Onglet Suivi** : jours travaillés (lundi à samedi par défaut), quota (réglé par l'administrateur, en
   lecture seule) et date de la dernière sauvegarde.
 
@@ -365,7 +365,7 @@ Sigle (unique dans le stage) et signification : elles forment la liste des abré
 ## 11. Calendrier et absences
 
 Les jours travaillés se règlent dans l'onglet **Suivi** du stage (lundi à samedi par défaut). **Absences**
-recense ce qui n'est pas travaillé : jour férié, maladie, congé, intempérie, cours au CFP. Les jours fériés fixes
+recense ce qui n'est pas travaillé : jour férié, maladie, congé, intempérie, cours au centre de formation professionnelle. Les jours fériés fixes
 du Cameroun sont déjà chargés pour tous ; ajoutez seulement vos absences.
 
 ![Absences](img/19_absences.jpg)

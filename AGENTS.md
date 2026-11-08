@@ -634,6 +634,7 @@ débordement horizontal.
 | B17 | Le compte formateur sert-il ? | Non : supprimé. Le nom du formateur n'est qu'un **libellé** de la couverture (« Formateur (responsable académique) »), saisi par l'apprenant. `formateur_referent`, `remarque_formateur`, groupe Formateur supprimés ; un ancien zip reste restaurable. |
 | B18 | L'accueil suffit-il pour démarrer ? | Non (scénario du 2026-11-08) : héros « Par où commencer », section en trois étapes, message du premier stage explicite, ancres non masquées par l'en-tête. |
 | B19 | Faut-il un code d'invitation ? | Non : **inscription libre pour tout le monde, en tant qu'apprenant**. Garde-fous conservés : courriel vérifié, pot de miel, 5 inscriptions par heure et par IP, fermeture à 80 % du disque ou à `MAX_APPRENANTS` (compte démo non compté). |
+| B20 | Sigles et fiches de formation (2026-11-08) ? | « CFP » s'écrit **centre de formation professionnelle** dans l'interface, les fiches et le manuel (le sigle reste dans la table des abréviations du rapport). Plus de « Créer un compte avec un code ». Les fiches suivent l'application : captures refaites (`docs/manuel/capturer_ecrans.py`, `docs/formation/capturer_sources.py`), nombre de pages lu dans le PDF publié (`carnet/formation.py`). |
 
 ## Points à valider par l'utilisateur
 
