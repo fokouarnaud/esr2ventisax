@@ -20,10 +20,6 @@ def superutilisateur(request):
     return request.user.is_superuser
 
 
-def gere_des_codes(request):
-    return request.user.is_superuser or request.user.groups.filter(name="Formateur").exists()
-
-
 def _entree(titre, icone, app, modele, permission=None):
     return {"title": titre, "icon": icone, "link": _liste(app, modele),
             "permission": permission or peut_voir(app, modele)}
@@ -57,7 +53,6 @@ NAVIGATION = [
         _entree("Abréviations", "abc", "carnet", "abreviation"),
     ]},
     {"title": "Administration", "separator": True, "collapsible": True, "items": [
-        _entree("Codes d'invitation", "key", "comptes", "codeinvitation", gere_des_codes),
         _entree("Utilisateurs", "person", "auth", "user", superutilisateur),
         _entree("Groupes", "group", "auth", "group", superutilisateur),
     ]},

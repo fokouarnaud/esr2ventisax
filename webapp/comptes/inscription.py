@@ -1,4 +1,4 @@
-"""Inscription par code d'invitation (US-36, US-37, US-42) : courriel vérifié, pot de miel, limite par IP."""
+"""Inscription libre en tant qu'apprenant (US-36, US-37, US-42, B19) : courriel vérifié, pot de miel, limite par IP."""
 
 import hashlib
 import hmac
@@ -7,11 +7,11 @@ from datetime import timedelta
 from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
 from django.db import transaction
-from django.db.models import F, Q
+from django.db.models import Q
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
@@ -20,7 +20,7 @@ from django.utils.http import urlsafe_base64_encode
 
 from carnet.acces import GROUPE_APPRENANT
 
-from .models import CodeInvitation, LimiteInscription, Profil
+from .models import LimiteInscription, Profil
 
 
 class JetonVerification(PasswordResetTokenGenerator):
@@ -46,8 +46,6 @@ def confirmes_ou_actifs():
 
 
 class FormulaireInscription(UserCreationForm):
-    code = forms.CharField(label="Code d'invitation", max_length=20,
-                           help_text="Huit caractères, remis par votre formateur.")
     avertissement_photos = forms.BooleanField(
         label="J'ai compris que mes photos sont accessibles par leur lien et gardent leur position GPS.")
     site_web = forms.CharField(required=False, label="Site web")  # pot de miel, masqué en CSS
@@ -73,15 +71,6 @@ class FormulaireInscription(UserCreationForm):
             self.fields[nom].widget.attrs["autocomplete"] = auto
         self.fields["username"].widget.attrs["autocapitalize"] = "none"
         self.fields["username"].widget.attrs.pop("autofocus", None)  # le 2e champ ne doit pas ouvrir le clavier
-        self.fields["code"].widget.attrs.update({"autocapitalize": "characters", "autocomplete": "off",
-                                                "spellcheck": "false"})
-
-    def clean_code(self):
-        saisi = self.cleaned_data["code"].strip().upper()
-        code = CodeInvitation.objects.filter(code=saisi).first()
-        if code is None or not code.est_utilisable():
-            raise forms.ValidationError("Ce code est inconnu, désactivé, expiré ou déjà utilisé au maximum.")
-        return code
 
     def clean_username(self):
         nom = self.cleaned_data.get("username")
@@ -127,7 +116,8 @@ def inscription_fermee():
 
     disque = occupation_globale([settings.MEDIA_ROOT, settings.BASE_DIR / "db.sqlite3"],
                                 total_octets=settings.CARNET_DISQUE_TOTAL_MO * OCTETS_PAR_MO)
-    actifs = User.objects.filter(is_active=True, groups__name=GROUPE_APPRENANT).count()
+    actifs = User.objects.filter(is_active=True, groups__name=GROUPE_APPRENANT).exclude(
+        username=settings.COMPTE_DEMO).count()  # le compte démo ne réserve pas la place d'un stage réel
     return disque["alerte"] or actifs >= settings.MAX_APPRENANTS
 
 
@@ -137,23 +127,19 @@ def creer_apprenant_en_attente(form):
     nom, courriel = form.cleaned_data["username"], form.cleaned_data["email"]
     for ancien in jamais_confirmes().filter(Q(username__iexact=nom) | Q(email__iexact=courriel)):
         supprimer_compte_en_attente(ancien)
-    code = CodeInvitation.objects.select_for_update().get(pk=form.cleaned_data["code"].pk)
     user = form.save(commit=False)
     user.is_active = False
-    user.is_staff = True
     user.save()
-    user.groups.add(Group.objects.get_or_create(name=GROUPE_APPRENANT)[0])
-    Profil.objects.filter(user=user).update(inscrit_par_formulaire=True, email_verifie=False, code_utilise=code)
-    CodeInvitation.objects.filter(pk=code.pk).update(usages=F("usages") + 1)
+    profil = user.profil
+    profil.role = Profil.Role.APPRENANT  # les droits viennent du profil (B15)
+    profil.inscrit_par_formulaire, profil.email_verifie = True, False
+    profil.save()
     return user
 
 
 @transaction.atomic
 def supprimer_compte_en_attente(user):
-    """Supprime un compte jamais confirmé et rend l'usage de son code."""
-    code_id = Profil.objects.filter(user=user).values_list("code_utilise", flat=True).first()
-    if code_id:
-        CodeInvitation.objects.filter(pk=code_id, usages__gt=0).update(usages=F("usages") - 1)
+    """Supprime un compte jamais confirmé."""
     user.delete()
 
 
@@ -163,7 +149,7 @@ _derniere_maintenance = 0.0
 
 
 def purger_comptes_non_confirmes(maintenant=None):
-    """Supprime les inscrits jamais confirmés depuis plus de 7 jours ; rend l'usage de leur code."""
+    """Supprime les inscrits jamais confirmés depuis plus de 7 jours."""
     limite = (maintenant or timezone.now()) - DUREE_SANS_CONFIRMATION
     perimes = list(jamais_confirmes().filter(date_joined__lt=limite))
     for user in perimes:

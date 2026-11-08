@@ -3,7 +3,9 @@
 import logging
 
 from django.contrib import messages
+from django.contrib.auth import views as auth
 from django.contrib.auth.models import User
+from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import urlsafe_base64_decode
@@ -55,3 +57,16 @@ def verifier(request, uidb64, jeton):
     Profil.objects.update_or_create(user=user, defaults={"email_verifie": True})
     messages.success(request, "Votre courriel est confirmé : vous pouvez vous connecter.")
     return redirect("comptes:connexion")
+
+
+class Connexion(auth.LoginView):
+    """Destination selon le profil (B16) : l'administrateur n'a pas de stage à créer."""
+
+    template_name = "comptes/connexion.html"
+    redirect_authenticated_user = True
+
+    def get_default_redirect_url(self):
+        profil = getattr(self.request.user, "profil", None)
+        if self.request.user.is_superuser or (profil and profil.role != Profil.Role.APPRENANT):
+            return reverse("admin:index")
+        return super().get_default_redirect_url()

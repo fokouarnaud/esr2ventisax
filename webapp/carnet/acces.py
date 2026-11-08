@@ -1,27 +1,21 @@
-"""Cloisonnement (A1, A13, A32) : point unique de décision sur ce que voit chaque compte."""
+"""Cloisonnement (A1, A13, B17) : point unique de décision sur ce que voit chaque compte.
+
+Deux profils seulement : l'apprenant voit ses stages, l'administrateur voit tout. Plus de compte formateur.
+"""
 
 from .models import Stage
 
 GROUPE_APPRENANT = "Apprenant"
-GROUPE_FORMATEUR = "Formateur"
-
-
-def est_formateur(user):
-    return user.groups.filter(name=GROUPE_FORMATEUR).exists()
 
 
 def stages_visibles(user):
     if user.is_superuser:
         return Stage.objects.all()
-    if est_formateur(user):
-        return Stage.objects.filter(formateur_referent=user)
     return Stage.objects.filter(proprietaire=user)
 
 
 def stages_modifiables(user):
-    if user.is_superuser:
-        return Stage.objects.all()
-    return Stage.objects.filter(proprietaire=user)
+    return stages_visibles(user)
 
 
 def filtrer_visibles(user, queryset):

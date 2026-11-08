@@ -1,63 +1,54 @@
-"""Comptes ouverts (PRD incrément 4, P4-3) : profil, codes d'invitation, traces anti-abus."""
+"""Comptes ouverts (PRD incrément 4, P4-3) : profil (porteur des droits), traces anti-abus.
 
-import datetime
-import secrets
+Inscription libre en tant qu'apprenant (B19) : plus de code d'invitation ni de compte formateur (B17)."""
 
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 
 from carnet.models.base import ModeleBase
 
-ALPHABET_CODE = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"  # sans 0, O, 1, I ni L (B2)
-LONGUEUR_CODE = 8
 
+# --- Conservés pour l'historique des migrations (0001 : ancien modèle CodeInvitation, retiré par B19) ---
 
 def generer_code():
-    while True:
-        code = "".join(secrets.choice(ALPHABET_CODE) for _ in range(LONGUEUR_CODE))
-        if not CodeInvitation.objects.filter(code=code).exists():
-            return code
+    import secrets
+
+    return "".join(secrets.choice("ABCDEFGHJKMNPQRSTUVWXYZ23456789") for _ in range(8))
 
 
 def expiration_par_defaut():
+    import datetime
+
+    from django.utils import timezone
+
     return timezone.now() + datetime.timedelta(days=90)
 
 
-class CodeInvitation(ModeleBase):
-    formateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                  related_name="codes_invitation", verbose_name="formateur")
-    code = models.CharField("code", max_length=LONGUEUR_CODE, unique=True, default=generer_code)
-    usages_max = models.PositiveIntegerField("usages maximum", default=5)
-    usages = models.PositiveIntegerField("usages", default=0)
-    expire_le = models.DateTimeField("expire le", default=expiration_par_defaut)
-    actif = models.BooleanField("actif", default=True)
-
-    class Meta:
-        verbose_name = "code d'invitation"
-        verbose_name_plural = "codes d'invitation"
-        ordering = ["-cree_le"]
-
-    def __str__(self):
-        return self.code
-
-    def est_utilisable(self, maintenant=None):
-        return self.actif and self.usages < self.usages_max and self.expire_le > (maintenant or timezone.now())
-
-
 class Profil(ModeleBase):
+    """Le profil porte les droits (B15) : groupes, statut équipe et superutilisateur en découlent."""
+
+    class Role(models.TextChoices):
+        APPRENANT = "apprenant", "Apprenant"
+        ADMINISTRATEUR = "administrateur", "Administrateur"
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profil")
+    role = models.CharField("profil", max_length=20, choices=Role.choices, default=Role.APPRENANT)
     email_verifie = models.BooleanField("courriel vérifié", default=False)
     inscrit_par_formulaire = models.BooleanField("inscrit par le formulaire", default=False)
-    code_utilise = models.ForeignKey(CodeInvitation, on_delete=models.SET_NULL, null=True, blank=True,
-                                     related_name="profils", verbose_name="code utilisé")
 
     class Meta:
         verbose_name = "profil"
         verbose_name_plural = "profils"
 
     def __str__(self):
-        return f"Profil de {self.user}"
+        return f"{self.get_role_display()} : {self.user}"
+
+    def save(self, *args, synchroniser=True, **kwargs):
+        super().save(*args, **kwargs)
+        if synchroniser:
+            from .droits import appliquer_role
+
+            appliquer_role(self.user, self.role)
 
 
 class EchecConnexion(ModeleBase):

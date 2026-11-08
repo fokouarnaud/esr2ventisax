@@ -15,12 +15,13 @@ def test_accueil_public_sans_connexion(client):
 
 
 @pytest.mark.django_db
-def test_accueil_propose_l_inscription_avec_un_code(client):
+def test_accueil_propose_l_inscription_libre(client):
     contenu = client.get("/").content.decode()
     assert f'href="{reverse("comptes:inscription")}' in contenu
     assert "Créer un compte" in contenu
     assert "pas d'inscription libre" not in contenu
-    assert "code d'invitation" in contenu
+    assert "code d'invitation" not in contenu
+    assert "inscription est libre" in contenu
 
 
 @pytest.mark.django_db

@@ -34,13 +34,8 @@ def bruno(db):
 
 
 @pytest.fixture
-def prof(db):
-    return compte("prof", "Formateur")
-
-
-@pytest.fixture
-def stage_awa(awa, prof):
-    return Stage.objects.create(proprietaire=awa, formateur_referent=prof, intitule="Stage Awa",
+def stage_awa(awa):
+    return Stage.objects.create(proprietaire=awa, intitule="Stage Awa",
                                 date_debut=D(2026, 3, 2), date_fin=D(2026, 6, 26))
 
 
@@ -66,10 +61,8 @@ def url_modif(obj):
 
 def test_groupes_ont_les_bonnes_permissions(db):
     apprenant = Group.objects.get(name="Apprenant").permissions.values_list("codename", flat=True)
-    formateur = Group.objects.get(name="Formateur").permissions.values_list("codename", flat=True)
     assert {"add_entreejournal", "change_stage", "delete_photo"} <= set(apprenant)
-    assert {"view_stage", "change_entreejournal"} <= set(formateur)
-    assert "change_stage" not in formateur and "add_entreejournal" not in formateur
+    assert not Group.objects.filter(name="Formateur").exists()  # plus de compte formateur (B17)
 
 
 def test_liste_du_journal_limitee_a_ses_notes(client, awa, note_awa, note_bruno):
@@ -99,21 +92,6 @@ def test_creer_un_stage_attribue_le_proprietaire(client, awa):
         "jours_travailles": "[0, 1, 2, 3, 4, 5]", "quota_mo": 80,
     })
     assert Stage.objects.get(intitule="Nouveau").proprietaire == awa
-
-
-def test_formateur_referent_ne_modifie_que_la_remarque(client, prof, note_awa):
-    client.force_login(prof)
-    assert client.get(url_modif(note_awa)).status_code == 200
-    client.post(url_modif(note_awa), {"texte": "réécrit", "date": "2026-03-03",
-                                      "remarque_formateur": "Préciser le diamètre."})
-    note_awa.refresh_from_db()
-    assert note_awa.remarque_formateur == "Préciser le diamètre."
-    assert note_awa.texte == "Note d'Awa"
-
-
-def test_formateur_non_referent_ne_voit_pas_la_note(client, prof, note_bruno):
-    client.force_login(prof)
-    assert client.get(url_modif(note_bruno)).status_code == 404
 
 
 def test_rubrique_du_cours_non_modifiable_par_l_apprenant(client, awa):
@@ -148,14 +126,6 @@ def test_aide_du_slug_lisible_dans_l_admin(client, awa, stage_awa, settings, tmp
     contenu = client.get(reverse("admin:carnet_photo_change", args=[photo.pk])).content.decode()
     assert "img/fig_.jpg" not in contenu
     assert "fig_compresseur.jpg" in contenu
-
-
-def test_libelle_du_formateur_referent_accentue(client, awa, stage_awa):
-    """Sans libellé, Django affichait « Formateur referent » dans l'onglet Suivi."""
-    client.force_login(awa)
-    contenu = client.get(reverse("admin:carnet_stage_change", args=[stage_awa.pk])).content.decode()
-    assert "Formateur referent" not in contenu
-    assert "Formateur référent" in contenu
 
 
 def test_valeurs_techniques_sans_zeros_inutiles_dans_la_liste(client, awa, stage_awa):

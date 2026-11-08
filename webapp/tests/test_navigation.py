@@ -42,16 +42,9 @@ def test_chaque_modele_de_l_admin_a_son_entree(db):
             assert url in liens, f"{modele.__name__} absent du menu"
 
 
-def test_apprenant_ne_voit_ni_utilisateurs_ni_codes(client):
+def test_apprenant_ne_voit_pas_les_utilisateurs(client):
     html = page(client, compte("awa", "Apprenant"))
     assert reverse("admin:carnet_stage_changelist") in html
-    assert reverse("admin:auth_user_changelist") not in html
-    assert reverse("admin:comptes_codeinvitation_changelist") not in html
-
-
-def test_formateur_voit_ses_codes_mais_pas_les_utilisateurs(client):
-    html = page(client, compte("prof", "Formateur"))
-    assert reverse("admin:comptes_codeinvitation_changelist") in html
     assert reverse("admin:auth_user_changelist") not in html
 
 

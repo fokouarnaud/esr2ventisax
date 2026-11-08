@@ -77,7 +77,7 @@
 
     {% if carnet_stages_suivis %}
     <section class="carnet-bloc">
-        <div class="carnet-entete"><div><h2>Stages suivis</h2><p>Lecture seule, remarques possibles sur chaque note.</p></div></div>
+        <div class="carnet-entete"><div><h2>Stages des apprenants</h2><p>Vue de l'administrateur : tous les stages du site.</p></div></div>
         <ul>{% for s in carnet_stages_suivis %}
             <li><a class="carnet-lien" href="{% url 'admin:carnet_entreejournal_changelist' %}?stage__id__exact={{ s.pk }}">{{ s }}</a></li>
         {% endfor %}</ul>
