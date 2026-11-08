@@ -1,0 +1,6 @@
+<div class="champ-auth{% if champ.errors %} champ-auth--erreur{% endif %}">
+    <label for="{{ champ.id_for_label }}">{{ champ.label }}{% if champ.field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+    {{ champ }}
+    {% if champ.help_text %}<span class="champ-auth__aide" id="{{ champ.auto_id }}_helptext">{{ champ.help_text|safe }}</span>{% endif %}
+    {% for e in champ.errors %}<span class="champ-auth__erreur" role="alert">{{ e }}</span>{% endfor %}
+</div>

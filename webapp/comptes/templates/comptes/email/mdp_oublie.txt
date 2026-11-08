@@ -1,0 +1,11 @@
+{% autoescape off %}Bonjour {{ user.first_name|default:user.username }},
+
+Une réinitialisation du mot de passe a été demandée pour votre compte du Carnet de stage (identifiant « {{ user.get_username }} »).
+Pour choisir un nouveau mot de passe, ouvrez ce lien dans les 24 heures :
+
+{{ protocol }}://{{ domain }}{% url 'comptes:mdp_nouveau' uidb64=uid token=token %}
+
+Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : votre mot de passe ne change pas.
+
+Le Carnet de stage
+{% endautoescape %}

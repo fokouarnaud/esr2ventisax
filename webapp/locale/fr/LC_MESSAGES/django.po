@@ -198,3 +198,6 @@ msgstr "Ouvrir la recherche"
 
 msgid "Open shortcuts list"
 msgstr "Afficher les raccourcis"
+
+msgid "After you've created a user, you’ll be able to edit more user options."
+msgstr "Une fois l’utilisateur créé, vous pourrez compléter son profil."

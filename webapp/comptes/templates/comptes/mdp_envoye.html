@@ -1,0 +1,10 @@
+{% extends "comptes/base.html" %}
+{% block titre %}Lien envoyé · Carnet de stage{% endblock %}
+{% block contenu %}
+<section class="carte auth__seul">
+    <span class="icone auth__icone" aria-hidden="true">mark_email_read</span>
+    <h1>Vérifiez vos courriels</h1>
+    <p>Si un compte correspond à cette adresse, un lien vient de partir. Il est valable 24 heures et ne sert qu'une fois.</p>
+    <p><a class="bouton" href="{% url 'comptes:connexion' %}">Retour à la connexion</a></p>
+</section>
+{% endblock %}

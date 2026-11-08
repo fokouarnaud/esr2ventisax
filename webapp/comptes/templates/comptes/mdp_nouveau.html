@@ -1,0 +1,19 @@
+{% extends "comptes/base.html" %}
+{% block titre %}Nouveau mot de passe · Carnet de stage{% endblock %}
+{% block contenu %}
+<section class="carte auth__seul" aria-labelledby="titre-nouveau">
+    <span class="icone auth__icone" aria-hidden="true">password</span>
+    {% if validlink %}
+    <h1 id="titre-nouveau">Choisir un nouveau mot de passe</h1>
+    <form method="post" class="form-auth" novalidate>{% csrf_token %}
+        {% include "comptes/_champ.html" with champ=form.new_password1 %}
+        {% include "comptes/_champ.html" with champ=form.new_password2 %}
+        <button class="bouton" type="submit">Enregistrer</button>
+    </form>
+    {% else %}
+    <h1 id="titre-nouveau">Ce lien ne fonctionne plus</h1>
+    <p>Il a déjà servi ou a expiré (24 heures). Demandez-en un nouveau.</p>
+    <p><a class="bouton" href="{% url 'comptes:mdp_oublie' %}">Demander un nouveau lien</a></p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -169,3 +169,12 @@
   .formation__couverture img { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
   .formation__une:hover .formation__couverture img { transform: rotate(0deg) translateY(-2px); }
 }
+
+/* En-tête : « Créer un compte » + « Se connecter » sur une ligne, même à 390 px */
+.entete__actions { display: flex; gap: 8px; align-items: center; }
+@media (max-width: 560px) {
+  /* deux boutons dans l'en-tête : la pastille suffit, le nom reste lu par les lecteurs d'écran */
+  .marque__nom { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (max-width: 360px) { .entete__actions .bouton--petit { padding: 0 10px; font-size: .8rem; } }
+.pied a { color: var(--turquoise-encre); }

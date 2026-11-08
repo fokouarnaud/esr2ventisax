@@ -1,0 +1,49 @@
+{% extends "comptes/base.html" %}{% load static %}
+{% block titre %}Créer un compte · Carnet de stage{% endblock %}
+{% block contenu %}
+<div class="auth">
+    <section class="auth__intro">
+        <h1>Votre carnet de terrain, prêt pour le rapport.</h1>
+        <p>Notez chaque jour ce que le cours exige ; le rapport se rédige ensuite à partir de vos notes.</p>
+        <ul class="auth__points">
+            <li><span class="icone" aria-hidden="true">key</span>Un code d'invitation remis par votre formateur</li>
+            <li><span class="icone" aria-hidden="true">mail</span>Un lien de confirmation envoyé par courriel</li>
+            <li><span class="icone" aria-hidden="true">photo_camera</span>Note rapide au téléphone, photos et GPS</li>
+        </ul>
+        <figure class="auth__visuel">
+            <img src="{% static 'carnet/accueil/note_rapide.webp' %}" width="560" height="1212" loading="lazy"
+                 alt="La page Note rapide sur un téléphone : texte, photos, position GPS et étiquettes.">
+        </figure>
+    </section>
+    <section class="carte auth__panneau" aria-labelledby="titre-inscription">
+        <h2 id="titre-inscription">Créer un compte</h2>
+        {% if inscription_fermee %}
+        <p class="alerte" role="status">Les inscriptions sont fermées pour le moment : l'espace disponible est réservé aux stages en cours. Contactez votre formateur.</p>
+        {% else %}
+        {% if form.non_field_errors %}<p class="alerte alerte--erreur" role="alert">{{ form.non_field_errors.0 }}</p>{% endif %}
+        <form method="post" class="form-auth" novalidate>{% csrf_token %}
+            <div class="form-auth__ligne">
+                {% include "comptes/_champ.html" with champ=form.first_name %}
+                {% include "comptes/_champ.html" with champ=form.last_name %}
+            </div>
+            {% include "comptes/_champ.html" with champ=form.username %}
+            {% include "comptes/_champ.html" with champ=form.email %}
+            {% include "comptes/_champ.html" with champ=form.password1 %}
+            {% include "comptes/_champ.html" with champ=form.password2 %}
+            {% include "comptes/_champ.html" with champ=form.code %}
+            <div class="champ-auth champ-auth--case{% if form.avertissement_photos.errors %} champ-auth--erreur{% endif %}">
+                {{ form.avertissement_photos }}
+                <label for="{{ form.avertissement_photos.id_for_label }}">{{ form.avertissement_photos.label }}</label>
+                {% for e in form.avertissement_photos.errors %}<span class="champ-auth__erreur" role="alert">{{ e }}</span>{% endfor %}
+            </div>
+            <div class="piege" aria-hidden="true">
+                <label for="id_site_web">Site web</label>
+                <input type="text" name="site_web" id="id_site_web" tabindex="-1" autocomplete="off">
+            </div>
+            <button class="bouton" type="submit">Créer mon compte</button>
+        </form>
+        {% endif %}
+        <p class="auth__pied">Déjà inscrit ? <a href="{% url 'comptes:connexion' %}">Se connecter</a></p>
+    </section>
+</div>
+{% endblock %}

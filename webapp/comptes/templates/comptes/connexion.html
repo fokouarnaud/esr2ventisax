@@ -1,0 +1,39 @@
+{% extends "comptes/base.html" %}{% load static %}
+{% block titre %}Connexion · Carnet de stage{% endblock %}
+{% block contenu %}
+<div class="auth">
+    <section class="auth__intro">
+        <h1>Bon retour sur votre carnet.</h1>
+        <p>Une note par jour suffit : texte, photos et position, complétés ensuite dans l'administration.</p>
+        <ul class="auth__points">
+            <li><span class="icone" aria-hidden="true">edit_note</span>Note rapide en trois gestes</li>
+            <li><span class="icone" aria-hidden="true">lock</span>Vos stages ne sont visibles que de vous et de votre formateur</li>
+            <li><span class="icone" aria-hidden="true">description</span>Un dossier terrain prêt pour le rapport</li>
+        </ul>
+        <figure class="auth__visuel">
+            <img src="{% static 'carnet/accueil/note_rapide.webp' %}" width="560" height="1212" loading="lazy"
+                 alt="La page Note rapide sur un téléphone : texte, photos, position GPS et étiquettes.">
+        </figure>
+    </section>
+    <section class="carte auth__panneau" aria-labelledby="titre-connexion">
+        <h2 id="titre-connexion">Se connecter</h2>
+        {% if form.non_field_errors %}<p class="alerte alerte--erreur" role="alert">{{ form.non_field_errors.0 }}</p>{% endif %}
+        <form method="post" class="form-auth" novalidate>{% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <div class="champ-auth">
+                <label for="id_username">Identifiant</label>
+                <input type="text" name="username" id="id_username" autocomplete="username" autocapitalize="none"
+                       required value="{{ form.username.value|default_if_none:'' }}">
+            </div>
+            <div class="champ-auth">
+                <label for="id_password">Mot de passe</label>
+                <input type="password" name="password" id="id_password" autocomplete="current-password" required>
+            </div>
+            <button class="bouton" type="submit">Se connecter</button>
+        </form>
+        <p class="auth__pied"><a href="{% url 'comptes:mdp_oublie' %}">Mot de passe oublié ?</a></p>
+        <p class="auth__pied">Pas encore de compte ? <a href="{% url 'comptes:inscription' %}">Créer un compte avec un code</a></p>
+        <p class="auth__pied"><a href="{% url 'accueil' %}">Découvrir le Carnet et la démo</a></p>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+Bonjour {{ user.first_name }},
+
+Vous venez de créer un compte sur le Carnet de stage avec l'identifiant « {{ user.username }} ».
+Pour l'activer, ouvrez ce lien :
+
+{{ lien }}
+
+Ce lien ne sert qu'une fois. Sans confirmation, le compte sera supprimé dans 7 jours.
+Si vous n'êtes pas à l'origine de cette inscription, ignorez ce message.
+
+Le Carnet de stage

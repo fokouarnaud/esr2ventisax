@@ -10,6 +10,7 @@ from carnet.views import accueil
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("carnet/", include("carnet.urls")),
+    path("", include("comptes.urls")),
     path("favicon.ico", lambda request: redirect(static_url("carnet/favicon.svg"))),
     path("", accueil, name="accueil"),  # publique ; un utilisateur connecté va à la note rapide
 ]

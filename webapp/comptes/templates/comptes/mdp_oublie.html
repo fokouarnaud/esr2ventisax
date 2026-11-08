@@ -1,0 +1,14 @@
+{% extends "comptes/base.html" %}
+{% block titre %}Mot de passe oublié · Carnet de stage{% endblock %}
+{% block contenu %}
+<section class="carte auth__seul" aria-labelledby="titre-mdp">
+    <span class="icone auth__icone" aria-hidden="true">key</span>
+    <h1 id="titre-mdp">Mot de passe oublié</h1>
+    <p>Indiquez l'adresse de votre compte : un lien pour choisir un nouveau mot de passe vous sera envoyé.</p>
+    <form method="post" class="form-auth" novalidate>{% csrf_token %}
+        {% include "comptes/_champ.html" with champ=form.email %}
+        <button class="bouton" type="submit">Envoyer le lien</button>
+    </form>
+    <p class="auth__pied"><a href="{% url 'comptes:connexion' %}">Retour à la connexion</a></p>
+</section>
+{% endblock %}

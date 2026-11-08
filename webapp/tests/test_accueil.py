@@ -10,8 +10,17 @@ def test_accueil_public_sans_connexion(client):
     assert reponse.status_code == 200
     contenu = reponse.content.decode()
     assert "Carnet de stage" in contenu
-    assert f'href="{reverse("admin:login")}' in contenu
+    assert f'href="{reverse("comptes:connexion")}' in contenu
     assert "Se connecter" in contenu
+
+
+@pytest.mark.django_db
+def test_accueil_propose_l_inscription_avec_un_code(client):
+    contenu = client.get("/").content.decode()
+    assert f'href="{reverse("comptes:inscription")}' in contenu
+    assert "Créer un compte" in contenu
+    assert "pas d'inscription libre" not in contenu
+    assert "code d'invitation" in contenu
 
 
 @pytest.mark.django_db
@@ -42,7 +51,7 @@ def test_apprenant_connecte_va_directement_a_la_note_rapide(client, apprenant, s
 
 @pytest.mark.django_db
 def test_page_de_connexion_renvoie_a_l_accueil(client):
-    contenu = client.get(reverse("admin:login")).content.decode()
+    contenu = client.get(reverse("comptes:connexion")).content.decode()
     assert 'href="/"' in contenu
     assert "Découvrir le Carnet" in contenu
 

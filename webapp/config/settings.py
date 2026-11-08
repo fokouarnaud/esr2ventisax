@@ -1,10 +1,13 @@
 """Réglages du Carnet de stage. Les secrets viennent de webapp/.env (jamais versionné)."""
 
+import datetime
 import os
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
+
+from comptes.navigation import NAVIGATION
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 if not os.environ.get("CARNET_SANS_DOTENV"):  # les tests de déploiement contrôlent tout l'environnement
@@ -29,6 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "carnet",
+    "comptes",
 ]
 
 MIDDLEWARE = [
@@ -39,6 +43,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "comptes.middleware.MaintenanceComptes",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -93,7 +98,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = "admin:login"
+LOGIN_URL = "comptes:connexion"  # page publique unique (B6) ; /admin/login/ y redirige
 LOGIN_REDIRECT_URL = "carnet:note_rapide"
 
 # Compte gratuit PythonAnywhere : 512 Mo pour tout (A33)
@@ -149,8 +154,32 @@ UNFOLD = {
             "950": "#052422",
         },
     },
-    "SIDEBAR": {
+    "SIDEBAR": {  # menu court, en groupes repliables, filtré par les droits (B11)
         "show_search": True,
-        "show_all_applications": True,
+        "show_all_applications": False,
+        "navigation": NAVIGATION,
     },
 }
+
+
+# --- Comptes ouverts (incrément 4, B1–B14) ---
+LOGOUT_REDIRECT_URL = "/"
+MAX_APPRENANTS = int(os.environ.get("MAX_APPRENANTS", "6"))
+LOGIN_MAX_ECHECS = 5
+LOGIN_BLOCAGE = datetime.timedelta(minutes=15)
+INSCRIPTIONS_MAX_PAR_HEURE = 5
+INSCRIPTION_IP_HEADER = os.environ.get("INSCRIPTION_IP_HEADER", "REMOTE_ADDR")  # HTTP_X_REAL_IP en production
+PASSWORD_RESET_TIMEOUT = 24 * 3600
+COMPTE_DEMO = "demo.apprenant"
+
+# Courriel (B5) : Gmail SMTP ; le mot de passe n'existe que dans le .env du serveur
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_TIMEOUT = 20
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL") or (
+    f"Carnet de stage <{EMAIL_HOST_USER}>" if EMAIL_HOST_USER else "Carnet de stage <noreply@localhost>")
+EMAIL_BACKEND = ("django.core.mail.backends.console.EmailBackend" if DEBUG and not EMAIL_HOST_PASSWORD
+                 else "django.core.mail.backends.smtp.EmailBackend")

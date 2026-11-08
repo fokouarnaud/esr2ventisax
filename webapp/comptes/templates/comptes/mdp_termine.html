@@ -1,0 +1,10 @@
+{% extends "comptes/base.html" %}
+{% block titre %}Mot de passe changé · Carnet de stage{% endblock %}
+{% block contenu %}
+<section class="carte auth__seul">
+    <span class="icone auth__icone" aria-hidden="true">check_circle</span>
+    <h1>Mot de passe changé</h1>
+    <p>Vous pouvez vous connecter avec votre nouveau mot de passe.</p>
+    <p><a class="bouton" href="{% url 'comptes:connexion' %}">Se connecter</a></p>
+</section>
+{% endblock %}

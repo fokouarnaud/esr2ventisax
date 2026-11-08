@@ -1,0 +1,32 @@
+{% load static %}<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f4f7f8" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a1c28" media="(prefers-color-scheme: dark)">
+    <title>{% block titre %}Carnet de stage{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'carnet/favicon.svg' %}">
+    <link rel="stylesheet" href="{% static 'carnet/css/polices.css' %}">
+    <link rel="stylesheet" href="{% static 'unfold/fonts/material-symbols/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'carnet/css/carnet.css' %}">
+</head>
+<body>
+<header class="entete">
+    <div class="entete__interieur">
+        <a class="marque" href="{% url 'accueil' %}">
+            <span class="marque__pastille"><span class="icone" aria-hidden="true">menu_book</span></span>
+            Carnet de stage
+        </a>
+    </div>
+</header>
+<main class="page page--auth">
+    {% if messages %}
+    <ul class="messages" role="status">
+        {% for m in messages %}<li class="{{ m.tags }}"><span class="icone" aria-hidden="true">{% if m.level_tag == 'success' %}check_circle{% elif m.level_tag == 'error' %}error{% else %}info{% endif %}</span>{{ m }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% block contenu %}{% endblock %}
+</main>
+</body>
+</html>
