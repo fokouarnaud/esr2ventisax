@@ -182,7 +182,8 @@ Par ordre de livraison (A20) :
 ### 3. Hors périmètre (strict)
 
 - Application hors ligne ou PWA, application mobile native, synchronisation différée (A6).
-- Inscription libre, réinitialisation du mot de passe par courriel, connexion via un réseau social (A13).
+- Inscription sans code d'invitation, connexion via un réseau social (A13, revu par B1 : l'inscription
+  avec code et la réinitialisation par courriel relèvent désormais de l'incrément 4 ci-dessous).
 - Rédaction automatique dans l'application, appel à l'API Claude ou à un autre LLM depuis le serveur (A4).
 - Compilation LaTeX, génération du PDF ou du PPTX, et génération des cartes sur PythonAnywhere : tout
   cela se fait en local (A4, A31).
@@ -194,6 +195,213 @@ Par ordre de livraison (A20) :
 - Code en dur pour une spécialité ou un thème donné (A2).
 - Tout ce qui touche à `archive/` et à `exemple_rapport/`. Aucun commit ni push de données réelles d'un
   apprenant.
+
+## GOALS — incrément 4 : comptes ouverts et revue UI/UX (`webapp/`)
+
+Reprendre le système de connexion et d'inscription de comptafiscaventisax.pythonanywhere.com (source
+locale : `c-fiscalite-syscohada/accounts/`, lue directement : REA est inutile sur du code source), en le
+limitant aux apprenants munis d'un code d'invitation, et corriger les défauts d'interface relevés :
+champs de formulaire invisibles, bouton « Ajouter un utilisateur » absent, déconnexion inaccessible
+quand le menu de gauche est long. Décisions détaillées : journal B1–B14 ci-dessous.
+
+### 1. Objectifs fonctionnels prioritaires
+
+Par ordre de livraison (B14) : deux lots, chacun testé puis déployé.
+
+**Lot 1 : interface (aucune dépendance à l'inscription)**
+1. **Gestion des utilisateurs dans Unfold** (B12) : `User` et `Group` réenregistrés avec les classes et
+   les formulaires d'Unfold (champs enfin stylés et visibles). Bouton « Ajouter un utilisateur » sur la
+   liste. Colonnes : identifiant, nom, courriel, groupe, courriel vérifié, actif, inscrit le, code utilisé.
+   Filtres : groupe, actif, vérifié. Le formulaire d'ajout choisit le groupe (Apprenant ou Formateur),
+   qui règle `is_staff`. Réservé au superutilisateur.
+2. **Menu court et déconnexion partout** (B11) : navigation Unfold définie à la main, en groupes
+   repliables (Mon stage, Journal, Données, Références, Administration réservée au superutilisateur),
+   sans la liste automatique de toutes les applications. Bouton « Se déconnecter » toujours visible dans
+   l'en-tête de l'admin et dans celui des pages Note rapide et Tri des photos ; retour à l'accueil après
+   déconnexion.
+3. **Revue UI/UX de tous les écrans** (B13), avec `design-taste-frontend` et Playwright : pages
+   d'authentification, tous les formulaires d'ajout et de modification de l'admin, Note rapide, Tri des
+   photos, accueil ; en clair et en sombre, à 390 et à 1440 px. Chaque champ a un bord au contraste d'au
+   moins 3:1, un libellé et un focus visibles, sans débordement. Résultat consigné dans « Charte
+   appliquée ».
+
+**Lot 2 : comptes ouverts**
+4. **Inscription par code d'invitation** (B1, B2, B9) : prénom, nom, identifiant, courriel, mot de passe
+   deux fois, code, pot de miel, et une case obligatoire « mes photos sont accessibles par leur lien et
+   gardent leur position GPS » (A22). Le compte est créé inactif, `is_staff`, dans le groupe Apprenant ;
+   le formateur du code devient le référent par défaut de ses stages ; prénom et nom préremplissent
+   `apprenant_nom` du premier stage.
+5. **Vérification du courriel** (B4) : lien à usage unique qui active le compte ; les comptes jamais
+   confirmés sont purgés après 7 jours, au plus une fois par heure lors d'une requête (pas de tâche
+   planifiée).
+6. **Connexion unique et protégée** (B4, B6) : une seule page publique `/connexion/`, aussi utilisée par
+   l'admin (`/admin/login/` y redirige) ; blocage de 15 min après 5 échecs pour un même identifiant.
+7. **Mot de passe oublié** (B4) : réinitialisation par courriel, lien valable 24 h. Le changement de mot
+   de passe d'un utilisateur connecté reste celui de l'admin Unfold.
+8. **Codes du formateur** (B2, B7) : chaque formateur crée, désactive et régénère ses propres codes dans
+   l'admin et voit combien d'apprenants les ont utilisés. Un code a 5 usages et 90 jours de validité par
+   défaut. Les comptes formateurs restent créés par le superutilisateur.
+9. **Garde-fous du disque** (B8) : inscription refusée, avec un message clair, au-delà de 80 % de 512 Mo
+   ou quand le nombre d'apprenants actifs atteint `MAX_APPRENANTS` (6 par défaut).
+10. **Comptes existants et démo** (B10) : un profil vérifié est créé pour chaque compte existant ; le
+    compte `demo.apprenant` ne peut ni changer son mot de passe, ni demander une réinitialisation, ni
+    changer son courriel.
+
+### 2. Contraintes techniques
+
+- **Modèle utilisateur** (B3) : on garde `django.contrib.auth.User` et les groupes Apprenant et
+  Formateur, sans `AUTH_USER_MODEL` personnalisé. Nouveaux modèles à clé UUID : `Profil` (1-1 avec User :
+  `email_verifie`, `code_utilise`), `CodeInvitation` (formateur, code, `expire_le`, `usages_max`, actif),
+  `EchecConnexion`, `LimiteInscription`.
+- **Port de comptafisca** : vues `django.contrib.auth` écrites à la main, sans django-allauth ni service
+  de captcha. Jeton de vérification dérivé de `PasswordResetTokenGenerator`. Codes de 8 caractères sans
+  0, O, 1, I ni L. Limite de 5 inscriptions par heure et par IP, l'IP n'étant stockée que sous forme de
+  HMAC. Pas d'`i18n_patterns` : URL en français seulement.
+- **Courriel** (B5) : SMTP Gmail du compte de comptafisca (port 587, TLS). `EMAIL_HOST_USER` et
+  `EMAIL_HOST_PASSWORD` uniquement dans le `.env` du serveur, collés par l'utilisateur ; console en local
+  quand `DEBUG` est actif sans mot de passe. Un contrôle `check --deploy` signale un SMTP absent.
+  `.env.example` et `DEPLOIEMENT.md` mis à jour.
+- **Interface** : gabarits Django et `carnet.css` (structure `.auth` en deux colonnes, `.panel`,
+  `.field` reprise de comptafisca et adaptée aux jetons du Carnet), clair et sombre, 390 px. Pas de
+  front-end séparé. Surcharges Unfold limitées aux blocs documentés, à revérifier après une montée de
+  version.
+- **Qualité** : TDD avec pytest-django. Tests repris de `accounts/tests/` de comptafisca et adaptés,
+  plus le cloisonnement des codes (formateur A contre formateur B), le verrou du compte démo, la présence
+  du bouton « Ajouter un utilisateur » et de la déconnexion. La Definition of Done (P5) s'applique à
+  chaque story.
+- **Déploiement** (B14) : un déploiement par lot avec le skill `deploy`, puis contrôle Playwright du site
+  en ligne. Aucun secret dans le dépôt, la conversation ou les journaux.
+
+### 3. Hors périmètre (strict)
+
+- Inscription sans code d'invitation, et toute inscription d'un formateur ou d'un administrateur (B1, B7).
+- Connexion via un réseau social, django-allauth, captcha externe, double authentification.
+- `AUTH_USER_MODEL` personnalisé ou reprise des migrations initiales (B3).
+- Promotions ou classes de comptafisca, import CSV d'apprenants (B2, B12).
+- Page publique de changement du mot de passe hors de l'admin (B4).
+- Version anglaise et sélecteur de langue.
+- Tâche planifiée sur le serveur pour la purge (B4) ; fournisseur de courriel autre que Gmail SMTP (B5).
+- Le reste du hors-périmètre de la section précédente demeure (PWA, LLM sur le serveur, contrôle d'accès
+  aux photos, etc.).
+
+## PRD — incrément 4 : comptes ouverts et revue UI/UX
+
+Ce PRD complète le PRD général (section suivante), dont les conventions (UUID, `cree_le`/`modifie_le`,
+français, cloisonnement) s'appliquent. Les stories US-32 à US-43 renvoient au journal B1–B14.
+
+### P4-1. Problème, utilisateurs, mesure du succès
+
+- **Problème** :
+  - Chaque compte doit aujourd'hui être créé à la main par le superutilisateur, qui devient le goulot
+    d'étranglement à chaque rentrée.
+  - Un mot de passe oublié n'a pas d'issue sans lui.
+  - Dans l'admin, les champs des utilisateurs s'affichent sans style (invisibles), le bouton « Ajouter un
+    utilisateur » manque, et la déconnexion se cache au bas d'un menu trop long.
+- **Personas** : ceux du PRD général, plus le **visiteur invité**, un futur apprenant qui a reçu un code
+  de son formateur et s'inscrit depuis son téléphone.
+- **Mesures du succès** :
+  - Un invité crée son compte et arrive sur la Note rapide en **moins de 3 minutes**, ouverture du
+    courriel comprise.
+  - **Aucun compte** n'est créé sans code valide ; aucun inconnu n'occupe le disque.
+  - La déconnexion est atteignable en **un clic, sans défiler**, sur chaque écran connecté, à 390 et à
+    1440 px.
+  - **Aucun champ de formulaire** n'a un bord sous 3:1 de contraste, en clair comme en sombre.
+  - Le superutilisateur n'intervient plus que pour créer les formateurs.
+
+### P4-2. User stories
+
+**É9. Interface (lot 1)**
+
+| ID | En tant que… | je veux… | afin de… | Critères d'acceptation | Prio |
+|---|---|---|---|---|---|
+| US-32 | superutilisateur | gérer les utilisateurs et les groupes dans l'admin Unfold, avec un bouton « Ajouter un utilisateur » | créer et suivre les comptes sans formulaire illisible | `User` et `Group` réenregistrés avec `unfold.admin.ModelAdmin` et les formulaires `unfold.forms` (création, modification, mot de passe). Le bouton « Ajouter un utilisateur » figure sur la liste. Colonnes : identifiant, nom, courriel, groupe, courriel vérifié, actif, inscrit le, code utilisé. Filtres : groupe, actif, vérifié. À l'ajout, le choix du groupe Apprenant ou Formateur règle `is_staff=True`. Apprenant et formateur : 403 sur ces pages et aucune entrée dans le menu. (B12) | M |
+| US-33 | apprenant, formateur ou superutilisateur | un menu de gauche court, en groupes repliables | trouver vite un écran et voir la fin du menu | `UNFOLD["SIDEBAR"]["navigation"]` défini à la main : Mon stage, Journal, Données, Références, Administration ; `show_all_applications=False`. Chaque entrée n'apparaît qu'à qui a le droit de voir le modèle. Le groupe Administration (utilisateurs, groupes, codes de tous) est réservé au superutilisateur. (B11) | M |
+| US-34 | utilisateur connecté | un bouton « Se déconnecter » toujours visible | quitter ma session sur un téléphone prêté | Le bouton (formulaire POST, jeton CSRF) est dans l'en-tête de l'admin et dans celui de `carnet/base.html` (Note rapide, Tri des photos). Il est visible sans défiler à 390 et à 1440 px. Après la déconnexion, on revient sur `/`. (B11) | M |
+| US-35 | utilisateur | des formulaires lisibles sur tous les écrans | ne plus chercher où saisir | Revue `design-taste-frontend` + Playwright de chaque écran (auth, chaque formulaire d'ajout et de modification de l'admin, Note rapide, Tri des photos, accueil), en clair et en sombre, à 390 et à 1440 px. Chaque champ a un bord ≥ 3:1 sur son fond, un libellé visible et un focus visible ; aucun débordement horizontal. Écarts corrigés (dont `--trait` en sombre dans `carnet.css`) et consignés dans « Charte appliquée ». (B13) | M |
+
+**É10. Comptes ouverts (lot 2)**
+
+| ID | En tant que… | je veux… | afin de… | Critères d'acceptation | Prio |
+|---|---|---|---|---|---|
+| US-36 | visiteur invité | créer mon compte avec le code de mon formateur | commencer mon carnet sans attendre l'administrateur | Page `/inscription/` : prénom, nom, identifiant, courriel, mot de passe ×2, code, case A22 obligatoire, pot de miel `site_web`. Refus avec un message par champ : code inconnu, désactivé, expiré ou épuisé ; courriel déjà utilisé par un compte confirmé (sans tenir compte de la casse) ; mot de passe refusé par les 4 validateurs Django ; case non cochée. Pot de miel rempli : fausse réussite, rien n'est créé. Plus de 5 inscriptions par heure pour une même IP (stockée en HMAC) : réponse 429. Succès : User inactif, `is_staff=True`, groupe Apprenant ; Profil avec `email_verifie=False` et `code_utilise` ; un usage de plus sur le code, compté dans la même transaction. (B1, B2, B9) | M |
+| US-37 | visiteur invité | confirmer mon courriel par un lien | activer mon compte | Le courriel texte contient un lien `/inscription/verifier/<uidb64>/<jeton>/`. Le jeton couvre pk, horodatage, `is_active`, `email_verifie` et courriel, et ne sert donc qu'une fois. Lien valide : compte actif, `email_verifie=True`, message de réussite, redirection vers `/connexion/`. Lien faux ou déjà utilisé : 400 avec un message clair. Une erreur SMTP supprime le compte et affiche une erreur dans le formulaire. Une nouvelle inscription avec le même identifiant ou le même courriel remplace un compte jamais confirmé. Les comptes jamais confirmés sont purgés après 7 jours, au plus une fois par heure, par un middleware (sans tâche planifiée) ; l'usage du code est alors rendu. (B4, B10) | M |
+| US-38 | apprenant inscrit | que mon premier stage connaisse déjà mon nom et mon formateur | gagner du temps et être suivi | À la création de son premier stage, `apprenant_nom` vaut « Prénom Nom » et `formateur_referent` le formateur du code utilisé. Les deux restent modifiables. (B2, B9) | S |
+| US-39 | utilisateur | me connecter sur une page unique et protégée | accéder au Carnet sans risque d'attaque par essais | `/connexion/` est la seule page de connexion, et `/admin/login/` y redirige en gardant `next`. Après 5 échecs en 15 min pour un même identifiant (mis en minuscules), la connexion est bloquée 15 min, avec un message dédié ; une réussite remet le compteur à zéro. Un compte inactif ou non vérifié est refusé, avec un message générique. Liens « Créer un compte » et « Mot de passe oublié ». Une fois connecté, on arrive sur la Note rapide, et un utilisateur déjà connecté qui ouvre la page y est redirigé. `LOGIN_URL = "comptes:connexion"`. (B4, B6) | M |
+| US-40 | utilisateur | réinitialiser mon mot de passe par courriel | ne pas rester bloqué | `/mot-de-passe/` puis `envoye/`, `<uidb64>/<jeton>/` et `termine/`, en français, avec le style des pages d'authentification. La réponse est la même que le courriel soit connu ou non. Le lien vaut 24 h (`PASSWORD_RESET_TIMEOUT`). Le compte démo est exclu : aucun courriel n'est envoyé. (B4, B10) | M |
+| US-41 | formateur | créer et gérer mes codes d'invitation dans l'admin | inviter mes apprenants | `CodeInvitationAdmin` : un formateur ne voit, ne crée et ne modifie que ses codes (404 sur ceux d'un autre) ; le superutilisateur voit tout et choisit le formateur. Code généré de 8 caractères sans 0/O/1/I/L, unique. Par défaut : 5 usages et une expiration à 90 jours. Actions « désactiver », « activer » et « régénérer ». Colonnes : code, usages/maximum, expire le, actif, et le nombre d'apprenants inscrits avec le code. Apprenant : aucun accès. (B2, B7) | M |
+| US-42 | superutilisateur | que l'inscription se ferme d'elle-même quand le compte gratuit est plein | protéger les stages en cours | L'inscription est refusée, avec un message qui invite à contacter le formateur, si l'occupation globale dépasse 80 % de 512 Mo (même calcul que US-26) ou si le nombre d'apprenants actifs atteint `MAX_APPRENANTS` (6 par défaut, lu dans le `.env`). La page affiche alors ce message sans formulaire. (B8) | M |
+| US-43 | superutilisateur | que les comptes existants et le compte démo restent sûrs | ne rien casser en ouvrant l'inscription | Une migration de données crée un Profil avec `email_verifie=True` pour chaque User existant, et un signal en crée un pour tout User ajouté dans l'admin. La purge ne touche jamais un compte actif ni un compte vérifié. `demo.apprenant` ne peut changer ni son mot de passe (403 sur la page de l'admin) ni son courriel, et ne reçoit pas de réinitialisation ; `charger_demo` reste idempotent. (B10) | M |
+
+**É11. Mise en service**
+
+| ID | En tant que… | je veux… | afin de… | Critères d'acceptation | Prio |
+|---|---|---|---|---|---|
+| US-44 | superutilisateur | configurer l'envoi des courriels sans exposer le secret | mettre l'inscription en ligne | Réglages SMTP Gmail (587, TLS) lus dans le `.env` : `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` (« Carnet de stage <…> »). Console si `DEBUG` et pas de mot de passe. Le check `comptes.E001` échoue sous `--deploy` si le SMTP manque. `.env.example` (sans valeur) et `DEPLOIEMENT.md` mis à jour. L'utilisateur colle lui-même le mot de passe. (B5, B14) | M |
+
+### P4-3. Modèle logique des données
+
+Conventions du PRD général (UUID, `cree_le`, `modifie_le`). Nouvelle application Django `comptes/`.
+
+| Entité | Attributs principaux | Relations | Règles |
+|---|---|---|---|
+| **User** (Django, inchangé) | identifiant, courriel, prénom, nom, `is_active`, `is_staff`, groupes, `date_joined` | — | Pas d'`AUTH_USER_MODEL` personnalisé (B3). Inscrit : `is_active=False` jusqu'à la vérification, `is_staff=True`, groupe Apprenant. |
+| **Profil** | `email_verifie` (booléen), `inscrit_par_formulaire` (booléen) | 1–1 → User ; → CodeInvitation `code_utilise`? | Créé par migration (existants : vérifié) et par signal. Purgeable seulement si `inscrit_par_formulaire`, non vérifié, inactif et `date_joined` de plus de 7 jours. |
+| **CodeInvitation** | `code` (8 caractères), `usages_max` (5), `usages` (0), `expire_le` (+90 j), `actif` | → User `formateur` (groupe Formateur ou superutilisateur) | `code` unique, sans 0/O/1/I/L. Utilisable si actif, non expiré et `usages < usages_max`. L'incrément de `usages` se fait sous verrou (`select_for_update`) dans la transaction de l'inscription. Cloisonné par formateur. |
+| **EchecConnexion** | `identifiant` (minuscules), `survenu_le` | — | Compté sur 15 min ; supprimé après une réussite ou au-delà de 24 h. |
+| **LimiteInscription** | `ip_hachee` (HMAC-SHA256 avec `SECRET_KEY`), `survenu_le` | — | Lignes de plus d'1 h supprimées à chaque contrôle. Jamais d'IP en clair. |
+| **Stage** (existant) | — | `formateur_referent` prérempli depuis `Profil.code_utilise.formateur` | Préremplissage au premier stage seulement (US-38). |
+
+Réglages ajoutés : `MAX_APPRENANTS` (6), `LOGIN_MAX_ECHECS` (5), `LOGIN_BLOCAGE` (15 min),
+`INSCRIPTIONS_MAX_PAR_HEURE` (5), `INSCRIPTION_IP_HEADER` (`REMOTE_ADDR`, `HTTP_X_REAL_IP` en production),
+`PASSWORD_RESET_TIMEOUT` (24 h), `LOGOUT_REDIRECT_URL = "/"`.
+
+### P4-4. Contrat des URL et des courriels
+
+```
+/connexion/                                    comptes:connexion        (GET, POST)
+/deconnexion/                                  comptes:deconnexion      (POST seulement)
+/inscription/                                  comptes:inscription      (GET, POST ; 429 si limite)
+/inscription/envoye/                           comptes:inscription_envoyee
+/inscription/verifier/<uidb64>/<jeton>/        comptes:verifier         (400 si jeton invalide)
+/mot-de-passe/                                 comptes:mdp_oublie
+/mot-de-passe/envoye/                          comptes:mdp_envoye
+/mot-de-passe/<uidb64>/<jeton>/                comptes:mdp_nouveau
+/mot-de-passe/termine/                         comptes:mdp_termine
+/admin/login/                                  → redirection 302 vers /connexion/?next=…
+comptes/email/verifier.txt, mdp_oublie.txt, mdp_oublie_objet.txt   (texte brut, français)
+```
+
+### P4-5. Definition of Done (critères stricts)
+
+**Pour chaque story US-32 à US-44** : les 7 critères de P5 du PRD général s'appliquent tous, et en plus :
+1. **Cloisonnement des comptes** testé : apprenant contre formateur contre superutilisateur pour l'admin
+   des utilisateurs ; formateur A contre formateur B pour les codes ; aucune page d'authentification ne
+   révèle si un identifiant ou un courriel existe (hormis le doublon de courriel d'un compte confirmé à
+   l'inscription).
+2. **Sécurité** : chaque formulaire porte un jeton CSRF ; la déconnexion n'accepte que POST ; aucun
+   courriel, mot de passe, jeton ni IP en clair dans les journaux ; `check --deploy` ne signale rien de
+   nouveau, `comptes.E001` compris.
+3. **Courriels** testés avec `mail.outbox` (destinataire, objet, lien absolu, français) ; aucun appel SMTP
+   réel dans les tests.
+4. **Écrans** : capture Playwright en clair, en sombre, à 390 et à 1440 px pour chaque page touchée ;
+   aucun débordement ; champs au contraste ≥ 3:1, libellé et focus visibles ; déconnexion visible sans
+   défiler.
+5. **Secret** : le mot de passe SMTP n'apparaît dans aucun fichier du dépôt, aucun message, aucune
+   commande exécutée par l'agent.
+
+**Lot 1 (US-32 à US-35)** : terminé quand, sur le site en ligne, Playwright montre :
+- en superutilisateur, le bouton « Ajouter un utilisateur » et un formulaire d'ajout aux champs visibles ;
+- en apprenant, un menu sans « Utilisateurs » et la déconnexion visible à 390 px ;
+- la section « Charte appliquée » complétée.
+
+**Lot 2 (US-36 à US-44)** : terminé quand :
+- **En local** (courriel console) : Playwright enchaîne inscription avec code, ouverture du lien,
+  connexion, Note rapide avec photo, puis déconnexion ; un code épuisé, un code expiré, la 6ᵉ inscription
+  de l'heure et le 6ᵉ échec de connexion sont refusés.
+- **En ligne, après le collage du mot de passe SMTP par l'utilisateur** : une inscription réelle avec un
+  code de test reçoit le courriel et s'active, puis le compte et le code de test sont supprimés.
+- **Comptes existants** : `fokou` et `demo.apprenant` se connectent toujours, et le compte démo reste
+  verrouillé.
 
 ## PRD — « Carnet de stage »
 
@@ -443,6 +651,51 @@ Contrôlée avec Playwright en clair et en sombre, à 390 et à 1440 px : aucun 
   ne s'annonce plus « edit_note »).
 - **Journal sur mobile** : la colonne « Note » garde au moins 15rem ; le tableau défile dans son cadre.
 - Tests : `webapp/tests/test_interface.py`.
+
+### Charte appliquée : comptes ouverts (revue UI/UX du 2026-11-08, B13)
+
+Contrôlée avec Playwright en clair et en sombre, à 390 et à 1440 px, sur les pages d'authentification,
+l'admin des utilisateurs, le formulaire d'un stage, la Note rapide, le Tri des photos et l'accueil : aucun
+débordement horizontal.
+- **Bords des champs ≥ 3:1** (WCAG 1.4.11). Le jeton `--trait` (`#e1e7ea`, 1,1:1 sur `--papier`) était la
+  cause des « champs qui n'apparaissent pas ». Nouveau jeton `--trait-champ` : `#71889a` en clair (3,4:1),
+  `#7f97a6` en sombre (4,9:1), appliqué aux champs, aux étiquettes `.choix` et aux boutons `.segments`.
+  Dans l'admin, `admin.css` impose `base-500` aux champs Unfold (`border-base-200` donnait 1,3:1), sauf en
+  erreur.
+- **Pages d'authentification** (`comptes/templates/comptes/`) : deux colonnes au-delà de 900 px (arguments
+  et capture réelle de la Note rapide à gauche, formulaire à droite), une seule colonne sur téléphone, le
+  formulaire avant les arguments. Champs de 48 px, libellé au-dessus, aide puis erreur dessous, aides de
+  Django raccourcies, pas de focus automatique, `autocomplete` renseigné. Pot de miel hors écran.
+- **Bouton d'ajout libellé** : surcharge `templates/unfold/helpers/add_link.html`, libellé tiré de
+  `libelle_ajout` (« Ajouter un utilisateur », « Ajouter un code »), absent de la page d'ajout elle-même,
+  icône seule sous 520 px.
+- **Déconnexion** : surcharge `templates/unfold/helpers/userlinks.html` (en-tête admin) et formulaire dans
+  `carnet/base.html` ; libellé masqué visuellement sous 520 px, toujours lu par les lecteurs d'écran.
+- **En-têtes étroits** : sous 400 px (Note rapide, Tri) et 560 px (accueil, deux boutons), le nom « Carnet
+  de stage » est masqué visuellement à côté de la pastille.
+- Message d'Unfold resté en anglais sur l'ajout d'un utilisateur : traduit dans `locale/fr` (`.mo`
+  recompilé).
+- Surcharges à revérifier après une montée de version d'Unfold : `add_link.html`, `userlinks.html`, le
+  sélecteur de bords dans `admin.css`.
+
+## Journal des décisions : comptes ouverts et revue UI/UX (grilling du 2026-11-08)
+
+| # | Question | Décision |
+|---|---|---|
+| B1 | Lever A13 et ouvrir l'inscription ? | Oui, comme comptafisca (courriel vérifié, pot de miel, limites), mais seulement avec un code d'invitation. Compte placé dans le groupe Apprenant. |
+| B2 | Qui émet le code, que porte-t-il ? | Modèle `CodeInvitation` lié à un formateur : 8 caractères sans 0/O/1/I/L, expiration, usages max. Le formateur devient le référent par défaut des stages de l'apprenant. |
+| B3 | Modèle utilisateur ? | Garder `django.contrib.auth.User` et les groupes ; nouveau `Profil` 1-1 (UUID, `email_verifie`, `code_utilise`). Pas d'`AUTH_USER_MODEL` personnalisé. |
+| B4 | Parcours repris ? | Tout comptafisca : inscription, vérification, connexion avec blocage (5 échecs → 15 min), déconnexion, mot de passe oublié par courriel. Changement connecté : admin Unfold. |
+| B5 | Compte d'envoi des courriels ? | Même Gmail SMTP que comptafisca, mot de passe d'application dans le `.env` du serveur seulement ; console en local. |
+| B6 | Page de connexion ? | Une seule page publique `/connexion/` (et `/inscription/`, `/mot-de-passe/…`), style comptafisca adapté à `carnet.css` ; `/admin/login/` y redirige. Inscrit : `is_staff` et groupe Apprenant. |
+| B7 | Formateurs et codes ? | Comptes formateurs créés par le superutilisateur seulement ; chaque formateur gère ses propres codes dans l'admin (cloisonnement testé) et voit leurs usages. |
+| B8 | Garde-fou du disque ? | Code : 5 usages et 90 jours par défaut. Inscription refusée au-delà de 80 % de 512 Mo ou de `MAX_APPRENANTS` (6) apprenants actifs. |
+| B9 | Champs d'inscription ? | Prénom, nom, identifiant, courriel, mot de passe ×2, code, pot de miel, case obligatoire d'avertissement A22. Prénom et nom préremplissent `apprenant_nom`. |
+| B10 | Comptes existants et démo ? | Migration : profil vérifié pour chaque compte ; purge limitée aux inscrits inactifs non vérifiés. Compte démo verrouillé (mot de passe, réinitialisation, courriel). |
+| B11 | Déconnexion inaccessible ? | Navigation Unfold à la main, en groupes repliables, sans liste automatique ; bouton « Se déconnecter » dans l'en-tête de l'admin et des pages publiques. |
+| B12 | Liste des utilisateurs ? | `UserAdmin` et `GroupAdmin` Unfold avec leurs formulaires ; bouton « Ajouter un utilisateur », colonnes et filtres utiles, choix du groupe à l'ajout ; réservé au superutilisateur. |
+| B13 | Portée de la revue UI/UX ? | Tous les écrans, en clair et en sombre, à 390 et 1440 px ; bord de champ ≥ 3:1, libellé et focus visibles, aucun débordement. |
+| B14 | Livraison ? | Deux lots (interface, puis comptes ouverts), deux déploiements ; l'utilisateur colle lui-même le mot de passe SMTP dans le `.env` du serveur. |
 
 ## Points à valider par l'utilisateur
 
