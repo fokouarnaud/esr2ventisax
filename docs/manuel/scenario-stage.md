@@ -279,7 +279,8 @@ En local, le superutilisateur importe le zip (`importer_dossier`). Claude Code r
 <img src="img/40_rapport_couverture.jpg" alt="Couverture du rapport" width="240"> <img src="img/41_rapport_organigramme.jpg" alt="Organigramme dans le rapport" width="240"> <img src="img/42_rapport_gantt.jpg" alt="Gantt dans le rapport" width="240"> <img src="img/43_rapport_photos.jpg" alt="Photos dans le rapport" width="240">
 
 *Le rapport de la démo : couverture, organigramme, Gantt et photos du corps. PDF complet :
-[demo/rapport_demo.pdf](../../demo/rapport_demo.pdf) (50 pages) ; présentation :
+[demo/rapport_demo.pdf](../../demo/rapport_demo.pdf) (50 pages) ; version Word :
+[demo/rapport_demo.docx](../../demo/rapport_demo.docx) ; présentation :
 [demo/presentation_demo.pptx](../../demo/presentation_demo.pptx).*
 
 ---

@@ -408,7 +408,8 @@ L'application ne rédige rien et ne compile rien. En fin de stage :
 3. ce qui n'a pas été saisi apparaît en « [À COMPLÉTER] » dans le PDF.
 
 La procédure est dans [docs/rapport-local.md](../rapport-local.md). Le résultat de la démo :
-[demo/rapport_demo.pdf](../../demo/rapport_demo.pdf) et [demo/presentation_demo.pptx](../../demo/presentation_demo.pptx).
+[demo/rapport_demo.pdf](../../demo/rapport_demo.pdf), sa version Word [demo/rapport_demo.docx](../../demo/rapport_demo.docx)
+et [demo/presentation_demo.pptx](../../demo/presentation_demo.pptx).
 
 ## 14. Le formateur et le rapport
 
