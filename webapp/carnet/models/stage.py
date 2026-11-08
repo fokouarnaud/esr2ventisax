@@ -29,8 +29,8 @@ class Stage(ModeleBase):
     tuteur_acad = models.CharField(
         "formateur (responsable académique)", max_length=200, blank=True,
         help_text="Nom de votre formateur tel qu'il sera imprimé sur la couverture du rapport. Saisi librement : "
-                  "le formateur n'a pas besoin de compte (B17).")
-    tuteur_acad_poste = models.CharField("poste du responsable académique", max_length=200, blank=True)
+                  "le formateur n'a pas besoin de compte.")
+    tuteur_acad_poste = models.CharField("poste du formateur", max_length=200, blank=True)
     entreprise = models.CharField("entreprise", max_length=200, blank=True)
     entreprise_sigle = models.CharField("sigle de l'entreprise", max_length=50, blank=True)
     cfp = models.CharField("centre de formation", max_length=200, blank=True)

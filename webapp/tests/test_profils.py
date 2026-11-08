@@ -201,3 +201,9 @@ def test_accueil_par_ou_commencer(client, db):
 def test_libelles_des_logos_de_la_couverture():
     assert Stage._meta.get_field("logo_cfp").verbose_name == "logo du CFP"
     assert Stage._meta.get_field("logo_entreprise").verbose_name == "logo de l'entreprise"
+
+
+def test_couverture_sans_reference_interne_et_poste_coherent():
+    aide = str(Stage._meta.get_field("tuteur_acad").help_text)
+    assert "B17" not in aide
+    assert Stage._meta.get_field("tuteur_acad_poste").verbose_name == "poste du formateur"
