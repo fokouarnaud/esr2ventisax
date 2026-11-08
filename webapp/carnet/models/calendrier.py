@@ -12,7 +12,7 @@ class Absence(ModeleBase):
         MALADIE = "maladie", "Maladie"
         CONGE = "conge", "Congé"
         INTEMPERIE = "intemperie", "Intempérie"
-        COURS_CFP = "cours_cfp", "Cours au CFP"
+        COURS_CFP = "cours_cfp", "Cours au centre de formation professionnelle"
 
     stage = models.ForeignKey("carnet.Stage", on_delete=models.CASCADE, null=True, blank=True, related_name="absences")
     date_debut = models.DateField("du")

@@ -22,16 +22,21 @@ if (-not ($sortie -match '^OK : aucune erreur')) {
 }
 $restants = Lister-AC $Dossier
 
+function Trouver-Python([string]$modules) {
+    # Essaie chaque Python du PATH, pas seulement le premier : le venv de l'application (souvent active)
+    # n'a ni PyMuPDF, ni python-pptx, ni python-docx.
+    $chemins = Get-Command python, py, python3 -All -ErrorAction SilentlyContinue | ForEach-Object Source |
+        Select-Object -Unique
+    foreach ($candidat in $chemins) {
+        & $candidat -c "import $modules" 2>$null
+        if ($LASTEXITCODE -eq 0) { return $candidat }
+    }
+    return $null
+}
+
 if (-not $SansPresentation) {
     Write-Host '== 5. Presentation'
-    # Le venv de l'application n'a pas PyMuPDF : on cherche un Python qui a fitz et pptx
-    $py = $null
-    foreach ($candidat in 'python', 'py', 'python3') {
-        if (Get-Command $candidat -ErrorAction SilentlyContinue) {
-            & $candidat -c 'import fitz, pptx' 2>$null
-            if ($LASTEXITCODE -eq 0) { $py = $candidat; break }
-        }
-    }
+    $py = Trouver-Python 'fitz, pptx'
     if (-not $py) {
         Write-Host 'Aucun Python avec PyMuPDF et python-pptx : python -m pip install python-pptx PyMuPDF'; exit 2
     }
@@ -40,8 +45,21 @@ if (-not $SansPresentation) {
     if ($LASTEXITCODE -ne 0) { Write-Host 'Generation de la presentation en echec.'; exit 1 }
 }
 
+Write-Host '== 6. Version Word'
+$word = Join-Path $Dossier 'rapport.docx'
+$pyWord = Trouver-Python 'fitz, docx'
+if (-not (Get-Command pandoc -ErrorAction SilentlyContinue)) {
+    Write-Host 'pandoc introuvable : https://pandoc.org/installing.html (version Word non produite)'; exit 2
+}
+if (-not $pyWord) { Write-Host 'Aucun Python avec PyMuPDF et python-docx : python -m pip install python-docx PyMuPDF'; exit 2 }
+$outil = Join-Path $Dossier 'outils\build_word.py'
+if (-not (Test-Path $outil)) { $outil = Join-Path $Depot 'tex_export_src\outils\build_word.py' }
+& $pyWord $outil $Dossier $word | Out-Host
+if ($LASTEXITCODE -ne 0) { Write-Host 'Generation de la version Word en echec.'; exit 1 }
+
 Write-Host '== Bilan'
 Write-Host "PDF          : $Dossier\main.pdf"
+Write-Host "Word         : $word"
 if (-not $SansPresentation) { Write-Host "Presentation : $Dossier\presentation.pptx" }
 Write-Host "\AC restants : $restants"
 if ($restants -gt 0) { exit 4 }

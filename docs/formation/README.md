@@ -34,3 +34,7 @@ images manquantes, puis imprime le HTML en A4 avec la police Lexend du projet.
 Mise en forme : `formation.css` (charte du Carnet, thème clair unique pour l'impression). Les captures de
 `img/` (onglet Suivi, refus d'une valeur sans source, formulaire d'équipement) viennent du compte de démonstration
 (données fictives) ; les versions recadrées sont régénérées par le script.
+
+Captures : `docs/manuel/capturer_ecrans.py` (manuel) puis `docs/formation/capturer_sources.py` (sources propres aux fiches),
+avec `charger_demo` et le serveur local sur le port 8765 ; `generer_pdf.py` les recadre (RECADRAGES). Relancer
+`charger_demo` ensuite. Le nombre de pages affiché sur l'accueil est lu dans le PDF publié.

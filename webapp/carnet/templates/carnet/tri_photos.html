@@ -7,6 +7,9 @@
     <p>Choisissez ce qui ira dans le rapport. Seules les photos « Corps » et « Annexe » sont exportées.</p>
 </div>
 
+{% if lecture_seule %}
+<p class="alerte" role="status"><span class="icone" aria-hidden="true">visibility</span>Compte de démonstration en lecture seule : vous pouvez tout consulter, rien n'est enregistré. Pour vous entraîner, créez votre propre compte.</p>
+{% endif %}
 <nav class="filtres" aria-label="Filtrer par destination">
     <a href="{% url 'carnet:tri_photos' %}" {% if not filtre %}aria-current="true"{% endif %}>Toutes<span class="compte">{{ total }}</span></a>
     {% for valeur, libelle, n in filtres %}
@@ -29,7 +32,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="suivant" value="{{ request.get_full_path }}#photo-{{ photo.pk }}">
                 {% for valeur, libelle, court in destinations %}
-                <button name="destination" value="{{ valeur }}" title="{{ libelle }}" aria-label="{{ libelle }}"
+                <button name="destination" value="{{ valeur }}" title="{{ libelle }}" aria-label="{{ libelle }}"{% if lecture_seule %} disabled{% endif %}
                         aria-pressed="{% if photo.destination == valeur %}true{% else %}false{% endif %}">{{ court }}</button>
                 {% endfor %}
             </form>

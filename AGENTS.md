@@ -60,6 +60,8 @@ powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\latex-pdf-soutena
 python tex_export_src\outils\generer_images_factices.py
 # Présentation
 python tex_export_src\outils\build_presentation.py tex_export_src tex_export_src\presentation.pptx
+# Version Word (pandoc, B22)
+python tex_export_src\outils\build_word.py tex_export_src tex_export_src\rapport.docx
 ```
 
 Git : les fichiers intermédiaires LaTeX sont ignorés ; `main.pdf` et `presentation.pptx` sont versionnés.
@@ -68,7 +70,7 @@ Ne rien pousser vers le dépôt distant sans demande explicite.
 ### Rapport réel à partir du Carnet de stage (US-30)
 
 Skill global **`rapport-dossier-terrain`** (source versionnée : `skills/rapport-dossier-terrain/`, à recopier dans `~/.claude/skills/` après modification) : il automatise les étapes 2 à 5 ci-dessous (`preparer.ps1` importe et
-contrôle, Claude rédige, `finaliser.ps1` compile et génère la présentation, puis fait le bilan des `\AC{}`).
+contrôle, Claude rédige, `finaliser.ps1` compile, génère la présentation et la version Word, puis fait le bilan des `\AC{}`).
 
 1. Dans l'application : Tableau de bord → « Télécharger le dossier terrain » (zip). L'export est refusé tant qu'une
    photo « corps » ou « annexe » n'a pas de slug et de légende ; le message indique lesquelles.
@@ -85,7 +87,8 @@ contrôle, Claude rédige, `finaliser.ps1` compile et génère la présentation,
    Pour la démo, `manage.py rediger_demo rapports/<dossier>` tient lieu de cette étape (textes de `carnet/demo/donnees.py`).
 4. Contrôle : `latexmk -pdf catalogue.tex` (tous les fragments générés), puis le rapport :
    `powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\latex-pdf-soutenance\scripts\compile-latex.ps1" -Dir rapports\<dossier>`
-5. Présentation : `python tex_export_src\outils\build_presentation.py rapports\<dossier> rapports\<dossier>\presentation.pptx`.
+5. Présentation : `python tex_export_src\outils\build_presentation.py rapports\<dossier> rapports\<dossier>\presentation.pptx`,
+   puis version Word : `python tex_export_src\outils\build_word.py rapports\<dossier>` → `rapport.docx` (B22).
 6. Ne jamais commiter `rapports/` (dépôt public, A14).
 
 ## GOALS — application « Carnet de stage » (`webapp/`)
@@ -634,6 +637,9 @@ débordement horizontal.
 | B17 | Le compte formateur sert-il ? | Non : supprimé. Le nom du formateur n'est qu'un **libellé** de la couverture (« Formateur (responsable académique) »), saisi par l'apprenant. `formateur_referent`, `remarque_formateur`, groupe Formateur supprimés ; un ancien zip reste restaurable. |
 | B18 | L'accueil suffit-il pour démarrer ? | Non (scénario du 2026-11-08) : héros « Par où commencer », section en trois étapes, message du premier stage explicite, ancres non masquées par l'en-tête. |
 | B19 | Faut-il un code d'invitation ? | Non : **inscription libre pour tout le monde, en tant qu'apprenant**. Garde-fous conservés : courriel vérifié, pot de miel, 5 inscriptions par heure et par IP, fermeture à 80 % du disque ou à `MAX_APPRENANTS` (compte démo non compté). |
+| B20 | Sigles et fiches de formation (2026-11-08) ? | « CFP » s'écrit **centre de formation professionnelle** dans l'interface, les fiches et le manuel (le sigle reste dans la table des abréviations du rapport). Plus de « Créer un compte avec un code ». Les fiches suivent l'application : captures refaites (`docs/manuel/capturer_ecrans.py`, `docs/formation/capturer_sources.py`), nombre de pages lu dans le PDF publié (`carnet/formation.py`). |
+| B21 | Le compte démo peut-il être modifié ? (2026-11-08) | Non : **lecture seule**. Profil **Démonstration** (groupe du même nom, droits `view_` seuls) : l'admin n'offre ni ajout, ni modification, ni suppression ; Note rapide et Tri des photos refusent l'écriture (403) avec un bandeau « lecture seule », comme le tableau de bord ; l'export reste permis sans toucher à la date de sauvegarde ; mot de passe inchangeable. **Seul l'administrateur modifie la démo.** Les exercices des fiches qui écrivent se font sur le compte de l'apprenant, dans un stage « Entraînement ». |
+| B22 | Version Word du rapport ? (2026-11-08) | Oui : `tex_export_src/outils/build_word.py` (pandoc), lancé par `finaliser.ps1` après le PDF et la présentation → `rapport.docx`. Schémas TikZ compilés seuls et insérés en PNG ; `tabularx` et figures à deux minipages normalisés ; sommaire Word à la place du SOMMAIRE ; bibliographie (citeproc) sous son titre ; légendes « Figure N : » / « Tableau N : » et renvois identiques au PDF ; « À COMPLÉTER » en orange. Le PDF fait foi pour l'examen. `finaliser.ps1` essaie chaque Python du PATH (le venv de l'application n'a ni PyMuPDF, ni python-pptx, ni python-docx). |
 
 ## Points à valider par l'utilisateur
 

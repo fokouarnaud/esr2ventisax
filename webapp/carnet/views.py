@@ -2,13 +2,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.http import HttpResponseBadRequest, StreamingHttpResponse
+from django.http import HttpResponseBadRequest, HttpResponseForbidden, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from .acces import filtrer_modifiables, stages_modifiables
+from .acces import filtrer_modifiables, peut_ecrire, stages_modifiables
 from .forms import NoteRapideForm
 from .models import EntreeJournal, Lieu, Photo, Rubrique, Stage
 from .services.export import ExportImpossible, iter_zip
@@ -43,6 +43,8 @@ def note_rapide(request):
         messages.warning(request, "Créez d'abord votre stage : seuls l'intitulé et les dates sont obligatoires, "
                                   "le reste se complète au fil du stage.")
         return redirect("admin:carnet_stage_add")
+    if request.method == "POST" and not peut_ecrire(request.user):
+        return HttpResponseForbidden(LECTURE_SEULE, content_type="text/plain; charset=utf-8")
     form = NoteRapideForm(request.POST or None, stage=stage)
     if request.method == "POST" and form.is_valid():
         try:
@@ -59,7 +61,7 @@ def note_rapide(request):
         "restant_mo": octets_restants(stage) / (1024 * 1024),
         "groupes": _groupes_rubriques(stage, coches),
         "enregistree": request.GET.get("enregistree") == "1",
-        "maintenant": timezone.localtime(),
+        "maintenant": timezone.localtime(), "lecture_seule": not peut_ecrire(request.user),
     })
 
 
@@ -99,6 +101,8 @@ def changer_stage_actif(request):
     return redirect(request.POST.get("suivant") or "carnet:note_rapide")
 
 
+LECTURE_SEULE = "Compte de démonstration en lecture seule : rien n'est enregistré. Créez votre compte pour vous entraîner."
+
 LIBELLES_COURTS = {"a_trier": "À trier", "corps": "Corps", "annexe": "Annexe", "preuve": "Preuve"}
 
 
@@ -116,12 +120,15 @@ def tri_photos(request):
         "photos": photos, "filtre": destination,
         "destinations": [(v, l, LIBELLES_COURTS[v]) for v, l in Photo.Destination.choices],
         "filtres": [(v, l, comptes[v]) for v, l in Photo.Destination.choices], "total": sum(comptes.values()),
+        "lecture_seule": not peut_ecrire(request.user),
     })
 
 
 @login_required
 @require_POST
 def destination_photo(request, pk):
+    if not peut_ecrire(request.user):
+        return HttpResponseForbidden(LECTURE_SEULE, content_type="text/plain; charset=utf-8")
     photo = get_object_or_404(filtrer_modifiables(request.user, Photo.objects.all()), pk=pk)
     destination = request.POST.get("destination")
     if destination not in Photo.Destination.values:
@@ -135,7 +142,7 @@ def destination_photo(request, pk):
 def export(request, pk):
     stage = get_object_or_404(stages_modifiables(request.user), pk=pk)
     try:
-        morceaux = iter_zip(stage)
+        morceaux = iter_zip(stage, marquer_sauvegarde=peut_ecrire(request.user))
     except ExportImpossible as exc:
         messages.error(request, str(exc))
         return redirect("admin:index")

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group, Permission
 from django.core.management.base import BaseCommand
 
-from carnet.acces import GROUPE_APPRENANT
+from carnet.acces import GROUPE_APPRENANT, GROUPE_DEMONSTRATION
 
 
 class Command(BaseCommand):
@@ -14,6 +14,10 @@ class Command(BaseCommand):
         groupe, cree = Group.objects.get_or_create(name=GROUPE_APPRENANT)
         groupe.permissions.set(permissions)
         self.stdout.write(f"{GROUPE_APPRENANT} : {'créé' if cree else 'mis à jour'} ({permissions.count()} permissions)")
+        consultation = permissions.filter(codename__startswith="view_")
+        demo, cree = Group.objects.get_or_create(name=GROUPE_DEMONSTRATION)
+        demo.permissions.set(consultation)  # compte de démonstration en lecture seule (B21)
+        self.stdout.write(f"{GROUPE_DEMONSTRATION} : {'créé' if cree else 'mis à jour'} ({consultation.count()} permissions)")
         supprimes, _ = Group.objects.filter(name="Formateur").delete()
         if supprimes:
             self.stdout.write("Formateur : supprimé (plus de compte formateur, B17)")

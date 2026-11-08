@@ -53,10 +53,10 @@ def capture(page, nom, plein=False):
 
 
 def connexion(page):
-    page.goto(f"{URL}/admin/login/")
+    page.goto(f"{URL}/connexion/")  # page publique unique (B6)
     page.fill("#id_username", IDENTIFIANT)
     page.fill("#id_password", MOT_DE_PASSE)
-    page.click("button[type=submit]")
+    page.click("form.form-auth button[type=submit]")
     page.wait_for_load_state("networkidle")
 
 
@@ -81,11 +81,11 @@ def bureau(p):
     page = ctx.new_page()
     a = f"{URL}/admin/carnet"
 
-    page.goto(f"{URL}/admin/login/")
+    page.goto(f"{URL}/connexion/")  # page publique unique (B6)
     page.fill("#id_username", IDENTIFIANT)
     capture(page, "01_connexion")
     page.fill("#id_password", MOT_DE_PASSE)
-    page.click("button[type=submit]")
+    page.click("form.form-auth button[type=submit]")
     page.wait_for_load_state("networkidle")
     changer_stage(page, "Stage de démonstration : plomberie sanitaire")
     page.goto(f"{URL}/admin/")

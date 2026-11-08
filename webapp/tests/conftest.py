@@ -9,14 +9,24 @@ def _hachage_rapide(settings):
     settings.PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 
 
+def _apprenant(nom):
+    """Comme dans l'application : le profil Apprenant applique ses droits (B15)."""
+    from django.core.management import call_command
+
+    call_command("creer_groupes", verbosity=0)
+    user = User.objects.create_user(nom, password="x")
+    user.profil.save()
+    return user
+
+
 @pytest.fixture
 def apprenant(db):
-    return User.objects.create_user("awa", password="x")
+    return _apprenant("awa")
 
 
 @pytest.fixture
 def autre_apprenant(db):
-    return User.objects.create_user("bruno", password="x")
+    return _apprenant("bruno")
 
 
 @pytest.fixture

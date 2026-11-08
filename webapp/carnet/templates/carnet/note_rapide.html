@@ -9,6 +9,9 @@
     <p>{{ maintenant|date:"l j F, H:i"|capfirst }}</p>
 </div>
 
+{% if lecture_seule %}
+<p class="alerte" role="status"><span class="icone" aria-hidden="true">visibility</span>Compte de démonstration en lecture seule : vous pouvez tout consulter, rien n'est enregistré. Pour vous entraîner, créez votre propre compte.</p>
+{% endif %}
 <form class="selecteur-stage" method="post" action="{% url 'carnet:stage_actif' %}" style="margin-bottom:16px">
     {% csrf_token %}
     <label class="visuellement-cache" for="choix-stage">Stage</label>
@@ -79,7 +82,7 @@
     </details>
 
     <div class="action-fixe">
-        <button class="bouton bouton--plein" type="submit"><span class="icone" aria-hidden="true">save</span> Enregistrer la note</button>
+        <button class="bouton bouton--plein" type="submit"{% if lecture_seule %} disabled{% endif %}><span class="icone" aria-hidden="true">save</span> Enregistrer la note</button>
     </div>
 </form>
 

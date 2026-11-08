@@ -5,7 +5,6 @@ import io
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
@@ -13,7 +12,6 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from carnet.acces import GROUPE_APPRENANT
 from carnet.demo import donnees as demo
 from carnet.demo.images import illustration, logo
 from carnet.models import (
@@ -22,6 +20,7 @@ from carnet.models import (
 )
 from carnet.services import calendrier
 from carnet.services.export import ecrire_zip
+from comptes.models import Profil
 
 SEMAINE = datetime.timedelta(days=7)
 
@@ -49,10 +48,11 @@ class Command(BaseCommand):
     def _compte(self, mot_de_passe):
         user, _ = get_user_model().objects.get_or_create(username=demo.IDENTIFIANT)
         user.first_name, user.last_name = "Apprenant", "DEMO"
-        user.is_staff, user.is_superuser, user.is_active = True, False, True
+        user.is_active = True
         user.set_password(mot_de_passe)
         user.save()
-        user.groups.add(Group.objects.get(name=GROUPE_APPRENANT))
+        user.profil.role = Profil.Role.DEMONSTRATION  # lecture seule ; droits appliqués par le profil (B15, B21)
+        user.profil.save()
         return user
 
     @staticmethod

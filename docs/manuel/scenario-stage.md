@@ -47,10 +47,11 @@ flowchart LR
 
 ---
 
-## Avant le stage : recevoir son compte (vendredi 29 mai)
+## Avant le stage : créer son compte (vendredi 29 mai)
 
-**Qui agit.** Le superutilisateur crée le compte `demo.apprenant` dans le groupe *Apprenant* et lui transmet ses
-identifiants. Il n'y a pas d'inscription libre.
+**Qui agit.** L'apprenant, seul : sur l'accueil, *Par où commencer* puis *Créer un compte*. L'inscription est
+libre, en tant qu'apprenant ; le compte s'active par le lien reçu par courriel. (Le compte `demo.apprenant` de ce
+scénario a été préparé par `charger_demo`.)
 
 **L'apprenant** se connecte une première fois sur un ordinateur, pour vérifier son accès.
 
@@ -63,7 +64,7 @@ identifiants. Il n'y a pas d'inscription libre.
 ### 7 h 30, au siège : créer le stage
 
 Sans stage, le tableau de bord affiche « Bienvenue » et le bouton **Créer mon stage**. L'apprenant saisit
-l'intitulé, la spécialité, le thème, l'entreprise et les dates. Le reste de la couverture (tuteurs, CFP,
+l'intitulé, la spécialité, le thème, l'entreprise et les dates. Le reste de la couverture (tuteurs, centre de formation professionnelle,
 diplôme, logos) peut attendre : un champ vide ne bloque rien.
 
 ![Création du stage](img/21_creer_stage.jpg)
@@ -186,7 +187,7 @@ L'isolant élastomère à cellules fermées fait le lien avec la spécialité : 
 matériau qu'en climatisation. Les notes portent l'étiquette *Liens avec le froid et la climatisation*.
 
 **Samedi 15 août** (Assomption, jour férié préchargé) : rien à déclarer, le jour n'est pas compté comme « sans
-note ». Pour une absence personnelle (maladie, cours au CFP), l'apprenant l'ajoute dans **Absences**.
+note ». Pour une absence personnelle (maladie, cours au centre de formation professionnelle), l'apprenant l'ajoute dans **Absences**.
 
 ![Absences](img/19_absences.jpg)
 

@@ -13,14 +13,16 @@ Les consignes du projet sont dans AGENTS.md, partagé avec les autres agents. On
   courriels, et sa Definition of Done (P4-5), qui s'ajoute à P5 ;
 - le **PRD** de l'application : user stories US-01 à US-31, modèle logique des données, contrat d'export
   et Definition of Done ;
-- les journaux des décisions : **Q1–Q16** pour le rapport, **A1–A40** pour l'application, **B1–B19** pour
-  les comptes ouverts et la revue UI/UX.
+- les journaux des décisions : **Q1–Q16** pour le rapport, **A1–A40** pour l'application, **B1–B22** pour
+  les comptes ouverts, la revue UI/UX, la démo en lecture seule (B21) et la version Word (B22).
 
 Règles de l'incrément 4 à ne pas défaire :
 - **Les droits sont portés par le profil** (B15) : on attribue un profil (Apprenant ou Administrateur) à un
   utilisateur ; ne jamais régler `groups`, `is_staff` ou `is_superuser` à la main.
 - **Pas de compte formateur** (B17) : le formateur est un libellé de la couverture (`tuteur_acad`).
 - **Inscription libre, sans code** (B19), protégée par les garde-fous du compte gratuit.
+- **Compte démo en lecture seule** (B21) : profil Démonstration, droits de consultation seuls ; seul
+  l'administrateur modifie la démo.
 
 Pour l'incrément 4 : lire le code de comptafisca directement (REA est inutile sur du code source local), ne
 jamais lire, écrire ni afficher le mot de passe SMTP (il est collé par l'utilisateur dans le `.env` du serveur).
@@ -46,10 +48,13 @@ La procédure complète, pas à pas, est dans `docs/rapport-local.md` et dans AG
    `\cite{}` ; personnes par leur fonction si le nom n'est pas publiable ; photos, tableaux et plans du catalogue
    insérés là où ils servent ; rien d'inventé, ce qui manque reste en `\AC{}`.
 4. Lister les `\AC{` restants à l'utilisateur, compiler avec `compile-latex.ps1 -Dir rapports\<dossier>`,
-   puis générer la présentation avec `tex_export_src/outils/build_presentation.py` (Python système : PyMuPDF).
+   puis générer la présentation avec `tex_export_src/outils/build_presentation.py` et la version Word avec
+   `tex_export_src/outils/build_word.py` (Python système : PyMuPDF, python-pptx, python-docx ; pandoc).
+   `finaliser.ps1` enchaîne compilation, présentation et Word.
 5. Ne jamais commiter `rapports/` ni un zip (dépôt public, A14).
 
 La démo (A38) suit le même chemin : `charger_demo --zip`, puis `importer_dossier`, puis `rediger_demo` à la place
-de l'étape 3. Ses identifiants (`demo.apprenant` / `demo-local-2026`) sont publics par choix.
+de l'étape 3. Ses identifiants (`demo.apprenant` / `demo-local-2026`) sont publics par choix : le
+compte est en lecture seule (B21).
 
 @AGENTS.md

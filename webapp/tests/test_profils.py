@@ -29,8 +29,8 @@ def compte(nom, role, **extra):
 
 # --- B15 : le profil porte les droits ---
 
-def test_deux_profils_seulement():
-    assert [r for r, _ in Profil.Role.choices] == ["apprenant", "administrateur"]
+def test_trois_profils():
+    assert [r for r, _ in Profil.Role.choices] == ["apprenant", "administrateur", "demonstration"]
 
 
 @pytest.mark.parametrize("role, groupes_attendus, superuser", [
@@ -199,7 +199,7 @@ def test_accueil_par_ou_commencer(client, db):
 
 
 def test_libelles_des_logos_de_la_couverture():
-    assert Stage._meta.get_field("logo_cfp").verbose_name == "logo du CFP"
+    assert Stage._meta.get_field("logo_cfp").verbose_name == "logo du centre de formation professionnelle"
     assert Stage._meta.get_field("logo_entreprise").verbose_name == "logo de l'entreprise"
 
 
@@ -207,3 +207,20 @@ def test_couverture_sans_reference_interne_et_poste_coherent():
     aide = str(Stage._meta.get_field("tuteur_acad").help_text)
     assert "B17" not in aide
     assert Stage._meta.get_field("tuteur_acad_poste").verbose_name == "poste du formateur"
+
+
+
+def test_libelles_sans_sigle_cfp():
+    """« CFP » s'écrit en toutes lettres dans l'interface : centre de formation professionnelle."""
+    from carnet.models import Absence
+
+    assert Stage._meta.get_field("cfp").verbose_name == "centre de formation professionnelle"
+    assert Stage._meta.get_field("cfp_sigle").verbose_name == "sigle du centre de formation professionnelle"
+    assert dict(Absence.Motif.choices)["cours_cfp"] == "Cours au centre de formation professionnelle"
+
+
+@pytest.mark.parametrize("nom_url", ["comptes:connexion", "comptes:inscription", "comptes:mdp_oublie"])
+def test_pages_de_compte_sans_code_ni_sigle(client, db, nom_url):
+    html = client.get(reverse(nom_url)).content.decode()
+    assert "avec un code" not in html and "code d'invitation" not in html.lower()
+    assert "CFP" not in html

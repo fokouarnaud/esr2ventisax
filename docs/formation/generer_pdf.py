@@ -20,9 +20,9 @@ MANUEL = ICI.parent / "manuel" / "img"
 PUBLICATION = ICI.parents[1] / "webapp" / "carnet" / "static" / "carnet" / "formation"  # accueil public (A40)
 # Captures recadrées sur la zone utile : nom -> (source, boîte gauche, haut, droite, bas)
 RECADRAGES = {
-    "connexion": (MANUEL / "01_connexion.jpg", (440, 230, 1000, 640)),
+    "connexion": (MANUEL / "01_connexion.jpg", (705, 120, 1145, 500)),  # panneau de /connexion/
     "creer_stage": (MANUEL / "21_creer_stage.jpg", (0, 70, 940, 470)),
-    "jours_travailles": (ICI / "img" / "onglet_suivi.jpg", (0, 296, 640, 480)),
+    "jours_travailles": (ICI / "img" / "onglet_suivi.jpg", (0, 462, 700, 620)),
     "rapport_activite": (MANUEL / "08b_note_rapport_activite.jpg", (0, 70, 1160, 640)),
     # samedi 2
     "refus_source": (ICI / "img" / "refus_sans_source.jpg", (0, 380, 1000, 700)),
