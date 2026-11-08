@@ -1,6 +1,6 @@
 ---
 name: rapport-dossier-terrain
-description: Transforme un zip « dossier terrain » exporté du Carnet de stage (dépôt esr2ventisax) en rapport de stage PDF et en présentation PPTX, en local et de bout en bout. Le skill importe le zip (importer_dossier), contrôle les fragments générés (catalogue.tex), rédige les parties à partir de donnees_terrain/terrain.md sans rien inventer, compile avec latex-pdf-soutenance, génère la présentation, puis dresse le bilan des champs à compléter. À utiliser quand l'utilisateur fournit ou mentionne un zip dossier-terrain-*.zip, veut « produire », « générer » ou « rédiger » le rapport d'un apprenant, ou cite la procédure US-30.
+description: Transforme un zip « dossier terrain » exporté du Carnet de stage (dépôt esr2ventisax) en rapport de stage PDF, en version Word (.docx) et en présentation PPTX, en local et de bout en bout. Le skill importe le zip (importer_dossier), contrôle les fragments générés (catalogue.tex), rédige les parties à partir de donnees_terrain/terrain.md sans rien inventer, compile avec latex-pdf-soutenance, produit la version Word avec pandoc, génère la présentation, puis dresse le bilan des champs à compléter. À utiliser quand l'utilisateur fournit ou mentionne un zip dossier-terrain-*.zip, veut « produire », « générer » ou « rédiger » le rapport d'un apprenant, ou cite la procédure US-30.
 ---
 
 # rapport-dossier-terrain : du zip au PDF et à la présentation
@@ -25,7 +25,7 @@ procédure US-30 d'AGENTS.md. Relis AGENTS.md (conventions, A14, A34, A36) avant
   Une donnée absente reste en `\AC{…}`.
 - **`-Force` écrase les textes déjà rédigés** : ne l'utilise qu'avec l'accord explicite de l'utilisateur.
 - Prérequis : venv de l'application (`webapp/.venv`, avec `requirements-local.txt`), `latexmk` et `biber`,
-  un Python avec `python-pptx` et `PyMuPDF`, le skill `latex-pdf-soutenance`. S'il en manque un, le script
+  un Python avec `python-pptx`, `python-docx` et `PyMuPDF`, `pandoc`, le skill `latex-pdf-soutenance`. S'il en manque un, le script
   le signale : transmets la commande d'installation sans rien installer d'office.
 
 ## 1–2. Importer et contrôler
@@ -90,7 +90,7 @@ powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\rapport-dossier-t
 
 - **Code 1** (compilation) : lis `main.log`, corrige ta rédaction (syntaxe LaTeX, `\ref` vers une figure retirée…)
   et relance. Ne modifie pas le style ni le préambule sans accord.
-- **Code 4** : le PDF et le PPTX sont produits, mais il reste des `\AC{}` (listés). C'est attendu quand
+- **Code 4** : le PDF, le Word et le PPTX sont produits, mais il reste des `\AC{}` (listés). C'est attendu quand
   l'application n'a pas tout saisi.
 - Contrôle visuel : rends quelques pages avec `pdftoppm -r 50 -png -f N -l N main.pdf` (couverture,
   organigramme, Gantt, une page de photos, bibliographie), puis lis les images. Pour les diapositives, exporte-les
@@ -99,7 +99,7 @@ powershell -ExecutionPolicy Bypass -File "$HOME\.claude\skills\rapport-dossier-t
 ## 6. Bilan à l'utilisateur
 
 Donne :
-1. les chemins de `main.pdf` (nombre de pages) et de `presentation.pptx` ;
+1. les chemins de `main.pdf` (nombre de pages), de `rapport.docx` (version Word, B22) et de `presentation.pptx` ;
 2. les `\AC{}` restants, regroupés par donnée manquante, avec la conduite à tenir : la compléter dans
    l'application, puis retélécharger et réimporter avec `-Force` (la rédaction est alors à refaire), ou la
    corriger directement dans `infos.tex` ou `parties/` ;

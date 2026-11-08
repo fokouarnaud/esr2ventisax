@@ -14,7 +14,7 @@ Deux façons de faire, qui produisent le même résultat :
 | Rédaction | demandée à Claude Code à l'étape 4 | incluse |
 
 **Prérequis** : l'installation locale de l'application ([README, démarrage rapide](../README.md#démarrage-rapide), avec `requirements-local.txt`), LaTeX
-(`latexmk`, `biber`), Python avec `python-pptx` et `PyMuPDF` pour la présentation, Claude Code pour la rédaction,
+(`latexmk`, `biber`), Python avec `python-pptx`, `python-docx` et `PyMuPDF`, `pandoc` pour la version Word, Claude Code pour la rédaction,
 et un accès Internet pour les plans OpenStreetMap.
 
 ## Option 1 : pas à pas
@@ -109,10 +109,21 @@ python tex_export_src/outils/build_presentation.py rapports/<slug>-<uuid8> rappo
 Quinze diapositives environ, dans le style du rapport, avec des notes de présentateur. Relire et ajuster dans
 PowerPoint.
 
+### 7 bis. Produire la version Word
+
+```bash
+python tex_export_src/outils/build_word.py rapports/<slug>-<uuid8>
+```
+
+`rapport.docx` à côté du PDF (B22) : même texte, couverture, sommaire Word (clic droit, « Mettre à jour les
+champs »), figures et tableaux numérotés comme dans le PDF, schémas TikZ rendus en images, bibliographie, et
+« À COMPLÉTER » en orange. La mise en page reste celle de Word : le PDF fait foi pour l'examen. `finaliser.ps1`
+l'enchaîne après la présentation.
+
 ### 8. Relire, livrer, conserver
 
 - Relire le PDF en entier et vérifier que les photos et les noms sont publiables.
-- Livrer `main.pdf` et `presentation.pptx`.
+- Livrer `main.pdf`, `rapport.docx` et `presentation.pptx`.
 - **Ne jamais commiter `rapports/`** : le dépôt est public (A14). Les fichiers y sont ignorés par git.
 - Garder le zip : il restaure le stage dans une base vide,
   `.venv/Scripts/python manage.py restaurer_dossier <zip> --proprietaire <identifiant>` (depuis `webapp/`).
@@ -147,6 +158,7 @@ US-30.
 | Rédiger | Claude, guidé par le skill | `parties/`, remerciements, abréviations et avant-propos écrits à partir de `terrain.md` (règles de l'étape 4) |
 | Compiler | `scripts/finaliser.ps1` → `latex-pdf-soutenance` | `main.pdf`, sans erreur ni référence indéfinie |
 | Présenter | `finaliser.ps1` → `build_presentation.py` | `presentation.pptx` (environ 15 diapositives) |
+| Version Word | `finaliser.ps1` → `build_word.py` (pandoc) | `rapport.docx`, figures et tableaux identiques au PDF |
 | Bilan | Claude | chemins des fichiers, `\AC{}` restants regroupés par donnée manquante, figures restées factices, rappels de relecture et de sauvegarde |
 
 Il contrôle aussi visuellement quelques pages du PDF (couverture, organigramme, Gantt, photos). Pour la démo
