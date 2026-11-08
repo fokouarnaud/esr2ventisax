@@ -16,7 +16,7 @@
     <div class="entete__interieur">
         <a class="marque" href="{% url 'carnet:note_rapide' %}">
             <span class="marque__pastille"><span class="icone" aria-hidden="true">menu_book</span></span>
-            Carnet de stage
+            <span class="marque__nom">Carnet de stage</span>
         </a>
         {% with nom=request.resolver_match.url_name %}
         <nav class="nav" aria-label="Navigation principale">
@@ -26,6 +26,9 @@
                 <span class="icone" aria-hidden="true">photo_library</span><span>Photos</span></a>
             <a href="{% url 'admin:index' %}">
                 <span class="icone" aria-hidden="true">dashboard</span><span>Tableau de bord</span></a>
+            <form method="post" action="{% url 'comptes:deconnexion' %}" class="nav__deconnexion">{% csrf_token %}
+                <button type="submit"><span class="icone" aria-hidden="true">logout</span><span>Se déconnecter</span></button>
+            </form>
         </nav>
         {% endwith %}
     </div>

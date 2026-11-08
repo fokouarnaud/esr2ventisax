@@ -1,0 +1,24 @@
+{% load i18n admin_urls %}
+{% comment %}
+Surcharge de unfold/helpers/add_link.html (django-unfold 0.110) : bouton d'ajout avec un libellé visible
+(« Ajouter un utilisateur ») au lieu d'une icône « + » seule (B12, US-32). Le libellé vient de
+`libelle_ajout` sur la ModelAdmin, sinon « Ajouter ». À revérifier après une montée de version d'Unfold.
+{% endcomment %}
+{% if cl %}
+    {% url cl.opts|admin_urlname:"add" as add_url %}
+    {% firstof cl.model_admin.libelle_ajout "Ajouter" as libelle %}
+{% else %}
+    {% url opts|admin_urlname:"add" as add_url %}
+    {% firstof adminform.model_admin.libelle_ajout "Ajouter" as libelle %}
+{% endif %}
+
+{% if add_url %}
+    {% if cl.model_admin.show_add_link or adminform.model_admin.show_add_link and original %}{# pas sur la page d'ajout elle-même #}
+        <div class="flex flex-row items-center">
+            <a href="{% add_preserved_filters add_url is_popup to_field %}" class="addlink border border-primary-700 bg-primary-600 flex font-medium gap-1.5 items-center h-[38px] justify-center -my-1 pl-3 pr-4 rounded-full text-sm text-white whitespace-nowrap hover:bg-primary-700 dark:border-primary-500" title="{{ libelle }}">
+                <span class="material-symbols-outlined md-18" aria-hidden="true">add</span>
+                <span class="carnet-ajout__libelle">{{ libelle }}</span>
+            </a>
+        </div>
+    {% endif %}
+{% endif %}

@@ -1,0 +1,10 @@
+{% extends "comptes/base.html" %}
+{% block titre %}Vérifiez vos courriels · Carnet de stage{% endblock %}
+{% block contenu %}
+<section class="carte auth__seul">
+    <span class="icone auth__icone" aria-hidden="true">mark_email_read</span>
+    <h1>Vérifiez vos courriels</h1>
+    <p>Si l'inscription est valide, un lien de confirmation vient de partir. Ouvrez-le pour activer votre compte : il ne sert qu'une fois et expire dans 7 jours.</p>
+    <p><a class="bouton" href="{% url 'comptes:connexion' %}">Aller à la connexion</a></p>
+</section>
+{% endblock %}

@@ -19,7 +19,6 @@ from .models import (
 
 admin.site.site_header = admin.site.site_title = "Carnet de stage"
 admin.site.index_title = "Tableau de bord"
-admin.site.login_template = "carnet/connexion.html"  # ajoute le lien vers l'accueil public (A39)
 
 _get_app_list = admin.site.get_app_list
 
@@ -122,6 +121,19 @@ class StageAdmin(CloisonneAdmin):
         if not change:
             obj.proprietaire = request.user
         super().save_model(request, obj, form, change)
+
+    def get_changeform_initial_data(self, request):
+        """Premier stage : nom de l'apprenant et formateur du code d'invitation (US-38)."""
+        initial = super().get_changeform_initial_data(request)
+        user = request.user
+        if Stage.objects.filter(proprietaire=user).exists():
+            return initial
+        if user.get_full_name():
+            initial.setdefault("apprenant_nom", user.get_full_name())
+        profil = getattr(user, "profil", None)
+        if profil and profil.code_utilise_id:
+            initial.setdefault("formateur_referent", profil.code_utilise.formateur_id)
+        return initial
 
     @admin.display(description="Dossier terrain")
     def lien_export(self, obj):

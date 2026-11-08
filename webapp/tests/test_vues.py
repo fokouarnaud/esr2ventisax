@@ -42,7 +42,7 @@ def stage_bruno(autre_apprenant):
 
 def test_note_rapide_exige_une_connexion(client, db):
     reponse = client.get(reverse("carnet:note_rapide"))
-    assert reponse.status_code == 302 and "login" in reponse["Location"]
+    assert reponse.status_code == 302 and reponse["Location"].startswith("/connexion/")
 
 
 def test_formulaire_note_rapide_affiche(connecte):

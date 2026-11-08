@@ -21,9 +21,21 @@ Contenu de `webapp/.env` (voir `.env.example`) :
 DJANGO_SECRET_KEY=<valeur générée>
 DJANGO_DEBUG=0
 DJANGO_ALLOWED_HOSTS=esrventisax.pythonanywhere.com
+EMAIL_HOST_USER=<adresse Gmail d'envoi>
+EMAIL_HOST_PASSWORD=<mot de passe d'application Gmail>
+MAX_APPRENANTS=6
+INSCRIPTION_IP_HEADER=HTTP_X_REAL_IP
 ```
 
 Sans `DJANGO_SECRET_KEY`, l'application refuse de démarrer en production (test `test_deploiement.py`).
+
+**Courriels (B5, US-44).** L'inscription et le mot de passe oublié envoient un courriel par Gmail SMTP
+(port 587, TLS), avec le même compte que comptafisca. **Le superutilisateur colle lui-même**
+`EMAIL_HOST_USER` et `EMAIL_HOST_PASSWORD` dans `webapp/.env` (console Bash, `nano .env`), puis *Reload*.
+Ce mot de passe d'application ne figure jamais dans le dépôt, dans une conversation ni dans une commande
+exécutée par un agent. Sans lui, `python manage.py check --deploy` affiche `comptes.E001`.
+`INSCRIPTION_IP_HEADER=HTTP_X_REAL_IP` : derrière le proxy de PythonAnywhere, `REMOTE_ADDR` est commun à
+tous les visiteurs ; la limite de 5 inscriptions par heure utilise donc l'IP réelle (stockée en HMAC).
 
 ```bash
 .venv/bin/python manage.py migrate
@@ -63,9 +75,14 @@ Sans `DJANGO_SECRET_KEY`, l'application refuse de démarrer en production (test 
 
 ## Comptes
 
-Dans l'admin (superutilisateur) : *Utilisateurs* → ajouter. Pour un apprenant ou un formateur :
-cocher **Statut équipe** (accès à l'admin) et choisir le groupe **Apprenant** ou **Formateur**.
-Le quota d'un stage (80 Mo par défaut) se règle dans l'onglet *Suivi* du stage.
+- **Formateurs** : créés par le superutilisateur seulement. Admin → *Administration* → *Utilisateurs* →
+  « Ajouter », choisir le groupe **Formateur** (le statut équipe est réglé automatiquement).
+- **Apprenants** : ils s'inscrivent eux-mêmes sur `/inscription/` avec un **code d'invitation** que le
+  formateur crée dans *Administration* → *Codes d'invitation* (5 usages, 90 jours par défaut). Le compte
+  s'active par le lien reçu par courriel ; sans confirmation, il est supprimé après 7 jours. Le
+  superutilisateur peut toujours créer un apprenant à la main (groupe **Apprenant**).
+- L'inscription se ferme d'elle-même au-delà de 80 % du disque ou de `MAX_APPRENANTS` apprenants actifs.
+- Le quota d'un stage (80 Mo par défaut) se règle dans l'onglet *Suivi* du stage.
 
 ## Mise à jour
 

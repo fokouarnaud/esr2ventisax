@@ -15,14 +15,17 @@
     <link rel="preload" as="image" href="{% static 'carnet/accueil/note_rapide.webp' %}">
 </head>
 <body class="accueil">
-{% url 'admin:login' as connexion %}
+{% url 'comptes:connexion' as connexion %}{% url 'comptes:inscription' as inscription %}
 <header class="entete">
     <div class="entete__interieur">
         <a class="marque" href="/">
             <span class="marque__pastille"><span class="icone" aria-hidden="true">menu_book</span></span>
-            Carnet de stage
+            <span class="marque__nom">Carnet de stage</span>
         </a>
-        <a class="bouton bouton--petit" href="{{ connexion }}">Se connecter</a>
+        <div class="entete__actions">
+            <a class="bouton bouton--petit bouton--contour" href="{{ inscription }}">Créer un compte</a>
+            <a class="bouton bouton--petit" href="{{ connexion }}">Se connecter</a>
+        </div>
     </div>
 </header>
 
@@ -156,7 +159,7 @@
 </main>
 
 <footer class="pied">
-    <p>Les comptes sont créés par l'administrateur du centre : il n'y a pas d'inscription libre. Mot de passe oublié : adressez-vous à lui.</p>
+    <p>L'inscription demande un code d'invitation remis par votre formateur : <a href="{{ inscription }}">créer un compte</a>. Mot de passe oublié : <a href="{% url 'comptes:mdp_oublie' %}">recevoir un lien par courriel</a>.</p>
 </footer>
 </body>
 </html>

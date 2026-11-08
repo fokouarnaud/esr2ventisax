@@ -12,6 +12,7 @@
   --papier: #f4f7f8;
   --surface: #fcfefe;
   --trait: #e1e7ea;
+  --trait-champ: #71889a; /* bord des champs : 3,4:1 sur --papier (WCAG 1.4.11), --trait n'y fait que 1,1:1 */
   --brume: #e9eff1;
   --bouton-fond: var(--marine);
   --bouton-fond-survol: var(--marine-doux);
@@ -36,6 +37,7 @@
     --papier: #0a1c28;
     --surface: #10283a;
     --trait: #234053;
+    --trait-champ: #7f97a6; /* 4,9:1 sur --surface sombre */
     --brume: #16324a;
     --turquoise-encre: #68ddce;
     --turquoise-voile: #12393b;
@@ -154,7 +156,7 @@ h2 { font-size: 1.05rem; font-weight: 600; }
 
 textarea, select {
   width: 100%; font: inherit; color: var(--encre); background: var(--papier);
-  border: 1px solid var(--trait); border-radius: var(--r-champ); padding: 12px 14px;
+  border: 1px solid var(--trait-champ); border-radius: var(--r-champ); padding: 12px 14px;
 }
 textarea { min-height: 9rem; resize: vertical; }
 textarea[aria-invalid="true"] { border-color: var(--erreur-encre); background: var(--erreur-fond); }
@@ -218,7 +220,7 @@ details.etiquettes[open] summary .icone { transform: rotate(180deg); }
 .choix { position: relative; }
 .choix input { position: absolute; opacity: 0; inset: 0; }
 .choix span {
-  display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--trait);
+  display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--trait-champ);
   font-size: .85rem; background: var(--surface); cursor: pointer;
 }
 .choix input:checked + span { background: var(--turquoise-voile); border-color: var(--turquoise-encre); color: var(--turquoise-encre); }
@@ -259,7 +261,7 @@ details.etiquettes[open] summary .icone { transform: rotate(180deg); }
 .segments { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
 .segments button {
   font: inherit; font-size: .8rem; min-height: 36px; padding: 0 8px; border-radius: 999px;
-  border: 1px solid var(--trait); background: var(--papier); color: var(--encre); cursor: pointer;
+  border: 1px solid var(--trait-champ); background: var(--papier); color: var(--encre); cursor: pointer;
 }
 .segments button:hover { background: var(--brume); }
 .segments button[aria-pressed="true"] { background: var(--marine); border-color: var(--marine); color: #fcfefe; }
@@ -270,6 +272,90 @@ details.etiquettes[open] summary .icone { transform: rotate(180deg); }
 .vide { text-align: center; padding: 48px 20px; display: grid; gap: 12px; justify-items: center; }
 .vide > .icone { font-size: 2.5rem; color: var(--turquoise-encre); }
 .vide p { margin: 0; color: var(--discret); max-width: 40ch; }
+
+/* Téléphone étroit : la pastille suffit, le nom reste lu par les lecteurs d'écran (place pour la déconnexion) */
+@media (max-width: 400px) {
+  .marque__nom { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* --- Déconnexion dans l'en-tête (US-34) ------------------------------------------------------ */
+.nav__deconnexion { margin: 0; display: contents; }
+.nav__deconnexion button {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px;
+  font: inherit; font-size: .9rem; white-space: nowrap; cursor: pointer;
+  color: var(--discret); background: none; border: 1px solid var(--trait-champ);
+}
+.nav__deconnexion button:hover { background: var(--brume); color: var(--encre); }
+@media (max-width: 520px) {
+  .nav__deconnexion button span:not(.icone) {
+    position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .nav__deconnexion button { padding: 8px 10px; }
+}
+
+/* --- Pages d'authentification (US-36 à US-40) : intro à gauche, formulaire à droite -------------- */
+.page--auth { max-width: 1040px; padding-top: 32px; padding-bottom: 64px; }
+.auth { display: grid; gap: 24px; align-items: start; }
+@media (min-width: 900px) {
+  .auth { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: 56px; padding-top: 24px; }
+}
+.auth__intro { display: grid; gap: 14px; align-content: start; }
+.auth__intro h1 { max-width: 18ch; }
+.auth__intro > p { margin: 0; color: var(--discret); max-width: 46ch; }
+.auth__points { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 12px; }
+.auth__points li { display: flex; gap: 12px; align-items: center; }
+.auth__points .icone {
+  display: grid; place-items: center; width: 36px; height: 36px; flex: none; border-radius: 999px;
+  background: var(--turquoise-voile); color: var(--turquoise-encre); font-size: 1.15rem;
+}
+@media (max-width: 899px) {
+  .auth__points { display: none; } /* sur téléphone, le formulaire passe avant les arguments */
+}
+.auth__panneau { padding: 24px; display: grid; gap: 16px; }
+.auth__panneau h2 { font-size: 1.35rem; }
+.auth__visuel { margin: 12px 0 0; max-width: 300px; }
+.auth__visuel img {
+  display: block; width: 100%; height: 340px; object-fit: cover; object-position: top;
+  border-radius: var(--r-carte); border: 1px solid var(--trait); box-shadow: var(--ombre);
+}
+@media (max-width: 899px) { .auth__visuel { display: none; } }
+.auth__seul { max-width: 520px; margin: 24px auto 0; padding: 28px 24px; display: grid; gap: 14px; }
+.auth__seul p { margin: 0; color: var(--discret); }
+.auth__seul p:has(.bouton), .auth__seul form:not(.form-auth) { display: flex; flex-wrap: wrap; gap: 10px; color: inherit; }
+.auth__icone {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px;
+  background: var(--turquoise-voile); color: var(--turquoise-encre); font-size: 1.5rem;
+}
+.auth__pied { margin: 0; font-size: .92rem; color: var(--discret); }
+
+.form-auth { display: grid; gap: 16px; }
+.form-auth .bouton { width: 100%; margin-top: 4px; }
+.form-auth__ligne { display: grid; gap: 16px; }
+@media (min-width: 480px) { .form-auth__ligne { grid-template-columns: 1fr 1fr; } }
+
+.champ-auth { display: grid; gap: 6px; min-width: 0; }
+.champ-auth > label { font-weight: 500; font-size: .95rem; }
+.champ-auth input:not([type="checkbox"]) {
+  width: 100%; min-height: 48px; font: inherit; color: var(--encre); background: var(--papier);
+  border: 1px solid var(--trait-champ); border-radius: var(--r-champ); padding: 10px 14px;
+}
+.champ-auth input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--turquoise) 70%, transparent); outline-offset: 2px;
+  border-color: var(--turquoise-encre);
+}
+.champ-auth--erreur input:not([type="checkbox"]) { border-color: var(--erreur-encre); background: var(--erreur-fond); }
+.champ-auth__aide { font-size: .85rem; color: var(--discret); }
+.champ-auth__aide ul { margin: 4px 0 0; padding-left: 1.1rem; }
+.champ-auth__erreur { font-size: .875rem; color: var(--erreur-encre); }
+.champ-auth--case { grid-template-columns: auto 1fr; align-items: start; column-gap: 12px; }
+.champ-auth--case input {
+  width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--turquoise-encre); cursor: pointer;
+}
+.champ-auth--case label { font-weight: 400; font-size: .92rem; cursor: pointer; }
+.champ-auth--case .champ-auth__erreur { grid-column: 1 / -1; }
+
+/* Pot de miel : hors écran pour un humain, rempli par les robots (US-36) */
+.piege { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }

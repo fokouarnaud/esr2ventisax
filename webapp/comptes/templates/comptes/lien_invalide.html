@@ -1,0 +1,11 @@
+{% extends "comptes/base.html" %}
+{% block titre %}Lien invalide · Carnet de stage{% endblock %}
+{% block contenu %}
+<section class="carte auth__seul">
+    <span class="icone auth__icone" aria-hidden="true">link_off</span>
+    <h1>Ce lien ne fonctionne pas</h1>
+    <p>Il a déjà servi, il a expiré ou il est incomplet. Si votre compte est déjà activé, connectez-vous ; sinon, inscrivez-vous de nouveau avec votre code.</p>
+    <p><a class="bouton" href="{% url 'comptes:connexion' %}">Se connecter</a>
+       <a class="bouton bouton--contour" href="{% url 'comptes:inscription' %}">Créer un compte</a></p>
+</section>
+{% endblock %}

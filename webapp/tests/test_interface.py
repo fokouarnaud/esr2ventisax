@@ -19,9 +19,9 @@ def client_apprenant(client, db, stage):
 
 
 def test_connexion_en_francais(client, db):
-    html = client.get(reverse("admin:login")).content.decode()
+    html = client.get(reverse("comptes:connexion")).content.decode()  # page publique unique (B6)
     assert "Bon retour sur" in html
-    assert "Retour au site" in html
+    assert "Découvrir le Carnet" in html
     for chaine in ANGLAIS:
         assert chaine not in html
 
@@ -39,8 +39,14 @@ def test_bouton_primaire_aux_couleurs_de_la_charte(settings):
     assert settings.UNFOLD["COLORS"]["primary"]["600"] == "#0d665e"
 
 
-def test_modeles_classes_sans_tenir_compte_des_accents(client_apprenant):
-    html = client_apprenant.get(reverse("admin:index")).content.decode()
-    noms = ["Données techniques", "Équipements", "Fiches entreprise", "Références", "Rubriques"]
-    positions = [html.index(n) for n in noms]
-    assert positions == sorted(positions)
+def test_modeles_classes_sans_tenir_compte_des_accents(rf, db):
+    # Le menu de gauche suit désormais l'ordre des groupes de B11 ; la liste des applications garde le tri A37.
+    from django.contrib import admin
+    from django.contrib.auth.models import User
+
+    requete = rf.get("/admin/")
+    requete.user = User.objects.create_superuser("root", password="x")
+    carnet = next(a for a in admin.site.get_app_list(requete) if a["app_label"] == "carnet")
+    noms = [str(m["name"]) for m in carnet["models"]]
+    attendus = ["Données techniques", "Équipements", "Fiches entreprise", "Références", "Rubriques"]
+    assert [n for n in noms if n in attendus] == attendus

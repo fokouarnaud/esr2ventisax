@@ -1,0 +1,26 @@
+{% load i18n static unfold %}
+{% comment %}
+Surcharge de unfold/helpers/userlinks.html (django-unfold 0.110) : ajoute « Se déconnecter », toujours visible
+dans l'en-tête (B11, US-34). À revérifier après une montée de version d'Unfold.
+{% endcomment %}
+{% if not is_popup %}
+    <div class="flex flex-row gap-3 items-center ml-auto">
+        {% if environment %}
+            {% include "unfold/helpers/label.html" with text=environment.0 type=environment.1 %}
+        {% endif %}
+
+        {% action_list %}
+
+        {% if nav_global_side %}
+            {{ nav_global_side }}
+        {% endif %}
+
+        <form method="post" action="{% url 'comptes:deconnexion' %}" class="carnet-deconnexion">
+            {% csrf_token %}
+            <button type="submit" class="border border-base-200 cursor-pointer dark:border-base-700 flex font-medium gap-2 hover:text-primary-600 items-center px-3 py-1.5 rounded-full text-sm dark:hover:text-primary-500" title="Se déconnecter">
+                <span class="material-symbols-outlined md-18" aria-hidden="true">logout</span>
+                <span class="carnet-deconnexion__libelle">Se déconnecter</span>
+            </button>
+        </form>
+    </div>
+{% endif %}

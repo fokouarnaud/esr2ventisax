@@ -54,3 +54,20 @@
 
 /* Journal sur mobile : l'aperçu de la note garde une largeur lisible, le tableau défile dans son cadre */
 @media (max-width: 767px) { #result_list .field-apercu { min-width: 15rem; } }
+
+/* Bords des champs (revue UI/UX, B13) : Unfold pose border-base-200 (#e1e7ea, 1,3:1 sur blanc) et
+   border-base-700 en sombre (1,4:1) ; base-500 (#71889a) donne 3,7:1 en clair et 4:1 en sombre (WCAG 1.4.11).
+   Les champs en erreur gardent leur bord rouge. */
+:is(input, select, textarea)[class*="border-base-"]:not([type="checkbox"], [type="radio"], [aria-invalid="true"]):not(.errors *) {
+  border-color: var(--color-base-500) !important;
+}
+:is(input[type="checkbox"], input[type="radio"])[class*="border-base-"]:not([aria-invalid="true"]) {
+  border-color: var(--color-base-500) !important;
+}
+/* Bouton d'ajout libellé (surcharge add_link.html) : icône seule sur téléphone */
+@media (max-width: 520px) {
+  .carnet-ajout__libelle { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  a.addlink { padding: 0; width: 38px; }
+  .carnet-deconnexion__libelle { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .carnet-deconnexion button { padding: 6px 8px; }
+}
