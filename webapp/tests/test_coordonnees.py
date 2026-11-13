@@ -2,7 +2,7 @@
 
 import pytest
 
-from carnet.admin import EntreeJournalAdmin, LieuAdmin, PhotoAdmin
+from carnet.admin import LieuAdmin
 from carnet.coordonnees import formater_position
 from carnet.models import EntreeJournal, Lieu, Photo
 from carnet.services.terrain_md import terrain_md
@@ -27,10 +27,13 @@ def test_champs_expliquent_le_signe(modele):
     assert "est ou ouest" in modele._meta.get_field("longitude").help_text.lower()
 
 
-def test_admin_affiche_la_position():
+def test_admin_affiche_la_position(rf):
+    from django.contrib import admin as site
+
     assert "position" in LieuAdmin.list_display
-    assert "position" in PhotoAdmin.readonly_fields
-    assert "position" in EntreeJournalAdmin.readonly_fields
+    for modele in (Photo, EntreeJournal, Lieu):
+        instance = site.site._registry[modele]
+        assert "position" in instance.get_readonly_fields(rf.get("/"))
 
 
 @pytest.mark.django_db
@@ -97,3 +100,31 @@ def test_admin_enregistre_un_lieu_au_sud_et_a_l_ouest(client, apprenant, stage):
     assert "3,86670° S ; 11,51670° O" in liste
     formulaire = client.get(f"/admin/carnet/lieu/{lieu.pk}/change/").content.decode()
     assert "Utiliser ma position" in formulaire and "carnet/js/coordonnees.js" in formulaire
+
+
+@pytest.mark.django_db
+def test_fiche_en_lecture_seule_donne_l_hemisphere(client, settings, tmp_path):
+    """Compte démo (B21) : la fiche affiche « 4,02550° N ; 9,69410° E », pas un nombre nu."""
+    import datetime
+
+    from django.contrib.auth.models import User
+    from django.core.management import call_command
+
+    from carnet.models import Stage
+    from comptes.models import Profil
+
+    settings.MEDIA_ROOT = tmp_path
+    call_command("creer_groupes")
+    user = User.objects.create_user(settings.COMPTE_DEMO, password="x")
+    user.profil.role = Profil.Role.DEMONSTRATION
+    user.profil.save()
+    stage = Stage.objects.create(proprietaire=user, intitule="Démo", date_debut=datetime.date(2026, 6, 1),
+                                 date_fin=datetime.date(2026, 9, 19))
+    lieu = Lieu.objects.create(stage=stage, nom="Chantier", latitude=4.0255, longitude=9.6941)
+    note = EntreeJournal.objects.create(stage=stage, date=datetime.date(2026, 6, 2), texte="Pose",
+                                        latitude=-3.8667, longitude=-11.5167)
+    client.force_login(user)
+    fiche = client.get(f"/admin/carnet/lieu/{lieu.pk}/change/").content.decode()
+    assert "4,02550° N ; 9,69410° E" in fiche
+    fiche = client.get(f"/admin/carnet/entreejournal/{note.pk}/change/").content.decode()
+    assert "3,86670° S ; 11,51670° O" in fiche
