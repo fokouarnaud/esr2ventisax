@@ -60,6 +60,34 @@ class CloisonneAdmin(ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return super().has_delete_permission(request, obj) and self._modifiable(request, obj)
 
+    @admin.display(description="position")
+    def position(self, obj):
+        return formater_position(obj.latitude, obj.longitude) or "—"
+
+    def _a_des_coordonnees(self):
+        return any(f.name == "latitude" for f in self.model._meta.get_fields())
+
+    def get_readonly_fields(self, request, obj=None):
+        champs = list(super().get_readonly_fields(request, obj))
+        if self._a_des_coordonnees() and "position" not in champs:
+            champs.append("position")
+        return champs
+
+    def get_fieldsets(self, request, obj=None):
+        """En lecture seule (compte démo, B21), latitude et longitude cèdent la place à « 4,02550° N ; 9,69410° E »."""
+        fieldsets = super().get_fieldsets(request, obj)
+        if obj is None or not self._a_des_coordonnees() or self.has_change_permission(request, obj):
+            return fieldsets
+        resultat = []
+        for nom, options in fieldsets:
+            champs = []
+            for champ in options["fields"]:
+                champ = "position" if champ == "latitude" else champ
+                if champ != "longitude" and champ not in champs:
+                    champs.append(champ)
+            resultat.append((nom, {**options, "fields": champs}))
+        return resultat
+
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         """Latitude et longitude : valeur sans signe + hémisphère (N/S, E/O) au lieu d'un nombre signé."""
         if db_field.name in ("latitude", "longitude") and db_field.editable:
@@ -174,11 +202,6 @@ class EntreeJournalAdmin(CloisonneAdmin):
         ("Liens", {"classes": ["tab"], "fields": [
             "lieu", "tache", "equipements", "personnes", "latitude", "longitude", "position"]}),
     ]
-    readonly_fields = ["position"]
-
-    @admin.display(description="position")
-    def position(self, obj):
-        return formater_position(obj.latitude, obj.longitude) or "—"
 
     @admin.display(description="note")
     def apercu(self, obj):
@@ -194,10 +217,6 @@ class PhotoAdmin(CloisonneAdmin):
     readonly_fields = ["miniature", "fichier", "taille_octets", "prise_le", "position"]
     filter_horizontal = ["rubriques"]
     exclude = ["stage", "latitude", "longitude"]  # lues dans l'EXIF ou captées par la note rapide
-
-    @admin.display(description="position")
-    def position(self, obj):
-        return formater_position(obj.latitude, obj.longitude) or "—"
 
     def has_add_permission(self, request):
         return False  # les photos arrivent par la note rapide (compression + quota)
@@ -240,10 +259,6 @@ class LieuAdmin(CloisonneAdmin):
         (None, {"fields": ["stage", "nom", "type", "ville", "quartier", "reperes", "niveaux"]}),
         ("Position", {"fields": ["latitude", "longitude"], "description": AIDE_POSITION}),
     ]
-
-    @admin.display(description="position")
-    def position(self, obj):
-        return formater_position(obj.latitude, obj.longitude)
 
 
 @admin.register(Tache)
