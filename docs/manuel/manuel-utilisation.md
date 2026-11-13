@@ -182,6 +182,27 @@ Une note s'ouvre sur sa partie générale (date, heure, texte saisi sur le terra
 
 Cochez **Complétée** quand la note est prête : elle sort du compteur « Notes à compléter ».
 
+### Plusieurs activités le même jour
+
+**Une note par activité ou intervention**, même si elles ont lieu le même jour. Trois activités dans la journée
+donnent trois notes, à la même date mais à des heures différentes.
+
+- Une note n'a qu'**un seul bloc Intervention** (nature, durée, coût, ressources) : deux interventions dans la
+  même note obligeraient à en perdre une ou à tout mélanger.
+- Chaque note a ses propres étiquettes, son lieu, sa tâche et ses photos. Séparées, les notes se rangent sous la
+  bonne rubrique du dossier terrain, donc dans la bonne partie du rapport.
+- Chaque note se coche **Complétée** à part : le tableau de bord montre exactement ce qui reste à faire.
+
+En pratique :
+
+1. **Sur le terrain** : une Note rapide juste après chaque activité. La date et l'**heure** se remplissent seules
+   et distinguent les notes de la journée ; la position et les photos vont à la bonne note.
+2. **Le soir, dans Journal** : complétez chaque note. La liste range les notes par date, puis par heure.
+3. **Une activité oubliée** : **Journal → Ajouter**, même date, heure de l'activité.
+
+À éviter : une seule note « fourre-tout » (« matin : X, après-midi : Y, soir : Z »). Le rapport n'est pas un récit
+au jour le jour ; ce sont des notes séparées et bien étiquetées qui permettent d'en faire la synthèse par rubrique.
+
 Les textes acceptent un **Markdown minimal** : paragraphes séparés par une ligne vide, listes commençant par
 « - » ou « 1. », **gras** entre deux astérisques. Pas de titres, de tableaux ni d'images dans le texte. Les
 caractères spéciaux (`& % $ # _ { } ~ ^ \`, « 50 % ») sont échappés à l'export : écrivez-les normalement.
@@ -452,11 +473,14 @@ Les photos choisies, elles, doivent être sélectionnées à nouveau.
 **La date de ma note est fausse.** La Note rapide prend la date du jour. Pour une note oubliée, créez-la depuis
 **Journal → Ajouter** et choisissez la date.
 
+**J'ai fait trois activités le même jour.** Créez trois notes à la même date, une par activité ou intervention
+(voir [Plusieurs activités le même jour](#plusieurs-activités-le-même-jour)).
+
 **Le quota est atteint.** Passer une photo en « Preuve » ne libère pas de place : supprimez les photos inutiles
 dans **Photos**, ou demandez une augmentation au superutilisateur.
 
-**Ce qui n'est pas prévu** : application hors ligne, application mobile, inscription libre, mot de passe oublié
-par courriel, rédaction automatique dans l'application.
+**Ce qui n'est pas prévu** : application hors ligne, application mobile, compte formateur, rédaction automatique
+dans l'application.
 
 ---
 
