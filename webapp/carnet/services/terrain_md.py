@@ -4,6 +4,8 @@ from carnet.models import (
     Abreviation, DonneeTechnique, EntreeJournal, Equipement, Lieu, Personne, Photo, Rubrique, Tache,
 )
 
+from carnet.coordonnees import formater_position
+
 from . import calendrier
 
 CHAMPS_NOTE = [
@@ -93,7 +95,7 @@ def terrain_md(stage):
     s.append("\n## Abréviations\n")
     s.extend(f"- {a.sigle} : {a.signification}" for a in Abreviation.objects.filter(stage=stage))
     s.append("\n## Lieux\n")
-    s.extend(f"- {l.nom} ({l.get_type_display()}) : {l.latitude:.5f}, {l.longitude:.5f} — {l.reperes}"
+    s.extend(f"- {l.nom} ({l.get_type_display()}) : {formater_position(l.latitude, l.longitude)} — {l.reperes}"
              for l in Lieu.objects.filter(stage=stage))
     s.append("\n## Photos retenues\n")
     s.extend(f"- img/fig_{p.slug}.jpg [{p.get_destination_display()}] : {p.legende}"

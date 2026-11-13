@@ -267,9 +267,30 @@ sont conservées.
 
 *Figure 21 : le chantier Résidence Démo.*
 
-Pour obtenir les coordonnées, le plus simple est d'enregistrer une note rapide **sur place** puis de recopier sa
-latitude et sa longitude (onglet **Liens** de la note). Les plans de situation sont dessinés plus tard, en local, à partir
-d'OpenStreetMap : le siège donne la figure de localisation du rapport.
+**Saisir la position.** Chaque coordonnée se saisit en deux parties : la valeur en degrés décimaux, **sans signe**,
+puis l'hémisphère dans la liste à côté.
+
+| Champ | Valeur | Hémisphère | Au Cameroun |
+|---|---|---|---|
+| Latitude | distance à l'équateur, de 0 à 90 | **Nord** ou **Sud** | toujours Nord (Douala ≈ 4,05° N) |
+| Longitude | distance au méridien de Greenwich, de 0 à 180 | **Est** ou **Ouest** | toujours Est (Douala ≈ 9,70° E) |
+
+La liste des lieux affiche ensuite la position en toutes lettres, par exemple « 4,02550° N ; 9,69410° E ».
+
+**Obtenir la position**, au choix :
+
+1. **Sur place** : touchez **Utiliser ma position** sous la latitude et acceptez la localisation demandée par le
+   navigateur. Latitude, longitude et hémisphères se remplissent ; la précision s'affiche (« ± 8 m »). Faites-le à
+   l'extérieur, loin des murs, pour une meilleure précision.
+2. **À distance** : dans OpenStreetMap ou Google Maps, faites un clic droit (appui long sur téléphone) sur le lieu,
+   puis copiez les deux nombres affichés, par exemple « 4.0496, 9.6942 ». Collez-les dans la **latitude** : les deux
+   champs et les hémisphères se remplissent. Le premier nombre est la latitude, le second la longitude ; un nombre
+   négatif signifie Sud ou Ouest.
+3. **Depuis une note** : une note rapide prise sur place capte la position ; elle s'affiche dans l'onglet **Liens**
+   de la note.
+
+Les plans de situation sont dessinés plus tard, en local, à partir d'OpenStreetMap : le siège donne la figure de
+localisation du rapport.
 
 ## 9. Rubriques et chapitres du thème
 

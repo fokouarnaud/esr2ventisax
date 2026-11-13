@@ -78,7 +78,10 @@
     navigator.geolocation.getCurrentPosition(function (p) {
       lat.value = p.coords.latitude.toFixed(6);
       lon.value = p.coords.longitude.toFixed(6);
-      afficherGps("etat--ok", "location_on", "Position captée (± " + Math.round(p.coords.accuracy) + " m)", false);
+      var la = p.coords.latitude, lo = p.coords.longitude;
+      var lisible = Math.abs(la).toFixed(5).replace(".", ",") + "° " + (la < 0 ? "S" : "N") + " ; "
+        + Math.abs(lo).toFixed(5).replace(".", ",") + "° " + (lo < 0 ? "O" : "E");
+      afficherGps("etat--ok", "location_on", "Position captée : " + lisible + " (± " + Math.round(p.coords.accuracy) + " m)", false);
     }, function (err) {
       var refus = err.code === err.PERMISSION_DENIED;
       afficherGps("etat--alerte", "location_off", refus ? "Position refusée" : "Position introuvable", !refus);
