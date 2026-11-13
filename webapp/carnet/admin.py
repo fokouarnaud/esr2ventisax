@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
+from .coordonnees import AIDE_POSITION, ChampCoordonnee, formater_position
 from .acces import filtrer_modifiables, filtrer_visibles, stages_modifiables, stages_visibles
 from .models import (
     Abreviation, Absence, BilanPersonnel, DonneeTechnique, EntreeJournal, Equipement, FicheEntreprise, Lieu,
@@ -58,6 +59,13 @@ class CloisonneAdmin(ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return super().has_delete_permission(request, obj) and self._modifiable(request, obj)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """Latitude et longitude : valeur sans signe + hémisphère (N/S, E/O) au lieu d'un nombre signé."""
+        if db_field.name in ("latitude", "longitude") and db_field.editable:
+            return ChampCoordonnee(db_field.name, required=not db_field.blank, label=db_field.verbose_name.capitalize(),
+                                   help_text=db_field.help_text)
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         cible = db_field.related_model
@@ -164,8 +172,13 @@ class EntreeJournalAdmin(CloisonneAdmin):
         ("Intervention", {"classes": ["tab"], "fields": [
             "intervention_nature", "intervention_duree_h", "intervention_cout", "intervention_ressources"]}),
         ("Liens", {"classes": ["tab"], "fields": [
-            "lieu", "tache", "equipements", "personnes", "latitude", "longitude"]}),
+            "lieu", "tache", "equipements", "personnes", "latitude", "longitude", "position"]}),
     ]
+    readonly_fields = ["position"]
+
+    @admin.display(description="position")
+    def position(self, obj):
+        return formater_position(obj.latitude, obj.longitude) or "—"
 
     @admin.display(description="note")
     def apercu(self, obj):
@@ -178,9 +191,13 @@ class PhotoAdmin(CloisonneAdmin):
     list_display = ["miniature", "legende", "slug", "destination", "prise_le"]
     list_editable = ["destination"]
     list_filter = ["destination", "rubriques"]
-    readonly_fields = ["miniature", "fichier", "taille_octets", "prise_le", "latitude", "longitude"]
+    readonly_fields = ["miniature", "fichier", "taille_octets", "prise_le", "position"]
     filter_horizontal = ["rubriques"]
-    exclude = ["stage"]
+    exclude = ["stage", "latitude", "longitude"]  # lues dans l'EXIF ou captées par la note rapide
+
+    @admin.display(description="position")
+    def position(self, obj):
+        return formater_position(obj.latitude, obj.longitude) or "—"
 
     def has_add_permission(self, request):
         return False  # les photos arrivent par la note rapide (compression + quota)
@@ -218,7 +235,15 @@ class AbsenceAdmin(RubriqueAdmin):
 
 @admin.register(Lieu)
 class LieuAdmin(CloisonneAdmin):
-    list_display = ["nom", "type", "ville", "quartier"]
+    list_display = ["nom", "type", "ville", "quartier", "position"]
+    fieldsets = [
+        (None, {"fields": ["stage", "nom", "type", "ville", "quartier", "reperes", "niveaux"]}),
+        ("Position", {"fields": ["latitude", "longitude"], "description": AIDE_POSITION}),
+    ]
+
+    @admin.display(description="position")
+    def position(self, obj):
+        return formater_position(obj.latitude, obj.longitude)
 
 
 @admin.register(Tache)

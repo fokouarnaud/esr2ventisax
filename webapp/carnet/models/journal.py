@@ -3,6 +3,7 @@ from django.db import models
 
 from .base import ModeleDeStage
 from .rubrique import Rubrique
+from carnet.coordonnees import AIDE
 
 AIDE_MARKDOWN = "Paragraphes séparés par une ligne vide ; listes « - » ou « 1. » ; **gras**."
 
@@ -95,8 +96,8 @@ class EntreeJournal(ModeleDeStage):
     heure = models.TimeField(null=True, blank=True)
     texte = champ_texte("note")
     completee = models.BooleanField("complétée", default=False)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True, help_text=AIDE["latitude"])
+    longitude = models.FloatField(null=True, blank=True, help_text=AIDE["longitude"])
     lieu = models.ForeignKey("carnet.Lieu", on_delete=models.SET_NULL, null=True, blank=True)
     tache = models.ForeignKey(Tache, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="tâche")
     rubriques = models.ManyToManyField(Rubrique, blank=True, verbose_name="étiquettes")

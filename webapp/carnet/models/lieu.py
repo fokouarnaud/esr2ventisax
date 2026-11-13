@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from .base import ModeleDeStage
+from carnet.coordonnees import AIDE
 
 RAYON_TERRE_M = 6_371_000
 RAYON_RATTACHEMENT_M = 200
@@ -26,8 +27,8 @@ class Lieu(ModeleDeStage):
 
     nom = models.CharField(max_length=150)
     type = models.CharField(max_length=20, choices=Type.choices, default=Type.CHANTIER)
-    latitude = models.FloatField(validators=[MinValueValidator(-90), MaxValueValidator(90)])
-    longitude = models.FloatField(validators=[MinValueValidator(-180), MaxValueValidator(180)])
+    latitude = models.FloatField(validators=[MinValueValidator(-90), MaxValueValidator(90)], help_text=AIDE["latitude"])
+    longitude = models.FloatField(validators=[MinValueValidator(-180), MaxValueValidator(180)], help_text=AIDE["longitude"])
     reperes = models.TextField("repères (ex. face pharmacie…, après le carrefour…)", blank=True)
     ville = models.CharField(max_length=100, blank=True)
     quartier = models.CharField(max_length=150, blank=True)

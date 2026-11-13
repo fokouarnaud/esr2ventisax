@@ -6,6 +6,7 @@ from django.db.models import Q
 
 from .base import ModeleDeStage
 from .rubrique import Rubrique
+from carnet.coordonnees import AIDE
 
 
 def chemin_photo(instance, _nom_origine):
@@ -21,8 +22,8 @@ class Photo(ModeleDeStage):
 
     fichier = models.ImageField(upload_to=chemin_photo)
     taille_octets = models.PositiveIntegerField(default=0, editable=False)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True, help_text=AIDE["latitude"])
+    longitude = models.FloatField(null=True, blank=True, help_text=AIDE["longitude"])
     prise_le = models.DateTimeField("prise le", null=True, blank=True)
     legende = models.CharField("légende", max_length=250, blank=True)
     slug = models.SlugField(max_length=60, blank=True, help_text="Nom du fichier dans le rapport, en minuscules sans espace : « compresseur » donne img/fig_compresseur.jpg.")
