@@ -135,8 +135,8 @@ Ce qui se fait tout seul :
 **Étiquettes du rapport** (facultatif) : ouvrez ce volet pour indiquer la partie du rapport où la note servira.
 Les étiquettes suivent le plan du cours : Introduction, Partie I Entreprise, Partie II Mission, Partie III Thème
 (vos chapitres), Partie IV Critiques et suggestions, Conclusion, Bilan personnel, Annexes. On peut en cocher
-plusieurs. Le sens de chaque étiquette, avec des exemples, est expliqué en
-[section 9](#que-veut-dire-chaque-étiquette--exemples).
+plusieurs. Ce que contient chaque partie du rapport, et le sens de chaque étiquette avec des exemples, sont
+expliqués en [section 9](#les-parties-du-rapport-expliquées-simplement).
 
 <img src="img/32_note_rapide_etiquettes.jpg" alt="Étiquettes de la note rapide" width="300"> <img src="img/33_note_enregistree.jpg" alt="Note enregistrée" width="300">
 
@@ -406,6 +406,62 @@ localisation du rapport.
 
 Les chapitres d'un stage sont invisibles des autres stages.
 
+### Les parties du rapport, expliquées simplement
+
+Avant de choisir une étiquette, il faut savoir ce que contient chaque partie du rapport. Le plan est imposé par le
+cours « Module 2 : Techniques de rédaction des rapports ». Retenez que **chaque partie répond à une question que
+se pose le jury** :
+
+```
+Introduction ....... « De quel stage parle-t-on, et comment le rapport est-il organisé ? »
+Partie I ........... « Où étiez-vous ? »                  → l'entreprise
+Partie II .......... « Qu'avez-vous fait, vous ? »        → votre mission
+Partie III ......... « Qu'avez-vous appris de technique ? » → le thème
+Partie IV .......... « Qu'est-ce qui pourrait être mieux ? » → critiques et suggestions
+Conclusion ......... « Qu'en retenez-vous ? »             → bilan, limites, recommandations
+Annexes ............ « Où sont les preuves ? »            → documents joints
+```
+
+| Partie | Ce qu'on y trouve | Ce qui n'y va **pas** |
+|---|---|---|
+| **Introduction** | le contexte du stage (pourquoi ce stage, cette entreprise, ce thème), puis l'annonce du plan | le détail de vos activités |
+| **Partie I : Entreprise** | l'entreprise **telle qu'elle est**, même sans vous : histoire, organisation, métiers, clients, fournisseurs, concurrents, chiffres, projets | ce que vous y avez fait |
+| **Partie II : Mission** | **votre** stage : votre poste, vos objectifs, comment vous avez travaillé, avec qui, ce qu'on vous a confié, vos résultats, vos difficultés et leurs solutions, le planning (Gantt) | les explications techniques générales |
+| **Partie III : Thème** | la **technique** du thème, expliquée comme dans un cours mais appuyée sur le chantier : notions, matériaux, calculs, modes opératoires, sécurité. Son plan, ce sont **vos chapitres** | le récit de vos journées |
+| **Partie IV : Critiques et suggestions** | ce qui marche bien, ce qui pourrait être amélioré dans l'entreprise ou sur le chantier, et vos propositions | les reproches personnels |
+| **Conclusion** | ce que le stage vous a apporté, ses limites, vos recommandations | des faits nouveaux |
+| **Annexes** | les documents trop longs pour le texte : fiches, plans, photos complémentaires. Chaque annexe est annoncée dans le texte | ce qui est indispensable à la compréhension |
+
+Les pages du début (couverture, dédicace, remerciements, abréviations, avant-propos) ne viennent pas des
+étiquettes : elles sont tirées de **Stage** (couverture), de **Personnes** (« à remercier ») et
+d'**Abréviations**.
+
+**La confusion la plus fréquente : Partie II ou Partie III ?**
+
+- Partie II parle de **vous** : « *J'ai* soudé 14 raccords au R+4 ; un raccord a dû être refait. »
+- Partie III parle de **la technique** : « La soudure par polyfusion se fait à 260 °C ; le temps de chauffe dépend
+  du diamètre. »
+
+Une même activité nourrit souvent les deux. Une note qui raconte ce que vous avez fait **et** comment cela se fait
+reçoit donc une étiquette de chaque partie.
+
+**Pour classer une note, posez-vous ces questions dans l'ordre :**
+
+1. Parle-t-elle de **l'entreprise elle-même** (histoire, clients, organisation…) ? → **Partie I**.
+2. Parle-t-elle de **ce que vous avez fait**, de votre rôle, de vos résultats ou de vos difficultés ?
+   → **Partie II**.
+3. Explique-t-elle **une technique**, un matériau, un calcul, une règle de sécurité ? → **un chapitre du thème**
+   (Partie III).
+4. Relève-t-elle **un défaut ou une amélioration possible** ? → **Critiques et suggestions**.
+5. Dit-elle **ce que vous en retirez**, votre ressenti, votre progression ? → **Bilan personnel** ou
+   **Conclusion**.
+6. Décrit-elle **un document à joindre** ? → **Annexes**.
+
+Plusieurs « oui » ? Cochez plusieurs étiquettes, trois au plus. Aucun « oui » ? Laissez la note sans étiquette.
+
+Pour voir à quoi ressemble chaque partie une fois rédigée, ouvrez le rapport de la démo :
+[demo/rapport_demo.pdf](../../demo/rapport_demo.pdf).
+
 ### À quoi sert une étiquette
 
 Une **étiquette** est une rubrique ou un chapitre que l'on accroche à une note. Elle répond à la question :
@@ -669,7 +725,9 @@ est une étape datée du Gantt, une note raconte une activité précise. Voir
 [Mission, tâches et notes](#mission-tâches-et-notes--trois-échelles-différentes).
 
 **Quelle étiquette choisir pour ma note ?** Celle de la partie du rapport où la note servira : une à trois au
-plus. Voir [Que veut dire chaque étiquette ?](#que-veut-dire-chaque-étiquette--exemples)
+plus. Si les parties du rapport ne vous sont pas familières, lisez d'abord
+[Les parties du rapport, expliquées simplement](#les-parties-du-rapport-expliquées-simplement), puis
+[Que veut dire chaque étiquette ?](#que-veut-dire-chaque-étiquette--exemples)
 
 **Le quota est atteint.** Passer une photo en « Preuve » ne libère pas de place : supprimez les photos inutiles
 dans **Photos**, ou demandez une augmentation au superutilisateur.
