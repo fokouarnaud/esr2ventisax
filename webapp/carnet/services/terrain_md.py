@@ -27,6 +27,8 @@ def _note(note):
         valeur = getattr(note, champ)
         if valeur not in (None, ""):
             lignes.append(f"  - {libelle} : {valeur}")
+    if note.tache_id:
+        lignes.append(f"  - Tâche : {note.tache.libelle}")
     personnes = [p.nom_exporte for p in note.personnes.all()]
     if personnes:
         lignes.append(f"  - Personnes : {', '.join(personnes)}")

@@ -3,6 +3,7 @@
 import unicodedata
 
 from django.contrib import admin
+from django.contrib.admin import RelatedOnlyFieldListFilter
 from django.db.models import Q
 from django.http import Http404
 from django.urls import reverse
@@ -188,7 +189,7 @@ admin.site.register(BilanPersonnel, FormulaireDuStageAdmin)
 @admin.register(EntreeJournal)
 class EntreeJournalAdmin(CloisonneAdmin):
     list_display = ["date", "apercu", "completee", "stage"]
-    list_filter = ["completee", "rubriques", "date"]
+    list_filter = ["completee", ("rubriques", RelatedOnlyFieldListFilter), ("tache", RelatedOnlyFieldListFilter), "date"]
     search_fields = ["texte", "activites"]
     date_hierarchy = "date"
     filter_horizontal = ["rubriques", "equipements", "personnes"]
@@ -213,7 +214,7 @@ class EntreeJournalAdmin(CloisonneAdmin):
 class PhotoAdmin(CloisonneAdmin):
     list_display = ["miniature", "legende", "slug", "destination", "prise_le"]
     list_editable = ["destination"]
-    list_filter = ["destination", "rubriques"]
+    list_filter = ["destination", ("rubriques", RelatedOnlyFieldListFilter)]
     readonly_fields = ["miniature", "fichier", "taille_octets", "prise_le", "position"]
     filter_horizontal = ["rubriques"]
     exclude = ["stage", "latitude", "longitude"]  # lues dans l'EXIF ou captées par la note rapide

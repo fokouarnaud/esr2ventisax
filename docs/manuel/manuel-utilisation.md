@@ -166,7 +166,7 @@ Une note s'ouvre sur sa partie générale (date, heure, texte saisi sur le terra
 |---|---|---|
 | Rapport d'activité | objectifs visés, moyens humains, moyens matériels, méthodologie, activités, éléments théoriques, difficultés, solutions, appréciation | la Partie II et la Partie III |
 | Intervention | nature, durée d'immobilisation (h), coût (F CFA), ressources | les interventions de dépannage ou de reprise |
-| Liens | lieu, tâche, équipements, personnes | relier les faits entre eux |
+| Liens | lieu, tâche, équipements, personnes | relier les faits entre eux (la tâche situe la note dans le planning) |
 
 ![Onglet Rapport d'activité](img/08b_note_rapport_activite.jpg)
 
@@ -181,6 +181,27 @@ Une note s'ouvre sur sa partie générale (date, heure, texte saisi sur le terra
 *Figure 14 : onglet Liens.*
 
 Cochez **Complétée** quand la note est prête : elle sort du compteur « Notes à compléter ».
+
+### Plusieurs activités le même jour
+
+**Une note par activité ou intervention**, même si elles ont lieu le même jour. Trois activités dans la journée
+donnent trois notes, à la même date mais à des heures différentes.
+
+- Une note n'a qu'**un seul bloc Intervention** (nature, durée, coût, ressources) : deux interventions dans la
+  même note obligeraient à en perdre une ou à tout mélanger.
+- Chaque note a ses propres étiquettes, son lieu, sa tâche et ses photos. Séparées, les notes se rangent sous la
+  bonne rubrique du dossier terrain, donc dans la bonne partie du rapport.
+- Chaque note se coche **Complétée** à part : le tableau de bord montre exactement ce qui reste à faire.
+
+En pratique :
+
+1. **Sur le terrain** : une Note rapide juste après chaque activité. La date et l'**heure** se remplissent seules
+   et distinguent les notes de la journée ; la position et les photos vont à la bonne note.
+2. **Le soir, dans Journal** : complétez chaque note. La liste range les notes par date, puis par heure.
+3. **Une activité oubliée** : **Journal → Ajouter**, même date, heure de l'activité.
+
+À éviter : une seule note « fourre-tout » (« matin : X, après-midi : Y, soir : Z »). Le rapport n'est pas un récit
+au jour le jour ; ce sont des notes séparées et bien étiquetées qui permettent d'en faire la synthèse par rubrique.
 
 Les textes acceptent un **Markdown minimal** : paragraphes séparés par une ligne vide, listes commençant par
 « - » ou « 1. », **gras** entre deux astérisques. Pas de titres, de tableaux ni d'images dans le texte. Les
@@ -217,6 +238,84 @@ comme stagiaire, résultats et remarques, travail en équipe, conséquence sur l
 Remplissez ces rubriques **au fil du stage**, dès que l'information est disponible. Le cours le rappelle : une
 fois sorti de l'entreprise, certaines informations deviennent difficiles à obtenir. Une rubrique compte comme
 remplie si son champ contient du texte **ou** si une note du journal porte son étiquette.
+
+### Mission, tâches et notes : trois échelles différentes
+
+Ces trois mots se ressemblent mais ne décrivent pas la même chose. Ils vont du plus large au plus détaillé :
+
+```
+MISSION ............ 1 par stage ......... « Quel est mon rôle dans l'entreprise ? »
+ └─ TÂCHES ......... 6 à 12 par stage .... « Quelles grandes étapes ai-je suivies, et quand ? »
+     └─ NOTES ...... 1 par activité ....... « Qu'ai-je fait, vu, mesuré à ce moment-là ? »
+```
+
+| | **Mission** | **Tâche** | **Note du journal** |
+|---|---|---|---|
+| Échelle | tout le stage | quelques jours à quelques semaines | une activité, à une date et une heure |
+| Combien | une seule fiche | 6 à 12 en général | une par activité (souvent plus de 100) |
+| Répond à | quel est mon poste, mon rôle, mon bilan ? | quelle étape, de quand à quand ? | que s'est-il passé exactement ? |
+| Où la saisir | **Mission** | **Tâches** | **Note rapide**, puis **Journal** |
+| Quand | au fil du stage, puis relue à la fin | au début de chaque étape ; la date de fin à la fin de l'étape | le jour même, sur le terrain |
+| Devient dans le rapport | la section « mission » de la Partie II | le diagramme de Gantt (Partie II) | la matière de toutes les parties, selon ses étiquettes |
+
+**Un exemple suivi du début à la fin** (chantier d'un immeuble R+10, stage en plomberie sanitaire) :
+
+**1. La Mission**, rédigée en synthèse. Elle décrit le rôle, pas les journées :
+
+> *Poste* : stagiaire technicien dans l'équipe plomberie du chantier.
+> *Objectifs et enjeux* : réaliser la distribution d'eau froide et d'eau chaude des étages dans les délais, sans
+> fuite à l'essai.
+> *Responsabilités* : préparation des tubes, assemblages par polyfusion, montage des réducteurs de pression,
+> autocontrôles.
+> *Résultats* : six niveaux distribués (RDC au R+5), cinq réducteurs montés, environ 280 m de canalisations isolées.
+
+**2. Les Tâches**, les grandes étapes du stage. Chacune devient une barre du Gantt :
+
+| Tâche | Début | Fin |
+|---|---|---|
+| Accueil et sécurité | 1er juin | 5 juin |
+| Préparation et traçage | 8 juin | 19 juin |
+| Canalisations des étages hauts | 22 juin | 10 juillet |
+| Réducteurs de pression et essais | 13 juillet | 24 juillet |
+
+**3. Les Notes**, ce qui s'est passé un jour donné. Par exemple le mercredi 1er juillet, pendant la tâche
+« Canalisations des étages hauts » :
+
+| Heure | Note (texte de la Note rapide) | Tâche (onglet Liens) | Étiquette |
+|---|---|---|---|
+| 8 h 15 | Soudure de 14 raccords PPR de 25 mm au R+4. Un raccord mal soudé, coupé et refait. | Canalisations des étages hauts | Mise en œuvre : modes opératoires (chapitre du thème) |
+| 11 h 00 | Plus de raccords de 40 mm au magasin : livraison dans deux jours. On passe au R+5. | Canalisations des étages hauts | Difficultés rencontrées et solutions apportées (rubrique du cours) |
+| 15 h 30 | Pression relevée en pied de colonne : 4,3 bar. Photo du manomètre. | Réducteurs de pression et essais | Dimensionnement d'une colonne d'eau froide (chapitre du thème) |
+
+**Comment les trois se nourrissent** :
+
+- Les **notes** sont la matière première. La Mission se rédige **à partir des notes**, et non l'inverse. Par
+  exemple, le raccord refait du 1er juillet devient un « fait important » de la Mission, et le nombre de niveaux
+  terminés vient des notes de la tâche.
+- Une note se rattache à **une tâche au plus** (onglet **Liens**, facultatif). Ce lien situe la note dans le
+  planning : le Journal se filtre par **tâche**, et le dossier terrain indique sous chaque note « Tâche : … ». Une
+  note peut porter sur une autre tâche que celle de la journée, comme la note de 15 h 30.
+- Un chiffre mesuré, comme les 4,3 bar de 15 h 30, se saisit **en plus** dans **Données techniques** comme un
+  relevé rattaché à la note : c'est ce qui permet de le citer dans le rapport.
+- Une tâche ne contient pas de texte de journée : son libellé, ses dates, son lieu et éventuellement le chapitre
+  du thème suffisent.
+
+**Règle simple pour savoir où écrire** :
+
+- **Ça s'est passé à un moment précis** (j'ai fait, vu, mesuré, appris) : une **note**.
+- **Ça a un début et une fin, et ça dure plusieurs jours** : une **tâche**.
+- **Ça décrit mon rôle sur l'ensemble du stage** : la **Mission**.
+
+**Erreurs fréquentes** :
+
+- **Une tâche par jour** (« lundi : traçage », « mardi : traçage »…) : le Gantt devient illisible. Regroupez en une
+  seule tâche « Préparation et traçage » du 8 au 19 juin.
+- **Le détail des journées dans la Mission** : la Mission est une synthèse de quelques phrases par rubrique. Le
+  détail reste dans les notes.
+- **Une seule tâche « Stage »** du premier au dernier jour : le Gantt n'apprend rien au lecteur. Découpez selon
+  les étapes réelles du travail.
+- **Attendre la fin du stage pour créer les tâches** : créez chaque tâche au début de l'étape, sans date de fin,
+  pour pouvoir y rattacher les notes au fur et à mesure.
 
 ## 7. Photos
 
@@ -322,7 +421,8 @@ Une boucle (un poste parent de lui-même, directement ou non) est refusée.
 ### Tâches (Gantt)
 
 Libellé, dates, lieu, chapitre. Une tâche sans date de fin s'arrête à la fin du stage. Les tâches donnent le
-diagramme de Gantt de la Partie II.
+diagramme de Gantt de la Partie II. Une tâche est une **étape de plusieurs jours**, pas une journée : voir
+[Mission, tâches et notes](#mission-tâches-et-notes--trois-échelles-différentes).
 
 ![Tâches](img/13_taches.jpg)
 
@@ -452,11 +552,18 @@ Les photos choisies, elles, doivent être sélectionnées à nouveau.
 **La date de ma note est fausse.** La Note rapide prend la date du jour. Pour une note oubliée, créez-la depuis
 **Journal → Ajouter** et choisissez la date.
 
+**J'ai fait trois activités le même jour.** Créez trois notes à la même date, une par activité ou intervention
+(voir [Plusieurs activités le même jour](#plusieurs-activités-le-même-jour)).
+
+**Quelle différence entre Mission, tâche et note ?** La Mission décrit votre rôle sur tout le stage, une tâche
+est une étape datée du Gantt, une note raconte une activité précise. Voir
+[Mission, tâches et notes](#mission-tâches-et-notes--trois-échelles-différentes).
+
 **Le quota est atteint.** Passer une photo en « Preuve » ne libère pas de place : supprimez les photos inutiles
 dans **Photos**, ou demandez une augmentation au superutilisateur.
 
-**Ce qui n'est pas prévu** : application hors ligne, application mobile, inscription libre, mot de passe oublié
-par courriel, rédaction automatique dans l'application.
+**Ce qui n'est pas prévu** : application hors ligne, application mobile, compte formateur, rédaction automatique
+dans l'application.
 
 ---
 
