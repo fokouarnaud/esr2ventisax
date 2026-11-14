@@ -16,7 +16,7 @@ Le scénario complet, du premier au dernier jour du stage, est dans [scenario-st
 6. [Fiche entreprise, Mission et Bilan personnel](#6-fiche-entreprise-mission-et-bilan-personnel)
 7. [Photos](#7-photos)
 8. [Lieux](#8-lieux)
-9. [Rubriques et chapitres du thème](#9-rubriques-et-chapitres-du-thème)
+9. [Rubriques, chapitres et étiquettes](#9-rubriques-chapitres-et-étiquettes)
 10. [Données structurées](#10-données-structurées)
 11. [Calendrier et absences](#11-calendrier-et-absences)
 12. [Dossier terrain : export et sauvegarde](#12-dossier-terrain--export-et-sauvegarde)
@@ -135,7 +135,8 @@ Ce qui se fait tout seul :
 **Étiquettes du rapport** (facultatif) : ouvrez ce volet pour indiquer la partie du rapport où la note servira.
 Les étiquettes suivent le plan du cours : Introduction, Partie I Entreprise, Partie II Mission, Partie III Thème
 (vos chapitres), Partie IV Critiques et suggestions, Conclusion, Bilan personnel, Annexes. On peut en cocher
-plusieurs.
+plusieurs. Le sens de chaque étiquette, avec des exemples, est expliqué en
+[section 9](#que-veut-dire-chaque-étiquette--exemples).
 
 <img src="img/32_note_rapide_etiquettes.jpg" alt="Étiquettes de la note rapide" width="300"> <img src="img/33_note_enregistree.jpg" alt="Note enregistrée" width="300">
 
@@ -391,7 +392,7 @@ La liste des lieux affiche ensuite la position en toutes lettres, par exemple «
 Les plans de situation sont dessinés plus tard, en local, à partir d'OpenStreetMap : le siège donne la figure de
 localisation du rapport.
 
-## 9. Rubriques et chapitres du thème
+## 9. Rubriques, chapitres et étiquettes
 
 **Rubriques** contient deux niveaux :
 
@@ -404,6 +405,114 @@ localisation du rapport.
 *Figure 22 : rubriques du stage de démonstration, dont les sept chapitres du thème « Plomberie sanitaire ».*
 
 Les chapitres d'un stage sont invisibles des autres stages.
+
+### À quoi sert une étiquette
+
+Une **étiquette** est une rubrique ou un chapitre que l'on accroche à une note. Elle répond à la question :
+**« Dans quelle partie du rapport cette note servira-t-elle ? »**
+
+Pensez à un classeur à intercalaires : chaque rubrique est un intercalaire (Historique, Clients et fournisseurs,
+Difficultés rencontrées…), et l'étiquette dit derrière quel intercalaire ranger la note. Une même note peut se
+ranger derrière plusieurs intercalaires.
+
+Concrètement, une étiquette a trois effets :
+
+1. **Dans le dossier terrain**, la note est recopiée **sous chaque rubrique cochée**. C'est à partir de ces notes
+   que la partie correspondante du rapport est rédigée.
+2. **Une note sans étiquette n'est pas perdue**, mais elle part en fin de dossier, dans « Journal chronologique
+   (notes sans étiquette) ». Elle est alors plus difficile à placer et risque d'être peu exploitée.
+3. **Au tableau de bord**, une rubrique de l'Entreprise ou de la Mission compte comme remplie dès qu'une note
+   porte son étiquette, même si le champ du formulaire est encore vide.
+
+L'étiquette ne dit pas **quand**, mais **où** : le *quand* est donné par la date et par la tâche (voir
+[Mission, tâches et notes](#mission-tâches-et-notes--trois-échelles-différentes)).
+
+### Que veut dire chaque étiquette ? Exemples
+
+La liste mélange les rubriques du cours, classées par partie, et vos chapitres. Voici, pour chacune, le genre de
+note qu'elle attend. Les exemples viennent d'un stage de plomberie sur un chantier d'immeuble.
+
+**Partie I : Entreprise** (ce que vous apprenez sur l'entreprise)
+
+| Étiquette | Cochez-la quand la note parle de… | Exemple de note |
+|---|---|---|
+| Présentation | ce qu'est l'entreprise, en bref | « Entreprise de second œuvre : plomberie, climatisation, électricité. » |
+| Organisation générale (organigramme) | les services, qui dirige quoi | « Trois divisions : plomberie, froid, électricité ; un chef par division. » |
+| Historique de l'entreprise | les dates et étapes de sa vie | « Créée en 2009 par le directeur actuel ; agence de Yaoundé ouverte en 2018. » |
+| Secteur(s) d'activité | les métiers exercés | « 60 % du travail en plomberie, le reste en climatisation. » |
+| Marchés de l'entreprise | le type de chantiers visés | « Surtout des immeubles d'habitation et des hôtels. » |
+| Clients et fournisseurs | qui commande, chez qui on achète | « Les tubes PPR viennent d'un grossiste de Bonabéri. » |
+| Situation concurrentielle | les concurrents et leur place | « Deux concurrents directs sur les chantiers de grande hauteur à Douala. » |
+| Chiffres clés | effectif, chiffre d'affaires, nombre de chantiers | « 45 employés, dont 12 plombiers. » |
+| Perspectives d'évolution | projets, forces, faiblesses | « Projet d'ouvrir une activité de maintenance. » |
+| Mutations technologiques | nouveaux matériaux, nouvelles méthodes | « Passage du tube galvanisé au PPR soudé depuis 2020. » |
+| Volonté des dirigeants | ce que veut la direction | « Le directeur veut certifier l'entreprise en qualité. » |
+
+**Partie II : Mission** (ce que vous faites, vous)
+
+| Étiquette | Cochez-la quand la note parle de… | Exemple de note |
+|---|---|---|
+| Poste occupé | votre poste et son intitulé | « Affecté comme aide-plombier dans l'équipe du chef d'équipe. » |
+| Position du poste dans l'organigramme | à qui vous rendez compte | « Je rends compte au chef d'équipe plomberie. » |
+| Faits importants | un événement marquant | « Fuite à l'essai du R+2 : tout l'étage repris. » |
+| Objectifs et enjeux de la mission | ce qu'on attend de vous, et pourquoi | « Finir la distribution du R+4 avant la pose des faux plafonds. » |
+| Méthodes et moyens employés | comment vous travaillez, avec quoi | « Traçage au cordeau, puis polyfusion à 260 °C. » |
+| Personnes avec lesquelles vous avez collaboré | une collaboration | « Réunion avec l'équipe climatisation pour partager la gaine. » |
+| Responsabilités exercées | ce qu'on vous a confié | « Le chef d'équipe me confie seul le montage des manomètres. » |
+| Résultats obtenus | ce qui est terminé, mesuré | « R+3 terminé : 48 m de tube posés, essai sans fuite. » |
+| Difficultés rencontrées et solutions apportées | un problème et sa solution | « Raccords de 40 mm manquants : on passe à l'étage suivant. » |
+
+**Partie III : vos chapitres du thème** (la technique)
+
+Ce sont les chapitres que vous avez créés, par exemple « Généralités sur la plomberie sanitaire », « Matériaux et
+matériels utilisés » ou « Mise en œuvre : modes opératoires ». Un sous-chapitre s'affiche avec son chapitre :
+« Mise en œuvre : modes opératoires › Soudure PPR ». Exemple : « Soudure d'un raccord de 25 mm : chauffe de 7 s,
+emboîtement sans rotation » → chapitre **Mise en œuvre : modes opératoires**.
+
+**Les autres parties**
+
+| Étiquette | Cochez-la quand la note… | Exemple de note |
+|---|---|---|
+| Introduction | explique le contexte ou le choix du stage | « Ce chantier est le plus haut immeuble en cours à Douala. » |
+| Critiques et suggestions | relève ce qui pourrait être mieux fait | « Pas de harnais pour les travaux en gaine : à prévoir. » |
+| Conclusion | tire une leçon générale | « J'ai compris l'importance de l'essai avant de refermer. » |
+| Bilan personnel | parle de votre ressenti, de votre progression | « Première soudure validée sans reprise : je suis plus sûr de moi. » |
+| Annexes | décrit un document à joindre en fin de rapport | « Fiche d'autocontrôle de l'essai du R+3, signée. » |
+
+Les chiffres de ces exemples sont inventés pour l'illustration : dans vos notes, écrivez ce que vous avez
+réellement vu ou appris.
+
+### Combien d'étiquettes cocher ?
+
+**Une à trois**, celles où la note servira vraiment. Exemples :
+
+- « Le chef d'équipe me confie seul le montage des réducteurs au R+3. J'ai réglé la pression à 3 bar. »
+  → **Responsabilités exercées** (on me confie une tâche) **et** le chapitre **Mise en œuvre : modes
+  opératoires** (comment on règle un réducteur).
+- « Fuite à l'essai : raccord mal chauffé. Coupé et refait, nouvel essai bon. »
+  → **Difficultés rencontrées et solutions apportées** (le problème et sa solution) **et** **Faits importants**
+  (l'événement a marqué le chantier).
+- « Arrivée sur le chantier à 7 h 30, rangement du matériel. »
+  → **aucune étiquette** : rien d'utile pour le rapport. Ce n'est pas grave, mais une telle note n'a pas besoin
+  d'être complétée en détail.
+
+À éviter : **tout cocher** « pour être sûr ». La note serait recopiée partout, et chaque partie du rapport
+devrait trier ce qui la concerne vraiment.
+
+### Comment poser les étiquettes
+
+- **Note rapide** : ouvrez le volet **Étiquettes du rapport** ; les étiquettes y sont regroupées par partie ;
+  cochez-les.
+- **Journal** (fiche d'une note) : le champ **Étiquettes** a deux listes. À gauche, les « étiquettes
+  disponibles » ; à droite, les étiquettes choisies. Tapez quelques lettres dans **Filtrer** (par exemple
+  « diffic ») pour trouver une rubrique, sélectionnez-la (Ctrl, ou Cmd sur Mac, pour en prendre plusieurs), puis
+  cliquez sur la flèche **Choisir**. Pour en enlever une, sélectionnez-la à droite et cliquez sur la flèche
+  **Retirer**.
+- **Retrouver** les notes d'une rubrique : dans **Journal**, bouton **Filtres**, puis **Étiquettes**.
+
+Les **photos** ont aussi des étiquettes. Elles servent à **retrouver** une photo (filtre de la liste des Photos),
+pas à la placer dans le rapport : c'est sa **destination** (corps ou annexe) et sa légende qui décident de sa
+place (voir [Photos](#7-photos)).
 
 ## 10. Données structurées
 
@@ -558,6 +667,9 @@ Les photos choisies, elles, doivent être sélectionnées à nouveau.
 **Quelle différence entre Mission, tâche et note ?** La Mission décrit votre rôle sur tout le stage, une tâche
 est une étape datée du Gantt, une note raconte une activité précise. Voir
 [Mission, tâches et notes](#mission-tâches-et-notes--trois-échelles-différentes).
+
+**Quelle étiquette choisir pour ma note ?** Celle de la partie du rapport où la note servira : une à trois au
+plus. Voir [Que veut dire chaque étiquette ?](#que-veut-dire-chaque-étiquette--exemples)
 
 **Le quota est atteint.** Passer une photo en « Preuve » ne libère pas de place : supprimez les photos inutiles
 dans **Photos**, ou demandez une augmentation au superutilisateur.
